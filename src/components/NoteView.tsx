@@ -17,7 +17,7 @@ export default function NoteView({ note }: NoteViewProps) {
   };
 
   const handleDelete = async () => {
-    const res = await fetch(`/notes/delete/${note.id}`, {
+    const res = await fetch(`/notes/${note.id}`, {
       method: "DELETE",
     });
 
