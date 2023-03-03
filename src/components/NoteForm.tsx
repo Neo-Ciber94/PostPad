@@ -77,8 +77,8 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
         <label className="mb-2 block font-bold dark:text-white">Title</label>
         <input
           placeholder="Title"
-          className={`focus:shadow-outline w-full appearance-none rounded 
-                border py-2 px-3 leading-tight shadow focus:outline-none ${
+          className={`focus:shadow-outline w-full appearance-none rounded dark:border-stone-900
+                border py-2 px-3 leading-tight shadow focus:outline-none dark:bg-gray-900 dark:text-white ${
                   errors.title?.message ? "border-red-500" : ""
                 }`}
           {...register("title")}
@@ -93,7 +93,7 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
           name="content"
           render={({ field }) => {
             return (
-              <div data-color-mode="light">
+              <div>
                 <MDEditor
                   value={field.value}
                   onChange={field.onChange}
