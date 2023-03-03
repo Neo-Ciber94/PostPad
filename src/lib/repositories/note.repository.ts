@@ -27,7 +27,7 @@ export class NoteRepository {
 
   async getBySlug(slug: string): Promise<Note | null> {
     const result = await prisma.note.findFirst({ where: { slug } });
-    
+
     if (result == null) {
       return null;
     }
@@ -58,10 +58,7 @@ export class NoteRepository {
       return null;
     }
 
-    const slug =
-      noteToUpdate.title === data.title
-        ? noteToUpdate.slug
-        : generateSlug(note.title.toLowerCase());
+    const slug = generateSlug(note.title.toLowerCase());
 
     const result = await prisma.note.update({
       where: { id: note.id },

@@ -3,6 +3,11 @@ import NoteList from "@/components/NoteList";
 import { getNotes } from "@/lib/server/notes";
 import Link from "next/link";
 
+export const metadata = {
+  title: "NoteVine",
+  description: "An application to create notes",
+};
+
 export default async function NoteListPage() {
   const notes = await getNotes();
 

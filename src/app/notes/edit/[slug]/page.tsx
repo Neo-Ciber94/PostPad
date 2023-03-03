@@ -2,6 +2,11 @@ import UpdateNoteForm from "@/components/UpdateNoteForm";
 import { getNoteBySlug } from "@/lib/server/notes";
 import { RequestContext } from "@/lib/types/context";
 
+export const metadata = {
+  title: "NoteVine | Edit",
+  description: "Edit a note",
+};
+
 type Params = { slug: string };
 
 export default async function EditNotePage(ctx: RequestContext<Params>) {

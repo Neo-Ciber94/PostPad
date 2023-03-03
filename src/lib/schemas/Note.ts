@@ -34,7 +34,7 @@ export const updateNoteSchema = z.object({
     .transform((s) => s.trim()),
   color: z
     .string()
-    .optional()
+    .nullish()
     .transform((s) => (s != null ? s.trim() : s)),
   content: z
     .string()
