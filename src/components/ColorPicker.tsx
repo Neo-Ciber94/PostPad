@@ -1,5 +1,5 @@
 import { useKeyboardEvent } from "@/hooks/useKeyboardEvent";
-import { useDetectClickOutside } from "@/hooks/useOuterClick";
+import { useOuterClick } from "@/hooks/useOuterClick";
 import { PaintBrushIcon } from "@heroicons/react/24/outline";
 import { forwardRef, useRef, useState } from "react";
 import Backdrop from "./Backdrop";
@@ -29,7 +29,7 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
     onChange(color);
   };
 
-  const colorPickerDialogRef = useDetectClickOutside<HTMLDivElement>({
+  const colorPickerDialogRef = useOuterClick<HTMLDivElement>({
     onClickOutside() {
       handleClose();
     },

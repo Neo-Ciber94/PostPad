@@ -1,4 +1,15 @@
+import { getNoteBySlug } from "@/lib/server/notes";
+import { RequestContext } from "@/lib/types/context";
 
-export default function NotePage() {
-    return <h1>Note</h1>
+type Params = { slug: string };
+
+export default async function NotePage(ctx: RequestContext<Params>) {
+  const slug = ctx.params.slug;
+  const note = await getNoteBySlug(slug);
+
+  return (
+    <pre className="p-4">
+      <code>{JSON.stringify(note, null, 2)}</code>
+    </pre>
+  );
 }

@@ -5,7 +5,7 @@ export interface UseDetectClickOutsideOptions {
   onClickOutside?: (event: MouseEvent) => void;
 }
 
-export function useDetectClickOutside<T extends HTMLElement>({
+export function useOuterClick<T extends HTMLElement>({
   event = "mousedown",
   onClickOutside,
 }: UseDetectClickOutsideOptions) {
@@ -14,9 +14,8 @@ export function useDetectClickOutside<T extends HTMLElement>({
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       const el = event.target as HTMLElement;
-      if (el && ref.current && el.contains(ref.current)) {
+      if (el && ref.current && !el.contains(ref.current)) {
         if (onClickOutside) {
-          event.stopPropagation();
           onClickOutside(event);
         }
       }
