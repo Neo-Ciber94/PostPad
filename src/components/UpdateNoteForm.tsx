@@ -1,53 +1,44 @@
 "use client";
-import { Note, UpdateNote } from "@/lib/schemas/Note";
+import NoteForm from "@/components/NoteForm";
+import { UpdateNote } from "@/lib/schemas/Note";
+import { getNoteBySlug } from "@/lib/server/notes";
+import { RequestContext } from "@/lib/types/context";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import NoteForm from "./NoteForm";
+import { useMutation } from "react-query";
 
-interface UpdateNoteFormProps {
-  note: Note;
-}
+type Params = {
+  slug: string;
+};
 
-export default function UpdateNoteForm({ note }: UpdateNoteFormProps) {
+export default async function UpdateNoteForm(ctx: RequestContext<Params>) {
+  const slug = ctx.params.slug;
+  const note = await getNoteBySlug(slug);
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<unknown>();
+  const mutation = useMutation(async (note: UpdateNote) => {
+    const json = JSON.stringify(note);
+    const result = await fetch("/api/notes", {
+      body: json,
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    });
 
-  const handleSubmitNote = async (note: UpdateNote) => {
-    setIsSubmitting(true);
+    console.log({ result });
 
-    try {
-      const res = await fetch("/api/notes", {
-        method: "PUT",
-        body: JSON.stringify(note),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-
-      if (res.ok) {
-        router.push("/");
-        return;
-      }
-
-      if (res.headers.get("content-type") === "application/json") {
-        const error = await res.json();
-        setError(error);
-      } else {
-        setError({ error: res.statusText });
-      }
-    } finally {
-      setIsSubmitting(false);
+    if (result.ok) {
+      // Redirect
+      router.push("/notes");
     }
-  };
+  });
 
   return (
     <div className="p-4">
-      <>
-        <NoteForm onSubmit={handleSubmitNote} note={note} isEditing />
-        {isSubmitting && <p>Submitting...</p>}
-        {error && <p className="text-red">{JSON.stringify(error)}</p>}
-      </>
+      <NoteForm
+        onSubmit={(note) => mutation.mutateAsync(note)}
+        isSubmitting={mutation.isLoading}
+        error={mutation.error}
+        note={note}
+        isEditing
+      />
     </div>
   );
 }

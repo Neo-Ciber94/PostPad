@@ -16,6 +16,7 @@ import Button from "./Button";
 import ColorPicker from "./ColorPicker";
 import LoadingSpinner from "./LoadingSpinner";
 import Alert from "./Alert";
+import { useRouter } from "next/navigation";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -49,6 +50,8 @@ export default function NoteForm({
     [isEditing]
   );
 
+  const router = useRouter();
+
   const {
     control,
     register,
@@ -59,14 +62,13 @@ export default function NoteForm({
     defaultValues: note,
   });
 
-  if (errors) {
-    console.error(errors);
-  }
-
   return (
     <form
       className="flex w-full flex-col lg:px-[10%]"
-      onSubmit={handleSubmit((note) => onSubmit(note as any))}
+      onSubmit={handleSubmit(async (note) => {
+        await onSubmit(note as any);
+        router.refresh();
+      })}
     >
       <div className="mb-2 flex flex-row justify-end">
         <Controller

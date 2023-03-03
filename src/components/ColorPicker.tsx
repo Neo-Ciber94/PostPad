@@ -30,7 +30,7 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
   };
 
   const colorPickerDialogRef = useOuterClick<HTMLDivElement>({
-    onClickOutside() {
+    onClick() {
       handleClose();
     },
   });

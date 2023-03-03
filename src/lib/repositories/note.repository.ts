@@ -40,9 +40,9 @@ export class NoteRepository {
     const slug = generateSlug(note.title.toLowerCase());
     const result = await prisma.note.create({
       data: {
-        title: data.title,
-        content: data.content,
-        color: data.color,
+        title: data.title.trim(),
+        content: data.content?.trim(),
+        color: data.color?.trim(),
         slug,
       },
     });
@@ -51,7 +51,7 @@ export class NoteRepository {
   }
 
   async update(note: UpdateNote): Promise<Note | null> {
-    const data = updateNoteSchema.parse(note);
+    const data = updateNoteSchema.parse(trimStrings(note));
     const noteToUpdate = await this.getById(note.id);
 
     if (noteToUpdate == null) {
@@ -85,4 +85,15 @@ export class NoteRepository {
 
     return noteSchema.parse(result);
   }
+}
+
+function trimStrings<T extends Record<string, unknown>>(obj: T): T {
+  for (const key in obj) {
+    const value = obj[key];
+
+    if (typeof value === "string") {
+      obj[key] = value.trim() as any;
+    }
+  }
+  return obj;
 }

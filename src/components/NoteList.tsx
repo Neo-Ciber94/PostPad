@@ -70,7 +70,8 @@ function NoteListItem({ note }: NoteListItemProps) {
   };
 
   const menuRef = useOuterClick<HTMLDivElement>({
-    onClickOutside() {
+    onClick() {
+      console.log("click outside");
       handleClose();
     },
   });
@@ -132,7 +133,7 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
                 e.stopPropagation();
                 e.preventDefault();
                 onClose();
-                router.push(`/notes/edit/${note.slug}`);
+                //router.push(`/notes/edit/${note.slug}`);
               }}
             >
               Edit
@@ -145,7 +146,7 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                onDelete(note);
+                //onDelete(note);
               }}
             >
               Delete
