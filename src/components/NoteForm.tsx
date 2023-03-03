@@ -15,7 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import Button from "./Button";
 import ColorPicker from "./ColorPicker";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: true });
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 interface CreateNoteFormProps {
   onSubmit: (note: CreateNote) => Promise<void>;
