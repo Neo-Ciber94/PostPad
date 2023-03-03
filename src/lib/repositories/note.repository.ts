@@ -37,7 +37,7 @@ export class NoteRepository {
 
   async create(note: CreateNote): Promise<Note> {
     const data = createNoteSchema.parse(note);
-    const slug = generateSlug(note.title);
+    const slug = generateSlug(note.title.toLowerCase());
     const result = await prisma.note.create({
       data: {
         title: data.title,
@@ -61,7 +61,7 @@ export class NoteRepository {
     const slug =
       noteToUpdate.title === data.title
         ? noteToUpdate.slug
-        : generateSlug(note.title);
+        : generateSlug(note.title.toLowerCase());
 
     const result = await prisma.note.update({
       where: { id: note.id },
