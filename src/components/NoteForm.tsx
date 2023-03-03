@@ -14,24 +14,36 @@ import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "./Button";
 import ColorPicker from "./ColorPicker";
+import LoadingSpinner from "./LoadingSpinner";
+import Alert from "./Alert";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 interface CreateNoteFormProps {
   onSubmit: (note: CreateNote) => Promise<void>;
+  isSubmitting: boolean;
+  error?: unknown;
   note?: undefined;
   isEditing?: false;
 }
 
 interface UpdateNoteFormProps {
   onSubmit: (note: UpdateNote) => Promise<void>;
+  isSubmitting: boolean;
+  error?: unknown;
   note: Note;
   isEditing: true;
 }
 
 export type NoteFormProps = CreateNoteFormProps | UpdateNoteFormProps;
 
-export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
+export default function NoteForm({
+  note,
+  error,
+  onSubmit,
+  isSubmitting,
+  isEditing,
+}: NoteFormProps) {
   const schema = useMemo(
     () => (isEditing === true ? updateNoteSchema : createNoteSchema),
     [isEditing]
@@ -77,8 +89,8 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
         <label className="mb-2 block font-bold dark:text-white">Title</label>
         <input
           placeholder="Title"
-          className={`focus:shadow-outline w-full appearance-none rounded dark:border-stone-900
-                border py-2 px-3 leading-tight shadow focus:outline-none dark:bg-gray-900 dark:text-white ${
+          className={`focus:shadow-outline w-full appearance-none rounded border
+                py-2 px-3 leading-tight shadow focus:outline-none dark:border-stone-900 dark:bg-gray-900 dark:text-white ${
                   errors.title?.message ? "border-red-500" : ""
                 }`}
           {...register("title")}
@@ -106,16 +118,73 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
         <p className="text-xs italic text-red-500">{errors.content?.message}</p>
       </div>
 
+      <>
+        {error && (
+          <div className="py-2">
+            <Alert color="#ff0000">{getErrorMessage(error)}</Alert>
+          </div>
+        )}
+      </>
+
       <div className="mb-2 flex flex-row gap-2">
-        <Button type="submit">
+        <Button
+          type="submit"
+          className="flex flex-row items-center gap-2"
+          disabled={isSubmitting}
+        >
+          {isSubmitting && <LoadingSpinner />}
           <span>{isEditing === true ? "Update" : "Create"}</span>
         </Button>
-        <Link href="/">
-          <Button type="button" className="bg-red-800 hover:bg-red-900">
+        <Link
+          href="/"
+          onClick={(e) => {
+            if (isSubmitting) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
+        >
+          <Button
+            type="button"
+            className="bg-red-800 hover:bg-red-900"
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
         </Link>
       </div>
     </form>
   );
+}
+
+function getErrorMessage(err: any): string {
+  if (err == null) {
+    throw new Error("no error");
+  }
+
+  if (typeof err === "string") {
+    return err;
+  }
+
+  if (Array.isArray(err)) {
+    return getErrorMessage(err[0]);
+  }
+
+  if (err.message) {
+    return getErrorMessage(err.message);
+  }
+
+  if (err.error) {
+    return getErrorMessage(err.error);
+  }
+
+  if (err.errors) {
+    return getErrorMessage(err.errors);
+  }
+
+  if (err.messages) {
+    return getErrorMessage(err.messages);
+  }
+
+  return JSON.stringify(err);
 }

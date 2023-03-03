@@ -83,7 +83,7 @@ function NoteListItem({ note }: NoteListItemProps) {
             className="h-8 w-8"
             style={{ color: note.color ?? undefined }}
           />
-          <div className="overflow-hidden text-ellipsis whitespace-nowrap w-[60vw] md:w-[40vw] lg:w-[calc(50vw)]">
+          <div className="w-[60vw] overflow-hidden text-ellipsis whitespace-nowrap md:w-[40vw]">
             {note.title}
           </div>
         </div>

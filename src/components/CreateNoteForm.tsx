@@ -2,47 +2,31 @@
 import NoteForm from "@/components/NoteForm";
 import { CreateNote } from "@/lib/schemas/Note";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMutation } from "react-query";
 
 export default function CreateNoteForm() {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<unknown>();
+  const mutation = useMutation(async (note: CreateNote) => {
+    const json = JSON.stringify(note);
+    const result = await fetch(json, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
 
-  const handleSubmitNote = async (note: CreateNote) => {
-    setIsSubmitting(true);
+    console.log({ result });
 
-    try {
-      const res = await fetch("/api/notes", {
-        method: "POST",
-        body: JSON.stringify(note),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-
-      if (res.ok) {
-        router.push("/");
-        return;
-      }
-
-      if (res.headers.get("content-type") === "application/json") {
-        const error = await res.json();
-        setError(error);
-      } else {
-        setError({ error: res.statusText });
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    // Redirect
+    router.push("/notes");
+  });
 
   return (
     <div className="p-4">
       <>
-        <NoteForm onSubmit={handleSubmitNote} />
-        {isSubmitting && <p>Submitting...</p>}
-        {error && <p className="text-red">{JSON.stringify(error)}</p>}
+        <NoteForm
+          onSubmit={(note) => mutation.mutateAsync(note)}
+          isSubmitting={mutation.isLoading}
+          error={mutation.error}
+        />
       </>
     </div>
   );

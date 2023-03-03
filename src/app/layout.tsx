@@ -1,5 +1,5 @@
-import Header from "@/components/Header";
 import "./globals.css";
+import Content from "@/components/Content";
 
 export const metadata = {
   title: "Notes App",
@@ -10,10 +10,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en" className="dark:bg-slate-700">
       <body>
-        <Header />
-        <main className="dark:bg-slate-700 h-full container mx-auto">
-          {children}
-        </main>
+        <Content>{children}</Content>
       </body>
     </html>
   );
