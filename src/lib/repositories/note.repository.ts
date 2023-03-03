@@ -8,7 +8,6 @@ import {
   updateNoteSchema,
 } from "../schemas/Note";
 import { generateSlug } from "../utils/generateSlug";
-import { unreachable } from "../utils/unreachable";
 
 export class NoteRepository {
   async getAll(): Promise<Note[]> {

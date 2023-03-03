@@ -1,3 +1,5 @@
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 import {
   CreateNote,
   createNoteSchema,
@@ -6,11 +8,14 @@ import {
   updateNoteSchema,
 } from "@/lib/schemas/Note";
 import { zodResolver } from "@hookform/resolvers/zod";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "./Button";
 import ColorPicker from "./ColorPicker";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: true });
 
 interface CreateNoteFormProps {
   onSubmit: (note: CreateNote) => Promise<void>;
@@ -54,7 +59,7 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
           render={({ field }) => {
             return (
               <ColorPicker
-                color={field.value}
+                color={field.value ?? undefined}
                 onChange={(color) => {
                   field.onChange(color);
                   console.log({ color });
@@ -80,13 +85,20 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
 
       <div className="mb-2">
         <label className="mb-2 block font-bold dark:text-white">Content</label>
-        <textarea
-          className={`focus:shadow-outline w-full appearance-none rounded 
-                border py-2 px-3 leading-tight shadow focus:outline-none ${
-                  errors.content?.message ? "border-red-500" : ""
-                }`}
-          rows={8}
-          {...register("content")}
+        <Controller
+          control={control}
+          name="content"
+          render={({ field }) => {
+            return (
+              <div data-color-mode="light">
+                <MDEditor
+                  value={field.value}
+                  onChange={field.onChange}
+                  height={300}
+                />
+              </div>
+            );
+          }}
         />
         <p className="text-xs italic text-red-500">{errors.content?.message}</p>
       </div>

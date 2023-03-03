@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     appDir: true,
+    esmExternals: "loose",
   },
   async redirects() {
     return [
@@ -14,4 +15,5 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+const removeImports = require("next-remove-imports")();
+module.exports = removeImports(nextConfig);
