@@ -66,7 +66,6 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
                 color={field.value ?? undefined}
                 onChange={(color) => {
                   field.onChange(color);
-                  console.log({ color });
                 }}
               />
             );
