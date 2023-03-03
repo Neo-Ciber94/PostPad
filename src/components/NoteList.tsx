@@ -41,22 +41,37 @@ interface NoteListItemProps {
 }
 
 function NoteListItem({ note }: NoteListItemProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    if (!open) {
+      setOpen(false);
+    }
+  };
+
+  const handleDelete = async (note: Note) => {
+    const res = await fetch(`/api/notes/${note.id}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      router.refresh();
+      return;
+    }
+
+    console.error("Error deleting", res.status, res.statusText);
+  };
+
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     event.preventDefault();
-
-    if (!open) {
-      setOpen(true);
-    }
+    setOpen(true);
   };
 
   const menuRef = useOuterClick<HTMLDivElement>({
     onClickOutside() {
-      if (!open) {
-        console.log("click");
-        setOpen(true);
-      }
+      handleClose();
     },
   });
 
@@ -64,15 +79,27 @@ function NoteListItem({ note }: NoteListItemProps) {
     <Link href={`/notes/${note.slug}`}>
       <div className="flex cursor-pointer flex-row items-center justify-between p-3 hover:bg-slate-600">
         <div className="flex flex-row items-center gap-2">
-          <DocumentIcon className="h-8 w-8" style={{ color: note.color }} />
-          <div>{note.title}</div>
+          <DocumentIcon
+            className="h-8 w-8"
+            style={{ color: note.color ?? undefined }}
+          />
+          <div className="overflow-hidden text-ellipsis whitespace-nowrap w-[60vw] md:w-[40vw] lg:w-[calc(50vw)]">
+            {note.title}
+          </div>
         </div>
 
         <div className="relative">
           <button onClick={handleOpenMenu}>
             <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-slate-500" />
           </button>
-          {open && <Menu note={note} ref={menuRef} />}
+          {open && (
+            <Menu
+              note={note}
+              ref={menuRef}
+              onClose={handleClose}
+              onDelete={handleDelete}
+            />
+          )}
         </div>
       </div>
     </Link>
@@ -81,33 +108,51 @@ function NoteListItem({ note }: NoteListItemProps) {
 
 interface MenuProps {
   note: Note;
+  onClose: () => void;
+  onDelete: (note: Note) => void;
 }
 
 const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(
-  { note },
+  { note, onClose, onDelete },
   ref
 ) {
   const router = useRouter();
 
   return (
-    <div
-      className="absolute top-5 left-[-60px] z-40 w-[100px] bg-white py-1 shadow-sm"
-      ref={ref}
-    >
-      <ul>
-        <li className="px-2 py-1 hover:bg-slate-300">
-          <button
-            className="text-black"
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              router.push(`/notes/edit/${note.slug}`);
-            }}
-          >
-            Edit
-          </button>
-        </li>
-      </ul>
-    </div>
+    <>
+      <div
+        className="absolute top-5 left-[-80px] z-40 w-[120px] rounded-md bg-white py-1 shadow-sm"
+        ref={ref}
+      >
+        <ul>
+          <li className="px-2 py-1 hover:bg-slate-300">
+            <button
+              className="text-black"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onClose();
+                router.push(`/notes/edit/${note.slug}`);
+              }}
+            >
+              Edit
+            </button>
+          </li>
+
+          <li className="px-2 py-1 hover:bg-slate-300">
+            <button
+              className="text-black"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onDelete(note);
+              }}
+            >
+              Delete
+            </button>
+          </li>
+        </ul>
+      </div>
+    </>
   );
 });

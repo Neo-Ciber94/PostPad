@@ -42,14 +42,18 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<CreateNote>({
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: note,
   });
 
+  if (errors) {
+    console.error(errors);
+  }
+
   return (
     <form
-      className="flex w-full flex-col lg:px-[20%]"
+      className="flex w-full flex-col lg:px-[10%]"
       onSubmit={handleSubmit((note) => onSubmit(note as any))}
     >
       <div className="mb-2 flex flex-row justify-end">
@@ -94,7 +98,7 @@ export default function NoteForm({ note, onSubmit, isEditing }: NoteFormProps) {
                 <MDEditor
                   value={field.value}
                   onChange={field.onChange}
-                  height={300}
+                  height={400}
                 />
               </div>
             );

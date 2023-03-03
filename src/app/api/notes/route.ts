@@ -1,4 +1,5 @@
 import { NoteService } from "@/lib/services/note.service";
+import { RequestContext } from "@/lib/types/context";
 import { json } from "@/lib/utils/responseUtils";
 import { ZodError } from "zod";
 
@@ -41,3 +42,4 @@ export async function PUT(request: Request) {
     return json(500);
   }
 }
+

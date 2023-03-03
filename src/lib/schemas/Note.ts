@@ -17,7 +17,7 @@ export const createNoteSchema = z.object({
     .string()
     .min(1)
     .transform((s) => s.trim()),
-  color: z.string().nullable(),
+  color: z.string().optional(),
   content: z
     .string()
     .optional()
@@ -34,7 +34,7 @@ export const updateNoteSchema = z.object({
     .transform((s) => s.trim()),
   color: z
     .string()
-    .nullable()
+    .nullish()
     .transform((s) => (s != null ? s.trim() : s)),
   content: z
     .string()
