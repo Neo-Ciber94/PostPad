@@ -25,12 +25,7 @@ export default function NoteList({ notes }: NoteListProps) {
       )}
 
       {notes.map((note) => {
-        return (
-          <div key={note.id}>
-            <NoteListItem note={note} />
-            <hr className="border-gray-500 opacity-60" />
-          </div>
-        );
+        return <NoteListItem note={note} key={note.id} />;
       })}
     </>
   );
@@ -73,19 +68,20 @@ function NoteListItem({ note }: NoteListItemProps) {
   return (
     <>
       <Link href={`/notes/${note.slug}`}>
-        <div className="flex cursor-pointer flex-row items-center justify-between p-3 hover:bg-slate-600">
-          <div className="flex flex-row items-center gap-2">
-            <DocumentIcon
-              className="h-8 w-8"
-              style={{ color: note.color ?? undefined }}
-            />
-            <div className="w-[60vw] overflow-hidden text-ellipsis whitespace-nowrap md:w-[40vw]">
+        <div
+          className="my-3 rounded-xl bg-slate-600 px-6 py-4 
+      shadow-sm shadow-[rgba(0,0,0,0.6)] transition duration-300
+      hover:bg-gray-800"
+        >
+          <div className="flex flex-row items-center justify-between">
+            <div className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
               {note.title}
             </div>
+
+            <button onClick={handleOpenMenu} ref={anchorEl}>
+              <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-slate-500" />
+            </button>
           </div>
-          <button onClick={handleOpenMenu} ref={anchorEl}>
-            <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-slate-500" />
-          </button>
         </div>
       </Link>
 
