@@ -10,7 +10,13 @@ export function generateSlug(str: string): string {
   const id = nanoid();
 
   str = str
+    // Replace all the accented characters
+    // https://stackoverflow.com/a/70288180/9307869
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .replaceAll(/[^a-zA-Z0-9]/g, REPLACEMENT)
+
+    // Remove the consecutive `-` and keep only one
     .split("")
     .filter((val, idx, items) => val !== REPLACEMENT || items[idx + 1] !== val)
     .join("");

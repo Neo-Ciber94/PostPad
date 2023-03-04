@@ -16,7 +16,7 @@ export function useOuterClick({
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       const el = event.target instanceof Node ? event.target : null;
-      if (el == null || ref.current == null) {
+      if (el == null || ref == null || ref.current == null) {
         return;
       }
 

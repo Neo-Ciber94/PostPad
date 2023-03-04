@@ -14,8 +14,8 @@ const getAllNotesOptionsSchema = z.object({
   search: z.string().optional(),
   pagination: z
     .object({
-      page: z.number().min(1),
-      limit: z.number().min(1).default(100),
+      page: z.number().min(1).optional(),
+      limit: z.number().min(1).optional(),
     })
     .optional(),
 });
@@ -24,21 +24,11 @@ export type GetAllNotesOptions = z.infer<typeof getAllNotesOptionsSchema>;
 
 export class NoteRepository {
   async getAll(options: GetAllNotesOptions = {}): Promise<Note[]> {
-    // On invalid parse we just ignore the result
-    const optionsResult = getAllNotesOptionsSchema.safeParse(options);
-    const { pagination, search } = optionsResult.success
-      ? options
-      : ({} as GetAllNotesOptions);
+    const { search, skip, take } = getQueryCriteriaFromOptions(options);
 
     // We use unknown just to ignore prisma return type
     let result: unknown[] = [];
-
-    // Pagination
-    const take = pagination?.limit;
-    const skip =
-      pagination == null ? undefined : (pagination.page - 1) * pagination.limit;
-
-    if (!!search && search.trim().length === 0) {
+    if (!!search && search.trim().length > 0) {
       result = await prisma.note.findMany({
         where: {
           OR: [
@@ -140,4 +130,25 @@ function trimStrings<T extends Record<string, unknown>>(obj: T): T {
     }
   }
   return obj;
+}
+
+function getQueryCriteriaFromOptions(options: GetAllNotesOptions) {
+  const DEFAULT_LIMIT = 100;
+
+  // On invalid parse we just ignore the result
+  const optionsResult = getAllNotesOptionsSchema.safeParse(options);
+  const { pagination, search } = optionsResult.success
+    ? options
+    : ({} as GetAllNotesOptions);
+
+  let skip: number | undefined;
+  let take: number | undefined;
+
+  if (pagination) {
+    const page = pagination.page || 1;
+    take = pagination.limit;
+    skip = (page - 1) * (pagination.limit || DEFAULT_LIMIT);
+  }
+
+  return { search, take, skip };
 }

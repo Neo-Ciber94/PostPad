@@ -38,7 +38,6 @@ export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
 
       const top = boundingRect.top + boundingRect.height;
       const left = boundingRect.left - boundingRect.width;
-      console.log({ top, left });
       setPos({ top, left });
     };
 

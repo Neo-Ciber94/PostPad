@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { NoteService } from "../services/note.service";
+import { SearchParams } from "../types/RequestContext";
+import { getArray } from "../utils/getArray";
 
 export async function getNoteBySlug(slug: string) {
   const noteService = new NoteService();
@@ -12,8 +14,9 @@ export async function getNoteBySlug(slug: string) {
   return result;
 }
 
-export async function getNotes() {
+export async function getNotes(searchParams: SearchParams = {}) {
   const noteService = new NoteService();
-  const notes = await noteService.getAllNotes();
+  const search = getArray(searchParams["search"] || [])[0];
+  const notes = await noteService.getAllNotes({ search });
   return notes;
 }
