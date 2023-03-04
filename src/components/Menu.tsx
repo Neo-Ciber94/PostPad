@@ -79,10 +79,10 @@ export const MenuItem: React.FC<PropsWithChildren<MenuItemProps>> = ({
 
   return (
     <li
-      className={`cursor-pointer px-2 py-1 hover:bg-slate-300 ${className}`}
+      className={`cursor-pointer px-2 py-1 text-black hover:bg-slate-300 ${className}`}
       {...rest}
     >
-      <button className={`text-black`}>{children}</button>
+      {children}
     </li>
   );
 };

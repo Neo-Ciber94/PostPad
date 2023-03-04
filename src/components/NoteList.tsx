@@ -1,13 +1,10 @@
 "use client";
 import { Note } from "@/lib/schemas/Note";
-import {
-  DocumentIcon,
-  EllipsisVerticalIcon,
-  InboxIcon,
-} from "@heroicons/react/24/solid";
+import { EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { useMutation } from "react-query";
 import { Menu, MenuItem } from "./Menu";
 
 export interface NoteListProps {
@@ -39,14 +36,7 @@ function NoteListItem({ note }: NoteListItemProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const anchorEl = useRef<HTMLButtonElement | null>(null);
-
-  const handleClose = () => {
-    if (open) {
-      setOpen(false);
-    }
-  };
-
-  const handleDelete = async (note: Note) => {
+  const mutation = useMutation(async () => {
     const res = await fetch(`/api/notes/${note.id}`, {
       method: "DELETE",
     });
@@ -55,8 +45,12 @@ function NoteListItem({ note }: NoteListItemProps) {
       router.refresh();
       return;
     }
+  });
 
-    console.error("Error deleting", res.status, res.statusText);
+  const handleClose = () => {
+    if (open) {
+      setOpen(false);
+    }
   };
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -86,8 +80,10 @@ function NoteListItem({ note }: NoteListItemProps) {
       </Link>
 
       <Menu open={open} anchor={anchorEl} onClose={handleClose}>
-        <MenuItem onClick={() => console.log("Edit")}>Edit</MenuItem>
-        <MenuItem onClick={() => console.log("Delete")}>Delete</MenuItem>
+        <MenuItem onClick={() => router.push(`/notes/edit/${note.slug}`)}>
+          Edit
+        </MenuItem>
+        <MenuItem onClick={() => mutation.mutate()}>Delete</MenuItem>
       </Menu>
     </>
   );
