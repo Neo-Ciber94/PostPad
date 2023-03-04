@@ -1,6 +1,6 @@
 import UpdateNoteForm from "@/components/UpdateNoteForm";
 import { getNoteBySlug } from "@/lib/server/notes";
-import { RequestContext } from "@/lib/types/context";
+import { RequestContext } from "@/lib/types/RequestContext";
 
 export const metadata = {
   title: "NoteVine | Edit",

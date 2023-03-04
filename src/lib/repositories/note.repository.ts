@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { prisma } from "../database/prisma";
 import {
   CreateNote,
@@ -9,9 +10,52 @@ import {
 } from "../schemas/Note";
 import { generateSlug } from "../utils/generateSlug";
 
+const getAllNotesOptionsSchema = z.object({
+  search: z.string().optional(),
+  pagination: z
+    .object({
+      page: z.number().min(1),
+      limit: z.number().min(1).default(100),
+    })
+    .optional(),
+});
+
+export type GetAllNotesOptions = z.infer<typeof getAllNotesOptionsSchema>;
+
 export class NoteRepository {
-  async getAll(): Promise<Note[]> {
-    const result = await prisma.note.findMany();
+  async getAll(options: GetAllNotesOptions = {}): Promise<Note[]> {
+    // On invalid parse we just ignore the result
+    const optionsResult = getAllNotesOptionsSchema.safeParse(options);
+    const { pagination, search } = optionsResult.success
+      ? options
+      : ({} as GetAllNotesOptions);
+
+    // We use unknown just to ignore prisma return type
+    let result: unknown[] = [];
+
+    // Pagination
+    const take = pagination?.limit;
+    const skip =
+      pagination == null ? undefined : (pagination.page - 1) * pagination.limit;
+
+    if (!!search && search.trim().length === 0) {
+      result = await prisma.note.findMany({
+        where: {
+          OR: [
+            { title: { contains: search } },
+            { content: { contains: search } },
+          ],
+        },
+        take,
+        skip,
+      });
+    } else {
+      result = await prisma.note.findMany({
+        take,
+        skip,
+      });
+    }
+
     return result.map((x) => noteSchema.parse(x));
   }
 

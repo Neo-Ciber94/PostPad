@@ -1,11 +1,14 @@
-import { NoteRepository } from "../repositories/note.repository";
+import {
+  GetAllNotesOptions,
+  NoteRepository,
+} from "../repositories/note.repository";
 import { CreateNote, Note, UpdateNote } from "../schemas/Note";
 
 export class NoteService {
   private readonly repository = new NoteRepository();
 
-  getAllNotes(): Promise<Note[]> {
-    return this.repository.getAll();
+  getAllNotes(options: GetAllNotesOptions = {}): Promise<Note[]> {
+    return this.repository.getAll(options);
   }
 
   getNoteById(id: string): Promise<Note | null> {

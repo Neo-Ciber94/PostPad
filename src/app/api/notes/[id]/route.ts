@@ -1,5 +1,5 @@
 import { NoteService } from "@/lib/services/note.service";
-import { RequestContext } from "@/lib/types/context";
+import { RequestContext } from "@/lib/types/RequestContext";
 import { json } from "@/lib/utils/responseUtils";
 
 export async function DELETE(_: Request, ctx: RequestContext<{ id: string }>) {

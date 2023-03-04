@@ -1,6 +1,6 @@
 import NoteView from "@/components/NoteView";
 import { getNoteBySlug } from "@/lib/server/notes";
-import { RequestContext } from "@/lib/types/context";
+import { RequestContext } from "@/lib/types/RequestContext";
 import { Metadata } from "next";
 
 export async function generateMetadata(
