@@ -3,13 +3,13 @@ import "@uiw/react-markdown-preview/markdown.css";
 import { Note } from "@/lib/schemas/Note";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useRouter } from "next/navigation";
-import Button from "./Button";
+import Button from "../../Button";
 
-export interface NoteViewProps {
+export interface NotePageBaseProps {
   note: Note;
 }
 
-export default function NoteView({ note }: NoteViewProps) {
+export default function NotePageBase({ note }: NotePageBaseProps) {
   const router = useRouter();
 
   const handleEdit = () => {

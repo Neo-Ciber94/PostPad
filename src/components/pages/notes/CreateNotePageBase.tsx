@@ -4,7 +4,7 @@ import { CreateNote } from "@/lib/schemas/Note";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 
-export default function CreateNoteForm() {
+export default function CreateNotePageBase() {
   const router = useRouter();
   const mutation = useMutation(async (note: CreateNote) => {
     const json = JSON.stringify(note);

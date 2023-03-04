@@ -1,4 +1,4 @@
-import NoteView from "@/components/NoteView";
+import NotePageBase from "@/components/pages/notes/NotePageBase";
 import { getNoteBySlug } from "@/lib/server/notes";
 import { RequestContext } from "@/lib/types/RequestContext";
 import { Metadata } from "next";
@@ -21,5 +21,5 @@ export default async function NotePage(ctx: RequestContext<Params>) {
   const slug = ctx.params.slug;
   const note = await getNoteBySlug(slug);
 
-  return <NoteView note={note} />;
+  return <NotePageBase note={note} />;
 }

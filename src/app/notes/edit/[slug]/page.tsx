@@ -1,4 +1,4 @@
-import UpdateNoteForm from "@/components/UpdateNoteForm";
+import EditNotePageBase from "@/components/pages/notes/EditNotePageBase";
 import { getNoteBySlug } from "@/lib/server/notes";
 import { RequestContext } from "@/lib/types/RequestContext";
 
@@ -12,5 +12,5 @@ type Params = { slug: string };
 export default async function EditNotePage(ctx: RequestContext<Params>) {
   const { slug } = ctx.params;
   const note = await getNoteBySlug(slug);
-  return <UpdateNoteForm note={note} />;
+  return <EditNotePageBase note={note} />;
 }

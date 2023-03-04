@@ -4,11 +4,11 @@ import { Note, UpdateNote } from "@/lib/schemas/Note";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 
-interface UpdateNoteFormProps {
+interface EditNotePageBase {
   note: Note;
 }
 
-export default function UpdateNoteForm({ note }: UpdateNoteFormProps) {
+export default function EditNotePageBase({ note }: EditNotePageBase) {
   const router = useRouter();
   const mutation = useMutation(async (note: UpdateNote) => {
     const json = JSON.stringify(note);

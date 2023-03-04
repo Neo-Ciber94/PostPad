@@ -1,4 +1,4 @@
-import CreateNoteForm from "@/components/CreateNoteForm";
+import CreateNotePageBase from "@/components/pages/notes/CreateNotePageBase";
 
 export const metadata = {
   title: "NoteVine | Create",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function NewNotePage() {
-  return <CreateNoteForm />;
+  return <CreateNotePageBase />;
 }
