@@ -26,25 +26,22 @@ export class NoteRepository {
   async getAll(options: GetAllNotesOptions = {}): Promise<Note[]> {
     const { search, skip, take } = getQueryCriteriaFromOptions(options);
 
-    // We use unknown just to ignore prisma return type
-    let result: unknown[] = [];
-    if (!!search && search.trim().length > 0) {
-      result = await prisma.note.findMany({
-        where: {
-          OR: [
-            { title: { contains: search } },
-            { content: { contains: search } },
-          ],
-        },
-        take,
-        skip,
-      });
-    } else {
-      result = await prisma.note.findMany({
-        take,
-        skip,
-      });
-    }
+    // FIXME: Full text search is currently only supported
+    // natively in prisma in MySQL and PostgreSQL
+    // https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
+    const result = await prisma.note.findMany({
+      where:
+        search == null
+          ? undefined
+          : {
+              OR: [
+                { title: { contains: search } },
+                { content: { contains: search } },
+              ],
+            },
+      take,
+      skip,
+    });
 
     return result.map((x) => noteSchema.parse(x));
   }

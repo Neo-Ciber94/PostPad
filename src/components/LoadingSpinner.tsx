@@ -1,11 +1,13 @@
 export interface LoadingSpinnerProps {
   size?: number;
   width?: number;
+  color?: string;
 }
 
 export default function LoadingSpinner({
   size = 16,
   width = 3,
+  color,
 }: LoadingSpinnerProps) {
   return (
     <div className="flex items-center justify-center">
@@ -16,6 +18,7 @@ export default function LoadingSpinner({
           height: size,
           width: size,
           borderWidth: width,
+          color,
         }}
       >
         <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">

@@ -1,4 +1,5 @@
 "use client";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import SearchInput from "@/components/SearchInput";
 import { useDebounce, useDebounceState } from "@/hooks/useDebounce";
 import { Note } from "@/lib/schemas/Note";
@@ -24,7 +25,11 @@ export default function NotesListPageBase({ initialNotes }: NoteListPageBase) {
     router.refresh();
   };
 
-  const notesQuery = useQuery(["notes", search], {
+  const {
+    data: notes = [],
+    isLoading,
+    isFetching,
+  } = useQuery(["notes", search], {
     queryFn: () => fetchNotes(search),
     enabled: !!search && search.trim().length > 0,
     initialData: initialNotes,
@@ -46,7 +51,17 @@ export default function NotesListPageBase({ initialNotes }: NoteListPageBase) {
         <div className="mt-4 mb-8">
           <SearchInput value={searchString} onInput={handleSearchChange} />
         </div>
-        <NoteList notes={notesQuery.data || []} />
+        {isLoading || isFetching ? (
+          <div className="my-20">
+            <LoadingSpinner
+              size={60}
+              width={5}
+              color="rgba(255, 255, 255, 0.2)"
+            />
+          </div>
+        ) : (
+          <NoteList notes={notes} />
+        )}
       </div>
     </div>
   );
