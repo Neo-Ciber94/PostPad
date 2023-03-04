@@ -1,18 +1,14 @@
 "use client";
 import NoteForm from "@/components/NoteForm";
-import { UpdateNote } from "@/lib/schemas/Note";
-import { getNoteBySlug } from "@/lib/server/notes";
-import { RequestContext } from "@/lib/types/context";
+import { Note, UpdateNote } from "@/lib/schemas/Note";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 
-type Params = {
-  slug: string;
-};
+interface UpdateNoteFormProps {
+  note: Note;
+}
 
-export default async function UpdateNoteForm(ctx: RequestContext<Params>) {
-  const slug = ctx.params.slug;
-  const note = await getNoteBySlug(slug);
+export default function UpdateNoteForm({ note }: UpdateNoteFormProps) {
   const router = useRouter();
   const mutation = useMutation(async (note: UpdateNote) => {
     const json = JSON.stringify(note);

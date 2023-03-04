@@ -1,31 +1,37 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-export interface UseDetectClickOutsideOptions {
+export interface UseOuterClickOptions {
+  ref: React.RefObject<HTMLElement>;
   event?: "click" | "mousedown" | "mouseup";
+  onClickOutside: (event: MouseEvent) => void;
   onClick?: (event: MouseEvent) => void;
 }
 
-export function useOuterClick<T extends HTMLElement>({
-  event = "mousedown",
-  onClick: onClickOutside,
-}: UseDetectClickOutsideOptions) {
-  const ref = useRef<T>(null);
-
+export function useOuterClick({
+  event = "click",
+  onClickOutside,
+  onClick,
+  ref,
+}: UseOuterClickOptions) {
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
-      const el = event.target as HTMLElement;
-      if (el && ref.current && el.contains(ref.current)) {
-        if (onClickOutside) {
-          onClickOutside(event);
+      const el = event.target instanceof Node ? event.target : null;
+      if (el == null || ref.current == null) {
+        return;
+      }
+
+      if (!ref.current.contains(el)) {
+        onClickOutside(event);
+      } else {
+        if (onClick) {
+          onClick(event);
         }
       }
     };
 
-    window.addEventListener(event, handleClick);
+    document.addEventListener(event, handleClick);
     return () => {
-      window.removeEventListener(event, handleClick);
+      document.removeEventListener(event, handleClick);
     };
-  }, [ref, event, onClickOutside]);
-
-  return ref;
+  }, [ref, event, onClick, onClickOutside]);
 }
