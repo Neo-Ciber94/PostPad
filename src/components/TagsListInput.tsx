@@ -88,7 +88,7 @@ export default function TagsListInput(props: TagsListInputProps) {
   return (
     <div
       className="flex w-full flex-row flex-wrap gap-2 
-    rounded-lg border-[1px] border-gray-400 p-2"
+    rounded-lg border-[1px] border-gray-600 p-2"
     >
       {tags.map((tag) => (
         <EditableChip

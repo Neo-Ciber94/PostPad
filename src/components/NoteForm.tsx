@@ -92,6 +92,7 @@ export default function NoteForm({
                 color={field.value ?? undefined}
                 onChange={(color) => {
                   field.onChange(color);
+                  document.body.style.backgroundColor = color;
                 }}
               />
             );
@@ -109,7 +110,7 @@ export default function NoteForm({
         <input
           placeholder="Title"
           className={`focus:shadow-outline w-full appearance-none rounded border
-                border-stone-900 bg-gray-900 py-2 px-3 leading-tight text-white shadow focus:outline-none ${
+                border-gray-600 bg-gray-900 py-2 px-3 leading-tight text-white shadow focus:outline-none ${
                   errors.title?.message ? "border-red-500" : ""
                 }`}
           {...register("title")}

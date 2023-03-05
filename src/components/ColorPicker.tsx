@@ -64,21 +64,45 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
   );
 }
 
+// const COLORS = [
+//   "#f1c40f", // bright yellow
+//   "#fceabb", // pastel yellow
+//   "#e74c3c", // bright red
+//   "#ffb6c1", // pastel red
+//   "#1abc9c", // bright green
+//   "#d5f5e3", // pastel green
+//   "#3498db", // bright blue
+//   "#bfefff", // pastel blue
+//   "#9b59b6", // bright purple
+//   "#e2b0ff", // pastel purple
+//   "#ff6600", // bright orange
+//   "#ffd8b1", // pastel orange
+//   "#ecf0f1", // bright gray
+//   "#d3d3d3", // pastel gray
+// ];
+
 const COLORS = [
-  "#f1c40f", // bright yellow
-  "#fceabb", // pastel yellow
-  "#e74c3c", // bright red
-  "#ffb6c1", // pastel red
-  "#1abc9c", // bright green
-  "#d5f5e3", // pastel green
-  "#3498db", // bright blue
-  "#bfefff", // pastel blue
-  "#9b59b6", // bright purple
-  "#e2b0ff", // pastel purple
-  "#ff6600", // bright orange
-  "#ffd8b1", // pastel orange
-  "#ecf0f1", // bright gray
-  "#d3d3d3", // pastel gray
+"#7F1D1D",
+"#7C2D12",
+"#78350F",
+"#713F12",
+"#365314",
+"#14532D",
+"#064E3B",
+"#134E4A",
+"#164E63",
+"#0C4A6E",
+"#1E3A8A",
+"#312E81",
+"#4C1D95",
+"#581C87",
+"#701A75",
+"#831843",
+"#881337",
+"#1C1917",
+"#171717",
+"#111827",
+"#0F172A",
 ];
 
 export interface ColorPickerDialogProps {
