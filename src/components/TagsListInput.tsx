@@ -2,32 +2,42 @@ import { useState } from "react";
 import { useNextId } from "@/hooks/useNextId";
 import EditableChip from "./EditableChip";
 
-export interface TagsListInputProps {
-  values?: string[];
-  maxLength?: number;
-  onChange?: (value: string[]) => void;
-}
+type TagItem = {
+  // Key send from the data base
+  id?: string;
 
-type Tag = {
-  id: string;
-  value: string;
+  // Key used to track in the client
+  key: string;
+
+  // Value of the tag
+  name: string;
 };
 
+export interface TagsListInputProps {
+  tags?: TagItem[];
+  maxLength?: number;
+  chipColor?: string;
+  chipTextColor?: string;
+  onChange?: (tag: TagItem[]) => void;
+}
+
 export default function TagsListInput(props: TagsListInputProps) {
-  const { values, onChange, maxLength } = props;
+  const { onChange, chipColor, chipTextColor, maxLength } = props;
   const nextId = useNextId("tag-");
   const [text, setText] = useState("");
-  const [tags, setTags] = useState<Tag[]>(() => {
-    const initialTags = values || [];
-    return initialTags.map((value) => ({ id: nextId(), value }));
+  const [tags, setTags] = useState<TagItem[]>(() => {
+    const initialTags = props.tags || [];
+
+    // If the tag don't had an id, we need to generate an unique id on the client
+    // used for tracking
+    return initialTags.map((t) => ({ ...t, key: t.id ?? nextId() }));
   });
 
-  const handleChangeTags = (newTags: Tag[]) => {
+  const handleChangeTags = (newTags: TagItem[]) => {
     setTags(newTags);
 
     if (onChange) {
-      const tagValues = newTags.map((t) => t.value);
-      onChange(tagValues);
+      onChange(newTags);
     }
   };
 
@@ -54,9 +64,9 @@ export default function TagsListInput(props: TagsListInputProps) {
       return;
     }
 
-    const newTag: Tag = {
-      id: nextId(),
-      value: newText,
+    const newTag: TagItem = {
+      key: nextId(),
+      name: newText,
     };
 
     const newTags = [...tags, newTag];
@@ -64,7 +74,7 @@ export default function TagsListInput(props: TagsListInputProps) {
   };
 
   const handleEditTag = (id: string, newValue: string) => {
-    const tag = tags.find((t) => t.id === id)!;
+    const tag = tags.find((t) => t.key === id)!;
 
     if (maxLength) {
       newValue = newValue.substring(0, maxLength);
@@ -76,12 +86,12 @@ export default function TagsListInput(props: TagsListInputProps) {
     }
 
     const newTag = { ...tag, value: newValue };
-    const newTags = tags.map((t) => (t.id === id ? newTag : t));
+    const newTags = tags.map((t) => (t.key === id ? newTag : t));
     handleChangeTags(newTags);
   };
 
   const handleDeleteTag = (id: string) => {
-    const newTags = tags.filter((t) => t.id !== id);
+    const newTags = tags.filter((t) => t.key !== id);
     handleChangeTags(newTags);
   };
 
@@ -93,18 +103,19 @@ export default function TagsListInput(props: TagsListInputProps) {
       {tags.map((tag) => (
         <EditableChip
           editable
-          value={tag.value}
-          key={tag.id}
-          onDelete={() => handleDeleteTag(tag.id)}
-          onChange={(val) => handleEditTag(tag.id, val)}
+          key={tag.key}
+          value={tag.name}
+          color={chipTextColor}
+          backgroundColor={chipColor}
+          onDelete={() => handleDeleteTag(tag.key)}
+          onChange={(val) => handleEditTag(tag.key, val)}
         />
       ))}
 
       <input
         value={text}
         onChange={handleTextChange}
-        className="flex-grow bg-transparent 
-        text-white outline-none"
+        className="flex-grow bg-transparent text-white outline-none"
         maxLength={maxLength}
         onBlur={handleAddTag}
         placeholder={tags.length > 0 ? undefined : "Add Tag..."}

@@ -4,13 +4,14 @@ import { useState } from "react";
 export interface EditableChipProps {
   value: string;
   color?: string;
+  backgroundColor?: string;
   editable?: boolean;
   onChange?: (value: string) => void;
   onDelete?: () => void;
 }
 
 export default function EditableChip(props: EditableChipProps) {
-  const { value, onChange, onDelete, color, editable } = props;
+  const { value, onChange, onDelete, backgroundColor, color, editable } = props;
   const [text, setText] = useState(value);
 
   const handleChangeText = (e: React.ChangeEvent<HTMLElement>) => {
@@ -32,8 +33,8 @@ export default function EditableChip(props: EditableChipProps) {
     <div
       className="flex flex-row items-center gap-2 rounded-xl px-3 py-1"
       style={{
-        backgroundColor: color || "#a00",
-        color: "white",
+        backgroundColor: backgroundColor || "black",
+        color: color || "white",
       }}
     >
       <span

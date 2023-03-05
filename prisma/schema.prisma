@@ -16,4 +16,12 @@ model Note {
   slug    String  @unique
   content String?
   color   String?
+  tags     Tag[]
+}
+
+model Tag {
+  id     String @id @unique @default(uuid())
+  name   String
+  noteId String
+  note   Note   @relation(fields: [noteId], references: [id])
 }

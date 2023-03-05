@@ -8,6 +8,7 @@ import {
   UpdateNote,
   updateNoteSchema,
 } from "../schemas/Note";
+import { arrayPartition } from "../utils/arrayUtils";
 import { generateSlug } from "../utils/generateSlug";
 
 const getAllNotesOptionsSchema = z.object({
@@ -41,13 +42,19 @@ export class NoteRepository {
             },
       take,
       skip,
+      include: {
+        tags: true,
+      },
     });
 
     return result.map((x) => noteSchema.parse(x));
   }
 
   async getById(id: string): Promise<Note | null> {
-    const result = await prisma.note.findFirst({ where: { id } });
+    const result = await prisma.note.findFirst({
+      where: { id },
+      include: { tags: true },
+    });
 
     if (result == null) {
       return null;
@@ -57,7 +64,10 @@ export class NoteRepository {
   }
 
   async getBySlug(slug: string): Promise<Note | null> {
-    const result = await prisma.note.findFirst({ where: { slug } });
+    const result = await prisma.note.findFirst({
+      where: { slug },
+      include: { tags: true },
+    });
 
     if (result == null) {
       return null;
@@ -69,12 +79,17 @@ export class NoteRepository {
   async create(note: CreateNote): Promise<Note> {
     const data = createNoteSchema.parse(note);
     const slug = generateSlug(note.title.toLowerCase());
+    const tags = note.tags || [];
+
     const result = await prisma.note.create({
       data: {
         title: data.title.trim(),
         content: data.content?.trim(),
         color: data.color?.trim(),
         slug,
+        tags: {
+          create: tags,
+        },
       },
     });
 
@@ -90,6 +105,10 @@ export class NoteRepository {
     }
 
     const slug = generateSlug(note.title.toLowerCase());
+    const [newTags, tags] = arrayPartition(
+      note.tags || [],
+      (x) => x.id == null
+    );
 
     const result = await prisma.note.update({
       where: { id: note.id },
@@ -97,6 +116,14 @@ export class NoteRepository {
         ...noteToUpdate,
         ...data,
         slug,
+        tags: {
+          create: newTags,
+          deleteMany: {
+            id: {
+              notIn: tags.map((x) => x.id!),
+            },
+          },
+        },
       },
     });
 

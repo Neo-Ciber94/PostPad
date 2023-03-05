@@ -19,19 +19,7 @@ import Alert from "./Alert";
 import { useRouter } from "next/navigation";
 import MarkdownEditor from "@uiw/react-md-editor";
 import TagList from "./TagsListInput";
-
-const EXAMPLE = [
-  "apple",
-  "pizza",
-  "pineapple",
-  "water",
-  "cheese",
-  "bread",
-  "chocolate",
-  "cake",
-  "coco",
-  "strawberry",
-];
+import { CONSTANTS } from "@/lib/config/constants";
 
 interface CreateNoteFormProps {
   onSubmit: (note: CreateNote) => Promise<void>;
@@ -102,7 +90,26 @@ export default function NoteForm({
 
       <div className="mb-2">
         <label className="mb-2 block font-bold text-white">Tags</label>
-        <TagList maxLength={10} onChange={console.log} values={EXAMPLE} />
+        <Controller
+          control={control}
+          name="tags"
+          render={({ field }) => {
+            const currentTags = (field.value || []).map((x) => ({
+              id: x.id,
+              key: x.id,
+              name: x.name,
+            }));
+
+            return (
+              <TagList
+                maxLength={CONSTANTS.MAX_TAG_LENGTH}
+                chipColor="#0D1117"
+                tags={currentTags}
+                onChange={field.onChange}
+              />
+            );
+          }}
+        />
       </div>
 
       <div className="mb-2">
@@ -110,9 +117,12 @@ export default function NoteForm({
         <input
           placeholder="Title"
           className={`focus:shadow-outline w-full appearance-none rounded border
-                border-gray-600 bg-gray-900 py-2 px-3 leading-tight text-white shadow focus:outline-none ${
+                border-gray-600 py-2 px-3 leading-tight text-white shadow focus:outline-none ${
                   errors.title?.message ? "border-red-500" : ""
                 }`}
+          style={{
+            backgroundColor: "#0D1117",
+          }}
           {...register("title")}
         />
         <p className="text-xs italic text-red-500">{errors.title?.message}</p>
@@ -164,7 +174,7 @@ export default function NoteForm({
         >
           <Button
             type="button"
-            className="bg-red-800 hover:bg-red-900"
+            className={`bg-red-800 ${isSubmitting ? "" : "hover:bg-red-900"} `}
             disabled={isSubmitting}
           >
             Cancel

@@ -4,6 +4,9 @@ import { Note } from "@/lib/schemas/Note";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useRouter } from "next/navigation";
 import Button from "../../Button";
+import { Tag } from "@/lib/schemas/Tag";
+import Chip from "@/components/Chip";
+import { TagIcon } from "@heroicons/react/24/outline";
 
 export interface NotePageBaseProps {
   note: Note;
@@ -44,11 +47,44 @@ export default function NotePageBase({ note }: NotePageBaseProps) {
           </Button>
         </div>
       </div>
-      <h1 className="py-2 text-4xl text-white">{note.title}</h1>
-      <hr className="border-b-gray-500 opacity-50" />
+
+      <>
+        {note.tags && (
+          <>
+            <div className="my-4 flex flex-row items-center gap-1">
+              <div className="mb-2 mr-4 flex flex-row items-center gap-1 text-white">
+                <TagIcon className="h-7 w-7 " />
+                <span className="text-lg">Tags</span>
+              </div>
+              <ChipList tags={note.tags || []} />
+            </div>
+            <hr className="mt-4 border-b-gray-500 opacity-20" />
+          </>
+        )}
+      </>
+
+      <h1 className="py-2 mt-4 mb-2 text-4xl text-white">{note.title}</h1>
+
+      <hr className="border-b-gray-500 opacity-20" />
       <div className="py-4">
         <MarkdownPreview source={note.content} className="p-10" />
       </div>
+    </div>
+  );
+}
+
+interface ChipListProps {
+  tags: Tag[];
+}
+
+function ChipList(props: ChipListProps) {
+  const { tags } = props;
+
+  return (
+    <div className="flex flex-row flex-wrap gap-2">
+      {tags.map((tag) => (
+        <Chip key={tag.id} value={tag.name} />
+      ))}
     </div>
   );
 }

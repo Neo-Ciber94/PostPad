@@ -1,10 +1,12 @@
 "use client";
 import { Note } from "@/lib/schemas/Note";
+import { Tag } from "@/lib/schemas/Tag";
 import { EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useMutation } from "react-query";
+import Chip from "./Chip";
 import { Menu, MenuItem } from "./Menu";
 
 export interface NoteListProps {
@@ -76,6 +78,8 @@ function NoteListItem({ note }: NoteListItemProps) {
               <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-slate-500" />
             </button>
           </div>
+
+          <NoteChipList tags={note.tags || []} />
         </div>
       </Link>
 
@@ -86,5 +90,26 @@ function NoteListItem({ note }: NoteListItemProps) {
         <MenuItem onClick={() => mutation.mutate()}>Delete</MenuItem>
       </Menu>
     </>
+  );
+}
+
+interface NoteChipListProps {
+  tags: Tag[];
+}
+
+function NoteChipList(props: NoteChipListProps) {
+  const MAX_CHIPS = 8;
+  let { tags } = props;
+  const hasOverflow = tags.length > MAX_CHIPS;
+  tags = tags.slice(0, MAX_CHIPS);
+
+  return (
+    <div className="flex flex-row flex-wrap gap-1">
+      {tags.map((tag) => (
+        <Chip key={tag.id} value={tag.name} />
+      ))}
+
+      {hasOverflow && <Chip value="..." className="px-5"/>}
+    </div>
   );
 }
