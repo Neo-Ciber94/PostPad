@@ -18,6 +18,20 @@ import LoadingSpinner from "./LoadingSpinner";
 import Alert from "./Alert";
 import { useRouter } from "next/navigation";
 import MarkdownEditor from "@uiw/react-md-editor";
+import TagList from "./TagsListInput";
+
+const EXAMPLE = [
+  "apple",
+  "pizza",
+  "pineapple",
+  "water",
+  "cheese",
+  "bread",
+  "chocolate",
+  "cake",
+  "coco",
+  "strawberry",
+];
 
 interface CreateNoteFormProps {
   onSubmit: (note: CreateNote) => Promise<void>;
@@ -86,11 +100,16 @@ export default function NoteForm({
       </div>
 
       <div className="mb-2">
+        <label className="mb-2 block font-bold text-white">Tags</label>
+        <TagList maxLength={10} onChange={console.log} values={EXAMPLE} />
+      </div>
+
+      <div className="mb-2">
         <label className="mb-2 block font-bold text-white">Title</label>
         <input
           placeholder="Title"
           className={`focus:shadow-outline w-full appearance-none rounded border
-                py-2 px-3 leading-tight shadow focus:outline-none border-stone-900 bg-gray-900 text-white ${
+                border-stone-900 bg-gray-900 py-2 px-3 leading-tight text-white shadow focus:outline-none ${
                   errors.title?.message ? "border-red-500" : ""
                 }`}
           {...register("title")}
