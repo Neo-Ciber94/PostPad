@@ -1,3 +1,4 @@
+"use client";
 import { useKeyboardEvent } from "@/hooks/useKeyboardEvent";
 import { useOuterClick } from "@/hooks/useOuterClick";
 import { PaintBrushIcon } from "@heroicons/react/24/outline";
@@ -29,7 +30,9 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
     onChange(color);
   };
 
-  const colorPickerDialogRef = useOuterClick<HTMLDivElement>({
+  const colorPickerDialogRef = useRef<HTMLDivElement | null>(null);
+  useOuterClick({
+    ref: colorPickerDialogRef,
     onClickOutside() {
       handleClose();
     },

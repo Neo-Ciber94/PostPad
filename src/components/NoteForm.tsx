@@ -1,3 +1,4 @@
+"use client";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import {
@@ -8,7 +9,6 @@ import {
   updateNoteSchema,
 } from "@/lib/schemas/Note";
 import { zodResolver } from "@hookform/resolvers/zod";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -17,8 +17,7 @@ import ColorPicker from "./ColorPicker";
 import LoadingSpinner from "./LoadingSpinner";
 import Alert from "./Alert";
 import { useRouter } from "next/navigation";
-
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+import MarkdownEditor from "@uiw/react-md-editor";
 
 interface CreateNoteFormProps {
   onSubmit: (note: CreateNote) => Promise<void>;
@@ -45,12 +44,11 @@ export default function NoteForm({
   isSubmitting,
   isEditing,
 }: NoteFormProps) {
+  const router = useRouter();
   const schema = useMemo(
     () => (isEditing === true ? updateNoteSchema : createNoteSchema),
     [isEditing]
   );
-
-  const router = useRouter();
 
   const {
     control,
@@ -107,13 +105,11 @@ export default function NoteForm({
           name="content"
           render={({ field }) => {
             return (
-              <div>
-                <MDEditor
-                  value={field.value}
-                  onChange={field.onChange}
-                  height={400}
-                />
-              </div>
+              <MarkdownEditor
+                value={field.value}
+                onChange={field.onChange}
+                height={400}
+              />
             );
           }}
         />
