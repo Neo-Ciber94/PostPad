@@ -111,7 +111,7 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
             className="shadow-[rgba(0,0,0,0.4) overflow-hidden rounded-2xl"
           >
             <header>
-              <nav className="flex h-12 cursor-pointer flex-row justify-between overflow-hidden rounded-t-2xl bg-slate-600 p-3 shadow-md dark:text-white">
+              <nav className="flex h-12 cursor-pointer flex-row justify-between overflow-hidden rounded-t-2xl bg-slate-600 p-3 shadow-md text-white">
                 <div className="flex flex-row items-center">
                   <PaintBrushIcon className="mr-3 h-4 w-4 text-white" />
                   <span>Pick a Color</span>

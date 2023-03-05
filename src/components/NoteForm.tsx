@@ -86,11 +86,11 @@ export default function NoteForm({
       </div>
 
       <div className="mb-2">
-        <label className="mb-2 block font-bold dark:text-white">Title</label>
+        <label className="mb-2 block font-bold text-white">Title</label>
         <input
           placeholder="Title"
           className={`focus:shadow-outline w-full appearance-none rounded border
-                py-2 px-3 leading-tight shadow focus:outline-none dark:border-stone-900 dark:bg-gray-900 dark:text-white ${
+                py-2 px-3 leading-tight shadow focus:outline-none border-stone-900 bg-gray-900 text-white ${
                   errors.title?.message ? "border-red-500" : ""
                 }`}
           {...register("title")}
@@ -99,7 +99,7 @@ export default function NoteForm({
       </div>
 
       <div className="mb-2">
-        <label className="mb-2 block font-bold dark:text-white">Content</label>
+        <label className="mb-2 block font-bold text-white">Content</label>
         <Controller
           control={control}
           name="content"

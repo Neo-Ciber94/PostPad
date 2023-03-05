@@ -44,7 +44,7 @@ export default function NotePageBase({ note }: NotePageBaseProps) {
           </Button>
         </div>
       </div>
-      <h1 className="py-2 text-4xl dark:text-white">{note.title}</h1>
+      <h1 className="py-2 text-4xl text-white">{note.title}</h1>
       <hr className="border-b-gray-500 opacity-50" />
       <div className="py-4">
         <MarkdownPreview source={note.content} className="p-10" />
