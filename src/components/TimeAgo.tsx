@@ -2,15 +2,15 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect } from "react";
 
 // We use an object to store the text to update each time the reference changes
-type TimeAgoData = { data: string };
+type TimeAgoText = { text: string };
 
 export interface TimeAgoProps {
   date: Date;
 }
 
 export default function TimeAgo({ date }: TimeAgoProps) {
-  const [timeAgoText, setTimeAgoText] = useState<TimeAgoData>({
-    data: getTimeAgoText(date),
+  const [timeAgo, setTimeAgo] = useState<TimeAgoText>({
+    text: getTimeAgoText(date),
   });
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function TimeAgo({ date }: TimeAgoProps) {
     const startTimeout = () => {
       timeoutId = window.setTimeout(() => {
         const text = getTimeAgoText(date);
-        setTimeAgoText({ data: text });
+        setTimeAgo({ text });
         startTimeout();
       }, nextMs);
     };
@@ -34,14 +34,14 @@ export default function TimeAgo({ date }: TimeAgoProps) {
         window.clearTimeout(timeoutId);
       }
     };
-  }, [timeAgoText, date]);
+  }, [timeAgo, date]);
 
   // We need to suppress the hydration warning because we are using a timer which values may
   // defer on the server and client
   return (
     <div className="mr-4 mb-3 mt-3 flex flex-row items-center justify-start gap-1 text-xs text-white opacity-50">
       <CalendarIcon className="h-4 w-4" />
-      <span suppressHydrationWarning>{timeAgoText.data}</span>
+      <span suppressHydrationWarning>{timeAgo.text}</span>
     </div>
   );
 }
