@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 
 const REPLACEMENT = "-";
+const MAX_LENGTH = 40;
 
 export function generateSlug(str: string): string {
   if (str.length === 0) {
@@ -28,6 +29,9 @@ export function generateSlug(str: string): string {
   if (str.endsWith(REPLACEMENT)) {
     str = str.substring(0, str.length - 1);
   }
+
+  // Ensure max length
+  str = str.slice(0, MAX_LENGTH);
 
   return `${str}${REPLACEMENT}${id}`;
 }
