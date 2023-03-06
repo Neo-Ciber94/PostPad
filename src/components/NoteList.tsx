@@ -1,16 +1,11 @@
 "use client";
-import { Note, noteSchema } from "@/lib/server/schemas/Note";
+import { Note } from "@/lib/server/schemas/Note";
 import { Tag } from "@/lib/server/schemas/Tag";
-import {
-  EllipsisVerticalIcon,
-  InboxIcon,
-  CalendarIcon,
-} from "@heroicons/react/24/solid";
+import { EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useMutation } from "react-query";
-import { z } from "zod";
 import Chip from "./Chip";
 import { Menu, MenuItem } from "./Menu";
 import TimeAgo from "./TimeAgo";

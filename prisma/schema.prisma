@@ -15,7 +15,6 @@ model Note {
   title     String
   slug      String    @unique
   content   String?
-  color     String?
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   tags      Tag[]

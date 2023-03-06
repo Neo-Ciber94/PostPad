@@ -10,7 +10,7 @@ import {
 } from "@/lib/server/schemas/Note";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "./Button";
 import ColorPicker from "./ColorPicker";
@@ -87,22 +87,6 @@ export default function NoteForm({
           >
             <TagIcon className="h-4 w-4 text-white" />
           </button>
-
-          <Controller
-            control={control}
-            name="color"
-            render={({ field }) => {
-              return (
-                <ColorPicker
-                  color={field.value ?? undefined}
-                  onChange={(color) => {
-                    field.onChange(color);
-                    document.body.style.backgroundColor = color;
-                  }}
-                />
-              );
-            }}
-          />
         </div>
       </div>
 

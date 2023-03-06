@@ -4,11 +4,31 @@ import { PaintBrushIcon } from "@heroicons/react/24/outline";
 import { forwardRef, useRef, useState } from "react";
 import Backdrop from "./Backdrop";
 
+/**
+ * The colors allowed in the color picker.
+ */
+export const PICKER_COLORS = [
+  "#541818",
+  "#7e3a3a",
+  "#092658",
+  "#3b3a7e",
+  "#083f2d",
+  "#3a7e4f",
+  "#220c2f",
+  "#471130",
+  "#313131",
+  "#717171",
+] as const;
+
 export interface ColorPickerProps {
   color?: string;
-  onChange: (color: string) => void;
+  onChange: (color: string | undefined) => void;
 }
 
+/**
+ * Open a modal to select a color
+ * @deprecated We are not using this anymore
+ */
 export default function ColorPicker({ color, onChange }: ColorPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,7 +44,7 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
     },
   });
 
-  const handleChangeColor = (color: string) => {
+  const handleChangeColor = (color: string | undefined) => {
     console.log({ color });
     onChange(color);
   };
@@ -63,51 +83,10 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
   );
 }
 
-// const COLORS = [
-//   "#f1c40f", // bright yellow
-//   "#fceabb", // pastel yellow
-//   "#e74c3c", // bright red
-//   "#ffb6c1", // pastel red
-//   "#1abc9c", // bright green
-//   "#d5f5e3", // pastel green
-//   "#3498db", // bright blue
-//   "#bfefff", // pastel blue
-//   "#9b59b6", // bright purple
-//   "#e2b0ff", // pastel purple
-//   "#ff6600", // bright orange
-//   "#ffd8b1", // pastel orange
-//   "#ecf0f1", // bright gray
-//   "#d3d3d3", // pastel gray
-// ];
-
-const COLORS = [
-"#7F1D1D",
-"#7C2D12",
-"#78350F",
-"#713F12",
-"#365314",
-"#14532D",
-"#064E3B",
-"#134E4A",
-"#164E63",
-"#0C4A6E",
-"#1E3A8A",
-"#312E81",
-"#4C1D95",
-"#581C87",
-"#701A75",
-"#831843",
-"#881337",
-"#1C1917",
-"#171717",
-"#111827",
-"#0F172A",
-];
-
 export interface ColorPickerDialogProps {
   color?: string;
   onClose: () => void;
-  onChange: (color: string) => void;
+  onChange: (color: string | undefined) => void;
 }
 
 // eslint-disable-next-line react/display-name
@@ -118,7 +97,7 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
       color
     );
 
-    const handleSelectColor = (color: string) => {
+    const handleSelectColor = (color: string | undefined) => {
       setSelectedColor(color);
       onChange(color);
     };
@@ -134,7 +113,7 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
             className="shadow-[rgba(0,0,0,0.4) overflow-hidden rounded-2xl"
           >
             <header>
-              <nav className="flex h-12 cursor-pointer flex-row justify-between overflow-hidden rounded-t-2xl bg-slate-600 p-3 shadow-md text-white">
+              <nav className="flex h-12 cursor-pointer flex-row justify-between overflow-hidden rounded-t-2xl bg-slate-600 p-3 text-white shadow-md">
                 <div className="flex flex-row items-center">
                   <PaintBrushIcon className="mr-3 h-4 w-4 text-white" />
                   <span>Pick a Color</span>
@@ -147,7 +126,7 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
             </header>
 
             <div className="flex flex-row flex-wrap gap-2 bg-white px-3 py-6">
-              {COLORS.map((color) => (
+              {PICKER_COLORS.map((color) => (
                 <button
                   type="button"
                   key={color}
@@ -160,6 +139,10 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
                   onClick={() => handleSelectColor(color)}
                 ></button>
               ))}
+              <ClearColorButton
+                type="button"
+                onClick={() => handleSelectColor(undefined)}
+              />
             </div>
           </div>
         </div>
@@ -168,3 +151,16 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
     );
   }
 );
+
+type ClearColorButtonProps = React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
+function ClearColorButton(props: ClearColorButtonProps) {
+  return (
+    <button
+      {...props}
+      className={`h-10 w-10 cursor-pointer rounded border-2 border-dashed border-black hover:border-neutral-400`}
+    ></button>
+  );
+}

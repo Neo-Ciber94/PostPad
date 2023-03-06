@@ -8,7 +8,7 @@ const singleDay = Single_Day({
 export default function Header() {
     return <header >
         <nav className="sticky border-[rgba(255,255,255,0.2)] 
-    border-b h-14 w-full shadow-md bg-gray-800
+    border-b h-14 w-full shadow-md bg-[#141414]
     flex flex-row items-center p-2 z-10">
             <Link href={"/"} >
                 <Logo />

@@ -9,10 +9,6 @@ export default function NoteFormSkeleton() {
             type="button"
             className="animate-pulse rounded-full  bg-slate-500 p-5 shadow-lg"
           ></button>
-          <button
-            type="button"
-            className="animate-pulse rounded-full  bg-slate-500 p-5 shadow-lg"
-          ></button>
         </div>
       </div>
 
