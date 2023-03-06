@@ -4,6 +4,8 @@ import { useRef, useState, useEffect, PropsWithChildren } from "react";
 export interface MenuProps {
   open: boolean;
   anchor: React.RefObject<HTMLElement>;
+  leftOffset?: number;
+  topOffset?: number;
   onClose: () => void;
 }
 
@@ -11,6 +13,8 @@ type Position = { top: number; left: number };
 
 export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
   children,
+  leftOffset = 30,
+  topOffset = 0,
   ...props
 }) => {
   const { open, onClose, anchor } = props;
@@ -20,7 +24,6 @@ export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
     ref: curRef,
     onClickOutside() {
       if (open) {
-        console.log("close");
         onClose();
       }
     },
@@ -36,8 +39,8 @@ export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
         return;
       }
 
-      const top = boundingRect.top + boundingRect.height;
-      const left = boundingRect.left - boundingRect.width;
+      const top = boundingRect.top + boundingRect.height - topOffset;
+      const left = boundingRect.left - boundingRect.width - leftOffset;
       setPos({ top, left });
     };
 
@@ -46,7 +49,7 @@ export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
     return () => {
       window.removeEventListener("resize", moveMenu);
     };
-  }, [anchor]);
+  }, [anchor, leftOffset, topOffset]);
 
   return (
     <>
