@@ -10,8 +10,17 @@ export const noteSchema = z.object({
   color: z.string().nullable(),
   content: z.string().optional(),
   tags: z.array(tagSchema).optional(),
-  createdAt: z.string().or(z.date()).pipe(z.coerce.date()),
-  updatedAt: z.string().or(z.date()).pipe(z.coerce.date()).nullable(),
+  createdAt: z
+    .string()
+    .or(z.date())
+    .pipe(z.coerce.date())
+    .transform((d) => d.toUTCString()),
+  updatedAt: z
+    .string()
+    .or(z.date())
+    .pipe(z.coerce.date())
+    .nullable()
+    .transform((d) => (d == null ? null : d.toUTCString())),
 });
 
 export type CreateNote = z.infer<typeof createNoteSchema>;
