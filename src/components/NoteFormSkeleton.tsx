@@ -4,10 +4,16 @@ export default function NoteFormSkeleton() {
   return (
     <div className="flex w-full flex-col lg:px-[10%]">
       <div className="mb-2 flex flex-row justify-end">
-        <button
-          type="button"
-          className="animate-pulse rounded-full  bg-slate-500 p-5 shadow-lg"
-        ></button>
+        <div className="flex flex-row gap-2">
+          <button
+            type="button"
+            className="animate-pulse rounded-full  bg-slate-500 p-5 shadow-lg"
+          ></button>
+          <button
+            type="button"
+            className="animate-pulse rounded-full  bg-slate-500 p-5 shadow-lg"
+          ></button>
+        </div>
       </div>
 
       <div className="mb-2">

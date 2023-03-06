@@ -11,7 +11,6 @@ export const metadata = {
 type Params = { slug: string };
 
 export default async function EditNotePage(ctx: RequestContext<Params>) {
-  await wait(3000);
   const { slug } = ctx.params;
   const note = await getNoteBySlug(slug);
   return <EditNotePageBase note={note} />;

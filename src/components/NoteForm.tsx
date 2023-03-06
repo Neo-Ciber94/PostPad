@@ -48,7 +48,9 @@ export default function NoteForm({
   isEditing,
 }: NoteFormProps) {
   const router = useRouter();
-  const [showTags, setShowTags] = useState(false);
+  const [showTags, setShowTags] = useState(
+    () => note && note.tags && note.tags.length > 0
+  );
   const schema = useMemo(
     () => (isEditing === true ? updateNoteSchema : createNoteSchema),
     [isEditing]

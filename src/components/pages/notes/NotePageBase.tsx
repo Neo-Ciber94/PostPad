@@ -49,7 +49,7 @@ export default function NotePageBase({ note }: NotePageBaseProps) {
       </div>
 
       <>
-        {note.tags && (
+        {note.tags && note.tags.length > 0 && (
           <>
             <div className="my-4 flex flex-row items-center gap-1">
               <div className="mb-2 mr-4 flex flex-row items-center gap-1 text-white">
@@ -63,7 +63,7 @@ export default function NotePageBase({ note }: NotePageBaseProps) {
         )}
       </>
 
-      <h1 className="py-2 mt-4 mb-2 text-4xl text-white">{note.title}</h1>
+      <h1 className="mt-4 mb-2 py-2 text-4xl text-white">{note.title}</h1>
 
       <hr className="border-b-gray-500 opacity-20" />
       <div className="py-4">
