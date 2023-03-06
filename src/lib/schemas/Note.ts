@@ -10,6 +10,8 @@ export const noteSchema = z.object({
   color: z.string().nullable(),
   content: z.string().optional(),
   tags: z.array(tagSchema).optional(),
+  createdAt: z.string().or(z.date()).pipe(z.coerce.date()),
+  updatedAt: z.string().or(z.date()).pipe(z.coerce.date()).nullable(),
 });
 
 export type CreateNote = z.infer<typeof createNoteSchema>;

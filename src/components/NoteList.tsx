@@ -1,13 +1,18 @@
 "use client";
-import { Note } from "@/lib/schemas/Note";
+import { Note, noteSchema } from "@/lib/schemas/Note";
 import { Tag } from "@/lib/schemas/Tag";
-import { EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid";
+import {
+  EllipsisVerticalIcon,
+  InboxIcon,
+  CalendarIcon,
+} from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useMutation } from "react-query";
 import Chip from "./Chip";
 import { Menu, MenuItem } from "./Menu";
+import TimeAgo from "./TimeAgo";
 
 export interface NoteListProps {
   notes: Note[];
@@ -35,6 +40,10 @@ interface NoteListItemProps {
 }
 
 function NoteListItem({ note }: NoteListItemProps) {
+  // We should parse the note to ensure the date value is correct,
+  // we could use superjson also
+  note = noteSchema.parse(note);
+
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const anchorEl = useRef<HTMLButtonElement | null>(null);
@@ -70,16 +79,24 @@ function NoteListItem({ note }: NoteListItemProps) {
       hover:bg-gray-800"
         >
           <div className="flex flex-row items-center justify-between">
-            <div className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
-              {note.title}
+            <div className="flex w-full flex-col overflow-hidden">
+              <TimeAgo date={note.createdAt} />
+
+              <div className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                {note.title}
+              </div>
+
+              {note.tags && (
+                <div className="mt-2">
+                  <NoteChipList tags={note.tags} />
+                </div>
+              )}
             </div>
 
             <button onClick={handleOpenMenu} ref={anchorEl}>
               <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-slate-500" />
             </button>
           </div>
-
-          <NoteChipList tags={note.tags || []} />
         </div>
       </Link>
 
@@ -109,7 +126,7 @@ function NoteChipList(props: NoteChipListProps) {
         <Chip key={tag.id} value={tag.name} />
       ))}
 
-      {hasOverflow && <Chip value="..." className="px-5"/>}
+      {hasOverflow && <Chip value="..." className="px-5" />}
     </div>
   );
 }

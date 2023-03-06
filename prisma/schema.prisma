@@ -11,17 +11,19 @@ datasource db {
 }
 
 model Note {
-  id      String  @id @unique @default(uuid())
-  title   String
-  slug    String  @unique
-  content String?
-  color   String?
-  tags     Tag[]
+  id        String    @id @unique @default(uuid())
+  title     String
+  slug      String    @unique
+  content   String?
+  color     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  tags      Tag[]
 }
 
 model Tag {
   id     String @id @unique @default(uuid())
   name   String
   noteId String
-  note   Note   @relation(fields: [noteId], references: [id])
+  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
 }
