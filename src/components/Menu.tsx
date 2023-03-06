@@ -1,4 +1,4 @@
-import { useOuterClick } from "@/hooks/useOuterClick";
+import { useOuterClick } from "@/lib/client/hooks/useOuterClick";
 import { useRef, useState, useEffect, PropsWithChildren } from "react";
 
 export interface MenuProps {

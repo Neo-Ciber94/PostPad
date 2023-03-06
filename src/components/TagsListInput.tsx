@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNextId } from "@/hooks/useNextId";
+import { useNextId } from "@/lib/client/hooks/useNextId";
 import EditableChip from "./EditableChip";
 
 type TagItem = {

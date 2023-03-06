@@ -7,7 +7,7 @@ import {
   Note,
   UpdateNote,
   updateNoteSchema,
-} from "@/lib/schemas/Note";
+} from "@/lib/server/schemas/Note";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -19,7 +19,7 @@ import Alert from "./Alert";
 import { useRouter } from "next/navigation";
 import MarkdownEditor from "@uiw/react-md-editor";
 import TagList from "./TagsListInput";
-import { CONSTANTS } from "@/lib/config/constants";
+import { CONSTANTS } from "@/lib/shared/constants";
 import { TagIcon } from "@heroicons/react/24/outline";
 
 interface CreateNoteFormProps {

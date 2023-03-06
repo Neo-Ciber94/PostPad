@@ -1,6 +1,6 @@
 "use client";
 import NoteForm from "@/components/NoteForm";
-import { Note, UpdateNote } from "@/lib/schemas/Note";
+import { Note, UpdateNote } from "@/lib/server/schemas/Note";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 

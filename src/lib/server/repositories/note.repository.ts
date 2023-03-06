@@ -8,8 +8,8 @@ import {
   UpdateNote,
   updateNoteSchema,
 } from "../schemas/Note";
-import { arrayPartition } from "../utils/arrayUtils";
-import { generateSlug } from "../utils/generateSlug";
+import { arrayPartition } from "../../utils/arrayUtils";
+import { generateSlug } from "../../utils/generateSlug";
 
 const getAllNotesOptionsSchema = z.object({
   search: z.string().optional(),

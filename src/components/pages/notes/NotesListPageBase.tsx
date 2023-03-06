@@ -1,8 +1,8 @@
 "use client";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SearchInput from "@/components/SearchInput";
-import { useDebounce, useDebounceState } from "@/hooks/useDebounce";
-import { Note } from "@/lib/schemas/Note";
+import { useDebounce, useDebounceState } from "@/lib/client/hooks/useDebounce";
+import { Note } from "@/lib/server/schemas/Note";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

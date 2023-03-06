@@ -1,5 +1,5 @@
-import { GetAllNotesOptions } from "@/lib/repositories/note.repository";
-import { NoteService } from "@/lib/services/note.service";
+import { GetAllNotesOptions } from "@/lib/server/repositories/note.repository";
+import { NoteService } from "@/lib/server/services/note.service";
 import { getSearchParams } from "@/lib/utils/requestUtils";
 import { json } from "@/lib/utils/responseUtils";
 import { ZodError } from "zod";

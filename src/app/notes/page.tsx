@@ -1,6 +1,6 @@
 import NotesListPageBase from "@/components/pages/notes/NotesListPageBase";
-import { getNotes } from "@/lib/server/notes";
-import { RequestContext } from "@/lib/types/RequestContext";
+import notesLoader from "@/lib/server/loaders/notesLoader";
+import { RequestContext } from "@/lib/server/types/RequestContext";
 
 export const metadata = {
   title: "NoteVine",
@@ -8,6 +8,6 @@ export const metadata = {
 };
 
 export default async function NotesListPage({ searchParams }: RequestContext) {
-  const notes = await getNotes(searchParams);
+  const notes = await notesLoader.getNotes(searchParams);
   return <NotesListPageBase initialNotes={notes} />;
 }

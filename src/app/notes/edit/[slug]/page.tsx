@@ -1,6 +1,6 @@
 import EditNotePageBase from "@/components/pages/notes/EditNotePageBase";
 import { getNoteBySlug } from "@/lib/server/notes";
-import { RequestContext } from "@/lib/types/RequestContext";
+import { RequestContext } from "@/lib/server/types/RequestContext";
 import { wait } from "@/lib/utils/wait";
 
 export const metadata = {

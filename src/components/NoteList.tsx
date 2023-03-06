@@ -1,6 +1,6 @@
 "use client";
-import { Note, noteSchema } from "@/lib/schemas/Note";
-import { Tag } from "@/lib/schemas/Tag";
+import { Note, noteSchema } from "@/lib/server/schemas/Note";
+import { Tag } from "@/lib/server/schemas/Tag";
 import {
   EllipsisVerticalIcon,
   InboxIcon,

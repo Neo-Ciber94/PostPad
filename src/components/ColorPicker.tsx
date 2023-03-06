@@ -1,5 +1,5 @@
-import { useKeyboardEvent } from "@/hooks/useKeyboardEvent";
-import { useOuterClick } from "@/hooks/useOuterClick";
+import { useKeyboardEvent } from "@/lib/client/hooks/useKeyboardEvent";
+import { useOuterClick } from "@/lib/client/hooks/useOuterClick";
 import { PaintBrushIcon } from "@heroicons/react/24/outline";
 import { forwardRef, useRef, useState } from "react";
 import Backdrop from "./Backdrop";

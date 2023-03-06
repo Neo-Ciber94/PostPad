@@ -1,10 +1,10 @@
 "use client";
 import "@uiw/react-markdown-preview/markdown.css";
-import { Note } from "@/lib/schemas/Note";
+import { Note } from "@/lib/server/schemas/Note";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useRouter } from "next/navigation";
 import Button from "../../Button";
-import { Tag } from "@/lib/schemas/Tag";
+import { Tag } from "@/lib/server/schemas/Tag";
 import Chip from "@/components/Chip";
 import { TagIcon } from "@heroicons/react/24/outline";
 
