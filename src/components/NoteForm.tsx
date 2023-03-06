@@ -10,7 +10,7 @@ import {
 } from "@/lib/schemas/Note";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "./Button";
 import ColorPicker from "./ColorPicker";
@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import MarkdownEditor from "@uiw/react-md-editor";
 import TagList from "./TagsListInput";
 import { CONSTANTS } from "@/lib/config/constants";
+import { TagIcon } from "@heroicons/react/24/outline";
 
 interface CreateNoteFormProps {
   onSubmit: (note: CreateNote) => Promise<void>;
@@ -47,6 +48,7 @@ export default function NoteForm({
   isEditing,
 }: NoteFormProps) {
   const router = useRouter();
+  const [showTags, setShowTags] = useState(false);
   const schema = useMemo(
     () => (isEditing === true ? updateNoteSchema : createNoteSchema),
     [isEditing]
@@ -71,46 +73,62 @@ export default function NoteForm({
       })}
     >
       <div className="mb-2 flex flex-row justify-end">
-        <Controller
-          control={control}
-          name="color"
-          render={({ field }) => {
-            return (
-              <ColorPicker
-                color={field.value ?? undefined}
-                onChange={(color) => {
-                  field.onChange(color);
-                  document.body.style.backgroundColor = color;
-                }}
-              />
-            );
-          }}
-        />
+        <div className="flex flex-row gap-2">
+          <button
+            type="button"
+            className="rounded-full bg-slate-600 p-3 shadow-lg 
+        transition-colors duration-200 hover:bg-slate-900"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowTags((show) => !show);
+            }}
+          >
+            <TagIcon className="h-4 w-4 text-white" />
+          </button>
+
+          <Controller
+            control={control}
+            name="color"
+            render={({ field }) => {
+              return (
+                <ColorPicker
+                  color={field.value ?? undefined}
+                  onChange={(color) => {
+                    field.onChange(color);
+                    document.body.style.backgroundColor = color;
+                  }}
+                />
+              );
+            }}
+          />
+        </div>
       </div>
 
-      <div className="mb-2">
-        <label className="mb-2 block font-bold text-white">Tags</label>
-        <Controller
-          control={control}
-          name="tags"
-          render={({ field }) => {
-            const currentTags = (field.value || []).map((x) => ({
-              id: x.id,
-              key: x.id,
-              name: x.name,
-            }));
+      {showTags && (
+        <div className="mb-2">
+          <label className="mb-2 block font-bold text-white">Tags</label>
+          <Controller
+            control={control}
+            name="tags"
+            render={({ field }) => {
+              const currentTags = (field.value || []).map((x) => ({
+                id: x.id,
+                key: x.id,
+                name: x.name,
+              }));
 
-            return (
-              <TagList
-                maxLength={CONSTANTS.MAX_TAG_LENGTH}
-                chipColor="#0D1117"
-                tags={currentTags}
-                onChange={field.onChange}
-              />
-            );
-          }}
-        />
-      </div>
+              return (
+                <TagList
+                  maxLength={CONSTANTS.MAX_TAG_LENGTH}
+                  chipColor="#0D1117"
+                  tags={currentTags}
+                  onChange={field.onChange}
+                />
+              );
+            }}
+          />
+        </div>
+      )}
 
       <div className="mb-2">
         <label className="mb-2 block font-bold text-white">Title</label>

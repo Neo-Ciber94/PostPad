@@ -1,4 +1,3 @@
-"use client";
 import { useKeyboardEvent } from "@/hooks/useKeyboardEvent";
 import { useOuterClick } from "@/hooks/useOuterClick";
 import { PaintBrushIcon } from "@heroicons/react/24/outline";
