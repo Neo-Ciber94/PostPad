@@ -80,7 +80,7 @@ function NoteListItem({ note }: NoteListItemProps) {
         >
           <div className="flex flex-row items-center justify-between">
             <div className="flex w-full flex-col overflow-hidden">
-              <TimeAgo date={note.createdAt} />
+              <TimeAgo date={note.updatedAt || note.createdAt} />
 
               <div className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                 {note.title}
