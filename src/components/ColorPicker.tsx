@@ -39,13 +39,11 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
   useKeyboardEvent({
     keys: "Escape",
     onKeyDown(event) {
-      console.log(event);
       handleClose();
     },
   });
 
   const handleChangeColor = (color: string | undefined) => {
-    console.log({ color });
     onChange(color);
   };
 
@@ -105,7 +103,7 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
     return (
       <>
         <div
-          className="absolute left-0 right-0 z-40 
+          className="absolute inset-x-0 z-40 
         mx-auto w-2/6 max-w-[400px] shadow-xl lg:w-[400px]"
         >
           <div

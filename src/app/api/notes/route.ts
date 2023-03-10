@@ -56,7 +56,8 @@ function getGetAllNotesOptionsFromRequest(request: Request) {
   const search = searchParams.get("search") ?? undefined;
   const page = searchParams.get("page") ?? undefined;
   const limit = searchParams.get("limit") ?? undefined;
-  const options: GetAllNotesOptions = {};
+  const tags = searchParams.getAll("tags");
+  const options: GetAllNotesOptions = { tags };
 
   if (search) {
     options.search = search;

@@ -13,6 +13,7 @@ import { generateSlug } from "../../utils/generateSlug";
 
 const getAllNotesOptionsSchema = z.object({
   search: z.string().optional(),
+  tags: z.array(z.string()).optional(),
   pagination: z
     .object({
       page: z.number().min(1).optional(),
@@ -23,18 +24,23 @@ const getAllNotesOptionsSchema = z.object({
 
 export type GetAllNotesOptions = z.infer<typeof getAllNotesOptionsSchema>;
 
+// TODO: Return only domain objects, don't map
+
 export class NoteRepository {
   async getAll(options: GetAllNotesOptions = {}): Promise<Note[]> {
-    const { search, skip, take } = getQueryCriteriaFromOptions(options);
+    const {
+      search,
+      skip,
+      take,
+      tags = [],
+    } = getQueryCriteriaFromOptions(options);
 
     const result = await prisma.note.findMany({
-      where:
-        search == null
-          ? undefined
-          : {
-              content: { search },
-              title: { search },
-            },
+      where: {
+        content: { search },
+        title: { search },
+        tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } },
+      },
       take,
       skip,
       include: {
@@ -112,7 +118,6 @@ export class NoteRepository {
       (x) => x.id == null
     );
 
-    console.log({ newTags, note });
     const result = await prisma.note.update({
       where: { id: note.id },
       data: {
@@ -171,7 +176,7 @@ function getQueryCriteriaFromOptions(options: GetAllNotesOptions) {
 
   // On invalid parse we just ignore the result
   const optionsResult = getAllNotesOptionsSchema.safeParse(options);
-  const { pagination, search } = optionsResult.success
+  const { pagination, search, tags } = optionsResult.success
     ? options
     : ({} as GetAllNotesOptions);
 
@@ -184,5 +189,5 @@ function getQueryCriteriaFromOptions(options: GetAllNotesOptions) {
     skip = (page - 1) * (pagination.limit || DEFAULT_LIMIT);
   }
 
-  return { search, take, skip };
+  return { search, take, skip, tags };
 }

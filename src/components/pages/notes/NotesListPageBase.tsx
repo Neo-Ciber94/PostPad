@@ -1,11 +1,12 @@
 "use client";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SearchInput from "@/components/SearchInput";
+import TagFilter, { SelectedTag } from "@/components/TagFilter";
 import { useDebounce, useDebounceState } from "@/lib/client/hooks/useDebounce";
 import { Note } from "@/lib/server/schemas/Note";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Button from "../../Button";
 import NoteList from "../../NoteList";
@@ -18,6 +19,11 @@ export default function NotesListPageBase({ initialNotes }: NoteListPageBase) {
   const router = useRouter();
   const [searchString, setSearchString] = useState("");
   const search = useDebounce(searchString, 500);
+  const [searchTags, setSearchTags] = useState<SelectedTag[]>([]);
+
+  const handleChangeTagFilter = (tags: SelectedTag[]) => {
+    setSearchTags(tags);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -27,14 +33,20 @@ export default function NotesListPageBase({ initialNotes }: NoteListPageBase) {
 
   const {
     data: notes = [],
+    refetch,
     isLoading,
     isFetching,
-  } = useQuery(["notes", search], {
-    queryFn: () => fetchNotes(search),
-    enabled: !!search && search.trim().length > 0,
+  } = useQuery(["notes", search, searchTags], {
+    queryFn: () => fetchNotes(search, searchTags),
+    enabled: false, // we fetch manually
     initialData: initialNotes,
-    refetchInterval: false,
   });
+
+  useEffect(() => {
+    if (search.trim().length > 0 || searchTags.length > 0) {
+      refetch();
+    }
+  }, [search, searchTags]);
 
   return (
     <div className="p-2 text-white">
@@ -48,7 +60,11 @@ export default function NotesListPageBase({ initialNotes }: NoteListPageBase) {
 
       <div className="px-10 md:px-[10%] lg:px-[20%]">
         <hr className="my-8 bg-gray-400 opacity-10" />
-        <div className="mt-4 mb-8">
+        <div className="mt-4 mb-8 flex flex-col gap-2">
+          <TagFilter
+            onChange={handleChangeTagFilter}
+            selectedTags={searchTags}
+          />
           <SearchInput value={searchString} onInput={handleSearchChange} />
         </div>
         {isLoading || isFetching ? (
@@ -67,8 +83,21 @@ export default function NotesListPageBase({ initialNotes }: NoteListPageBase) {
   );
 }
 
-async function fetchNotes(searchString: string) {
-  const res = await fetch(`/api/notes?search=${searchString}`);
+async function fetchNotes(searchString: string, tags: SelectedTag[]) {
+  const searchParams = new URLSearchParams();
+
+  if (searchString.trim().length > 0) {
+    searchParams.set("search", searchString);
+  }
+
+  if (tags.length > 0) {
+    tags.forEach((t) => searchParams.append("tags", t.name));
+  }
+
+  const queryString = searchParams.toString();
+  const q = queryString.length > 0 ? `?${queryString}` : "";
+
+  const res = await fetch(`/api/notes${q}`);
   const json = await res.json();
   return json as Note[];
 }

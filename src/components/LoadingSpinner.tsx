@@ -5,8 +5,8 @@ export interface LoadingSpinnerProps {
 }
 
 export default function LoadingSpinner({
-  size = 16,
-  width = 3,
+  size = 30,
+  width = 4,
   color,
 }: LoadingSpinnerProps) {
   return (

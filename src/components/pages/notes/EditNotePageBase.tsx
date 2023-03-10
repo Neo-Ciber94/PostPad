@@ -18,8 +18,6 @@ export default function EditNotePageBase({ note }: EditNotePageBase) {
       headers: { "Content-Type": "application/json" },
     });
 
-    console.log({ result });
-
     if (result.ok) {
       // Redirect
       router.push("/notes");
