@@ -95,6 +95,16 @@ export default function TagsListInput(props: TagsListInputProps) {
     handleChangeTags(newTags);
   };
 
+  const removeLastTag = () => {
+    if (tags.length === 0) {
+      return;
+    }
+
+    const newTags = [...tags];
+    newTags.pop();
+    setTags(newTags);
+  };
+
   return (
     <div
       className="flex w-full flex-row flex-wrap gap-2 
@@ -123,6 +133,11 @@ export default function TagsListInput(props: TagsListInputProps) {
           if (e.key === "Enter") {
             e.preventDefault();
             handleAddTag();
+          }
+
+          if (e.key === "Backspace" && text.length === 0) {
+            e.preventDefault();
+            removeLastTag();
           }
         }}
       />
