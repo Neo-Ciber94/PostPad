@@ -17,17 +17,17 @@ export async function POST(request: Request) {
   try {
     const input = await request.json();
     const result = noteService.createNote(input);
-    console.log({ input });
+    console.log({ created: input });
     return json(result);
   } catch (err) {
     console.error(err);
 
     if (err instanceof ZodError) {
       const zodError = err as ZodError;
-      return json(400, zodError.message);
+      return json(400, { message: zodError.message });
     }
 
-    return json(500);
+    return json(500, { message: "Something went wrong" });
   }
 }
 
@@ -37,17 +37,17 @@ export async function PUT(request: Request) {
   try {
     const input = await request.json();
     const result = noteService.updateNote(input);
-    console.log({ input });
+    console.log({ updated: input });
     return json(result);
   } catch (err) {
     console.error(err);
 
     if (err instanceof ZodError) {
       const zodError = err as ZodError;
-      return json(400, zodError.message);
+      return json(400, { message: zodError.message });
     }
 
-    return json(500);
+    return json(500, { message: "Something went wrong" });
   }
 }
 

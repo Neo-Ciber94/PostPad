@@ -1,6 +1,20 @@
-export function json<T>(body: T): Response;
-export function json<T>(statusCode: number, body: T): Response;
-export function json<T>(statusCodeOrBody: T | number, body?: T): Response {
+/**
+ * Creates a `JSON` response.
+ */
+export function json<T extends object>(body: T): Response;
+
+/**
+ * Creates a `JSON` response.
+ */
+export function json<T extends object>(statusCode: number, body: T): Response;
+
+/**
+ * Creates a `JSON` response.
+ */
+export function json<T extends object>(
+  statusCodeOrBody: T | number,
+  body?: T
+): Response {
   const jsonBody =
     body == null ? JSON.stringify(statusCodeOrBody) : JSON.stringify(body);
   const statusCode = body == null ? 200 : (statusCodeOrBody as number);

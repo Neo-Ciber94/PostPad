@@ -1,0 +1,14 @@
+services:
+  db:
+    image: mysql:8.0.32
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+    ports:
+      - 13306:3306
+    volumes:
+      - dbdata:/mysql/data
+
+volumes:
+  dbdata:

@@ -27,18 +27,13 @@ export class NoteRepository {
   async getAll(options: GetAllNotesOptions = {}): Promise<Note[]> {
     const { search, skip, take } = getQueryCriteriaFromOptions(options);
 
-    // FIXME: Full text search is currently only supported
-    // natively in prisma in MySQL and PostgreSQL
-    // https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
     const result = await prisma.note.findMany({
       where:
         search == null
           ? undefined
           : {
-              OR: [
-                { title: { contains: search } },
-                { content: { contains: search } },
-              ],
+              content: { search },
+              title: { search },
             },
       take,
       skip,
@@ -85,7 +80,6 @@ export class NoteRepository {
       data: {
         title: data.title.trim(),
         content: data.content?.trim(),
-        color: data.color?.trim(),
         slug,
         tags: {
           create: tags,
@@ -98,18 +92,27 @@ export class NoteRepository {
 
   async update(note: UpdateNote): Promise<Note | null> {
     const data = updateNoteSchema.parse(trimStrings(note));
-    const noteToUpdate = await this.getById(note.id);
+    const noteToUpdate = await prisma.note.findFirst({
+      where: { id: note.id },
+    });
 
     if (noteToUpdate == null) {
       return null;
     }
 
-    const slug = generateSlug(note.title.toLowerCase());
+    // Only generate a new slug if the title changed
+    const slug =
+      data.title === noteToUpdate.title
+        ? noteToUpdate.slug
+        : generateSlug(note.title.toLowerCase());
+
+    // The split the new and current tags
     const [newTags, tags] = arrayPartition(
       note.tags || [],
       (x) => x.id == null
     );
 
+    console.log({ newTags, note });
     const result = await prisma.note.update({
       where: { id: note.id },
       data: {
@@ -117,12 +120,15 @@ export class NoteRepository {
         ...data,
         slug,
         tags: {
-          create: newTags,
+          // Delete the relations not included in the current tags
           deleteMany: {
             id: {
               notIn: tags.map((x) => x.id!),
             },
           },
+
+          // Insert the new tags
+          create: newTags,
         },
       },
     });
