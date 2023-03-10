@@ -120,6 +120,10 @@ export class NoteRepository {
         ...data,
         slug,
         tags: {
+          // TODO: Not sure if this code will work anywhere,
+          // we must be sure the tags are deleted first
+          // and then we add the new tags, in that order.
+
           // Delete the relations not included in the current tags
           deleteMany: {
             id: {
