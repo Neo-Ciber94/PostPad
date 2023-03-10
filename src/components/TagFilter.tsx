@@ -195,7 +195,7 @@ function TagToggle({ tag, selected, onClick }: TagToggleProps) {
     <button
       onClick={onClick}
       type="button"
-      className={`text-md min-w-[70px] rounded-full py-2 px-1
+      className={`text-md min-w-[70px] rounded-full py-2 px-4
         text-white shadow-md shadow-black/25 transition
         duration-200
         ${
