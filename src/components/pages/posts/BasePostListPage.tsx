@@ -38,7 +38,7 @@ export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
     isFetching,
   } = useQuery(["posts", search, searchTags], {
     queryFn: () => fetchPosts(search, searchTags),
-    //enabled: false, // we fetch manually
+    //enabled: false, // we fetch manually?
     initialData: initialPosts,
   });
 
