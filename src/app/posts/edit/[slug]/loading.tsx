@@ -1,4 +1,4 @@
-import PostFormSkeleton from "@/components/PostFormSkeleton";
+import PostFormSkeleton from "@/components/loading/PostFormSkeleton";
 
 export default function Loading() {
   return (
