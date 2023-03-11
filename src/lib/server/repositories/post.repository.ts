@@ -24,8 +24,6 @@ const getAllPostsOptionsSchema = z.object({
 
 export type GetAllPostsOptions = z.infer<typeof getAllPostsOptionsSchema>;
 
-// TODO: Return only domain objects, don't map
-
 export class PostRepository {
   async getAll(options: GetAllPostsOptions = {}): Promise<Post[]> {
     const {

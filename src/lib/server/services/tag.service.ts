@@ -5,7 +5,7 @@ export class TagService {
   protected readonly repository = new TagRepository();
 
   async getAllTags() {
-    const tags = await this.repository.getAll();
-    return tags.map((x) => tagSchema.parse(x));
+    const result = await this.repository.getAll();
+    return result;
   }
 }

@@ -1,4 +1,5 @@
 import { prisma } from "../database/prisma";
+import { tagSchema } from "../schemas/Tag";
 
 export class TagRepository {
   async getAll() {
@@ -6,6 +7,6 @@ export class TagRepository {
       distinct: "name",
     });
 
-    return tags;
+    return tags.map((tag) => tagSchema.parse(tag));
   }
 }
