@@ -5,11 +5,11 @@ import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 
-interface EditPostPageBase {
+interface BaseEditPostPage {
   post: Post;
 }
 
-export default function EditPostPageBase({ post }: EditPostPageBase) {
+export default function BaseEditPostPage({ post }: BaseEditPostPage) {
   const router = useRouter();
   const mutation = useMutation(async (post: UpdatePost) => {
     const json = JSON.stringify(post);

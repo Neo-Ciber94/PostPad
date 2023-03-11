@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
-export default function HomePageBase() {
+export default function BaseHomePage() {
   const router = useRouter();
 
   const handleLogin = () => {

@@ -1,4 +1,4 @@
-import CreatePostPageBase from "@/components/pages/posts/CreatePostPageBase";
+import BaseCreatePostPage from "@/components/pages/posts/BaseCreatePostPage";
 
 export const metadata = {
   title: "PostPad | Create",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function NewPostPage() {
-  return <CreatePostPageBase />;
+  return <BaseCreatePostPage />;
 }

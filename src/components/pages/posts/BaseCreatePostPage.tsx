@@ -5,7 +5,7 @@ import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 
-export default function CreatePostPageBase() {
+export default function BaseCreatePostPage() {
   const router = useRouter();
   const mutation = useMutation(async (post: CreatePost) => {
     const json = JSON.stringify(post);

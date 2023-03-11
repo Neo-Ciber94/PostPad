@@ -1,4 +1,4 @@
-import PostPageBase from "@/components/pages/posts/PostPageBase";
+import BasePostPage from "@/components/pages/posts/BasePostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
 import { truncateString } from "@/lib/utils/truncateString";
@@ -27,5 +27,5 @@ type Params = { slug: string };
 export default async function PostPage(ctx: RequestContext<Params>) {
   const slug = ctx.params.slug;
   const post = await postsLoader.getPostBySlug(slug);
-  return <PostPageBase post={post} />;
+  return <BasePostPage post={post} />;
 }

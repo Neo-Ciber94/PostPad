@@ -11,11 +11,11 @@ import { useQuery } from "react-query";
 import Button from "../../Button";
 import PostList from "../../PostList";
 
-export interface PostListPageBase {
+export interface BasePostListPage {
   initialPosts: Post[];
 }
 
-export default function PostsListPageBase({ initialPosts }: PostListPageBase) {
+export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
   const router = useRouter();
   const [searchString, setSearchString] = useState("");
   const search = useDebounce(searchString, 500);

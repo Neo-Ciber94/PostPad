@@ -8,11 +8,11 @@ import { Tag } from "@/lib/server/schemas/Tag";
 import Chip from "@/components/Chip";
 import { TagIcon } from "@heroicons/react/24/outline";
 
-export interface PostPageBaseProps {
+export interface BasePostPageProps {
   post: Post;
 }
 
-export default function PostPageBase({ post }: PostPageBaseProps) {
+export default function BasePostPage({ post }: BasePostPageProps) {
   const router = useRouter();
 
   const handleEdit = () => {
