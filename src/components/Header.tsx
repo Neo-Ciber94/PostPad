@@ -26,7 +26,7 @@ function Logo() {
       className={`cursor-pointer text-3xl text-white`}
       style={singleDay.style}
     >
-      Postvine
+      PostPad
     </h1>
   );
 }

@@ -4,7 +4,7 @@ import { RequestContext } from "@/lib/server/types/RequestContext";
 import { wait } from "@/lib/utils/wait";
 
 export const metadata = {
-  title: "PostVine | Edit",
+  title: "PostPad | Edit",
   description: "Edit a post",
 };
 

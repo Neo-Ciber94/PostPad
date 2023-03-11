@@ -17,7 +17,7 @@ export async function generateMetadata(
   }
 
   return {
-    title: `PostVine | ${post.title}`,
+    title: `PostPad | ${post.title}`,
     description,
   };
 }

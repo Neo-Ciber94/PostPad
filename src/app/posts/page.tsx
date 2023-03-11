@@ -3,7 +3,7 @@ import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
 
 export const metadata = {
-  title: "PostVine",
+  title: "PostPad",
   description: "An application to create posts",
 };
 
