@@ -135,32 +135,37 @@ function TagSelectorDialog(props: TagSelectorDialog) {
           </div>
         )}
 
-        {tags.length > 0 && (
-          <>
-            <div className="my-4 px-4">
-              <label>Filter by name</label>
-              <input
-                value={tagSearch}
-                onInput={handleInputChange}
-                className="mt-2 w-full rounded-md py-3 
+        <div className="max-h-[280px] my-3 
+          overflow-y-auto scrollbar-thin
+            scrollbar-thumb-base-700 
+            scrollbar-track-base-300/25">
+          {tags.length > 0 && (
+            <>
+              <div className="my-4 px-4">
+                <label>Filter by name</label>
+                <input
+                  value={tagSearch}
+                  onInput={handleInputChange}
+                  className="mt-2 w-full rounded-md py-3 
                 px-4 text-black shadow-md shadow-black/25"
-                type="search"
-                placeholder="Tag name..."
-              />
-            </div>
-
-            <div className="mb-4 flex flex-row flex-wrap gap-2 p-2">
-              {tags.map((tag) => (
-                <TagToggle
-                  key={tag.id}
-                  tag={tag}
-                  selected={isSelected(tag.id)}
-                  onClick={() => handleToggle(tag)}
+                  type="search"
+                  placeholder="Tag name..."
                 />
-              ))}
-            </div>
-          </>
-        )}
+              </div>
+
+              <div className="mb-4 flex flex-row flex-wrap gap-2 p-2">
+                {tags.map((tag) => (
+                  <TagToggle
+                    key={tag.id}
+                    tag={tag}
+                    selected={isSelected(tag.id)}
+                    onClick={() => handleToggle(tag)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
 
         {isError && (
           <div className="my-4 px-2">
@@ -195,7 +200,11 @@ function TagToggle({ tag, selected, onClick }: TagToggleProps) {
       className={`text-md min-w-[70px] rounded-full py-2 px-4
         shadow-md shadow-black/25 transition
         duration-200
-        ${selected ? "bg-accent-500 text-black ring-2 ring-black/50" : "bg-black  text-white"}`}
+        ${
+          selected
+            ? "bg-accent-500 text-black ring-2 ring-black/50"
+            : "bg-black  text-white"
+        }`}
     >
       {tag.name}
     </button>
@@ -209,5 +218,6 @@ async function fetchTags() {
     },
   });
   const json = await res.json();
+  return [...json, ...json, ...json, ...json, ...json, ...json];
   return json as SelectedTag[];
 }
