@@ -1,5 +1,10 @@
 import { Tag } from "@/lib/server/schemas/Tag";
-import { AdjustmentsHorizontalIcon, InboxIcon, TagIcon } from "@heroicons/react/24/solid";
+import { getErrorMessage } from "@/lib/utils/getErrorMessage";
+import {
+  AdjustmentsHorizontalIcon,
+  InboxIcon,
+  TagIcon,
+} from "@heroicons/react/24/solid";
 import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import Alert from "./Alert";
@@ -139,8 +144,8 @@ function TagSelectorDialog(props: TagSelectorDialog) {
           className="my-3 max-h-[280px] 
           overflow-y-auto scrollbar-thin
             scrollbar-track-base-300/25
-            scrollbar-thumb-rounded-lg 
-            scrollbar-thumb-base-700"
+            scrollbar-thumb-base-700 
+            scrollbar-thumb-rounded-lg"
         >
           {tags.length > 0 && (
             <>
@@ -179,7 +184,9 @@ function TagSelectorDialog(props: TagSelectorDialog) {
 
         {isError && (
           <div className="my-4 px-2">
-            <Alert color="#e00">{JSON.stringify(error)}</Alert>
+            <Alert color="#e00">
+              {getErrorMessage(error) || "Something went wrong"}
+            </Alert>
           </div>
         )}
 

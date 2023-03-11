@@ -5,7 +5,7 @@ import { EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Chip, { ChipProps } from "./Chip";
 import { Menu, MenuItem } from "./Menu";
 import TimeAgo from "./TimeAgo";
@@ -39,12 +39,25 @@ function PostListItem({ post }: PostListItemProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const anchorEl = useRef<HTMLButtonElement | null>(null);
-  const mutation = useMutation(async () => {
+  const queryClient = useQueryClient();
+  const deletePost = useMutation(async () => {
+    handleClose();
+
+    // TODO: Add a custom dialog instead
+    const canDelete = confirm("Delete this post?");
+    if (canDelete != true) {
+      return;
+    }
+
     const res = await fetch(`/api/posts/${post.id}`, {
       method: "DELETE",
     });
 
     if (res.ok) {
+      await queryClient.invalidateQueries({
+        queryKey: ["posts"],
+        exact: false,
+      });
       router.refresh();
       return;
     }
@@ -96,7 +109,7 @@ function PostListItem({ post }: PostListItemProps) {
         <MenuItem onClick={() => router.push(`/posts/edit/${post.slug}`)}>
           Edit
         </MenuItem>
-        <MenuItem onClick={() => mutation.mutate()}>Delete</MenuItem>
+        <MenuItem onClick={() => deletePost.mutate()}>Delete</MenuItem>
       </Menu>
     </>
   );
@@ -124,5 +137,5 @@ function PostChipList(props: PostChipListProps) {
 }
 
 const PostChip: React.FC<ChipProps> = (props) => {
-  return <Chip {...props} className="bg-black text-[#f8f8f2]"/>;
+  return <Chip {...props} className="bg-black text-[#f8f8f2]" />;
 };

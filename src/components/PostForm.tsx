@@ -20,6 +20,7 @@ import MarkdownEditor from "@uiw/react-md-editor";
 import TagList from "./TagsListInput";
 import { CONSTANTS } from "@/lib/shared/constants";
 import { TagIcon } from "@heroicons/react/24/outline";
+import { getErrorMessage } from "@/lib/utils/getErrorMessage";
 
 interface CreatePostFormProps {
   onSubmit: (post: CreatePost) => Promise<void>;
@@ -152,7 +153,9 @@ export default function PostForm({
       <>
         {error && (
           <div className="py-2">
-            <Alert color="#ff0000">{getErrorMessage(error)}</Alert>
+            <Alert color="#ff0000">
+              {getErrorMessage(error) || "Something went wrong"}
+            </Alert>
           </div>
         )}
       </>
@@ -183,36 +186,4 @@ export default function PostForm({
       </div>
     </form>
   );
-}
-
-function getErrorMessage(err: any): string {
-  if (err == null) {
-    throw new Error("no error");
-  }
-
-  if (typeof err === "string") {
-    return err;
-  }
-
-  if (Array.isArray(err)) {
-    return getErrorMessage(err[0]);
-  }
-
-  if (err.message) {
-    return getErrorMessage(err.message);
-  }
-
-  if (err.error) {
-    return getErrorMessage(err.error);
-  }
-
-  if (err.errors) {
-    return getErrorMessage(err.errors);
-  }
-
-  if (err.messages) {
-    return getErrorMessage(err.messages);
-  }
-
-  return JSON.stringify(err);
 }
