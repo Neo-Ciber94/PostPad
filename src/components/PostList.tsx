@@ -85,7 +85,7 @@ function PostListItem({ post }: PostListItemProps) {
         >
           <div className="flex flex-row items-center justify-between">
             <div className="flex w-full flex-col overflow-hidden">
-              <TimeAgo date={new Date(post.updatedAt || post.createdAt)} />
+              <TimeAgo date={new Date(post.updatedAt ?? post.createdAt)} />
 
               <div className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                 {post.title}

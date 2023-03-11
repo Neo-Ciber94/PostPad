@@ -100,6 +100,12 @@ export class PostRepository {
     const data = updatePostSchema.parse(trimStrings(post));
     const postToUpdate = await prisma.post.findFirst({
       where: { id: post.id },
+      select: {
+        id: true,
+        content: true,
+        title: true,
+        slug: true
+      },
     });
 
     if (postToUpdate == null) {
