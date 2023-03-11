@@ -36,13 +36,10 @@ export default function NotePageBase({ note }: NotePageBaseProps) {
     <div className="container mx-auto px-10 md:px-20">
       <div className="flex flex-row justify-end p-2">
         <div className="flex flex-row gap-2">
-          <Button className="w-[100px]" onClick={handleEdit}>
+          <Button variant="primary" onClick={handleEdit}>
             Edit
           </Button>
-          <Button
-            className="w-[100px] bg-red-700 hover:bg-red-800"
-            onClick={handleDelete}
-          >
+          <Button variant="error" onClick={handleDelete}>
             Delete
           </Button>
         </div>

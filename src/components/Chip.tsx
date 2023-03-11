@@ -1,22 +1,16 @@
 export interface ChipProps {
   value: string;
-  color?: string;
-  backgroundColor?: string;
   className?: string;
 }
 
 export default function Chip(props: ChipProps) {
-  const { value, backgroundColor, color, className } = props;
+  const { value, className = "bg-black text-white" } = props;
 
   return (
     <div
-      className={`flex flex-row items-center gap-2 rounded-xl px-3 py-1 ${className}`}
-      style={{
-        backgroundColor: backgroundColor || "black",
-        color: color || "white",
-      }}
+      className={`flex flex-row items-center gap-2 rounded-xl px-4 py-1 ${className}`}
     >
-      <span className="break-all outline-none">{value}</span>
+      <span className="break-all text-sm outline-none">{value}</span>
     </div>
   );
 }

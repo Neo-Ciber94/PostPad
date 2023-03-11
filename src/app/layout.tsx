@@ -9,7 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
-      <body className="bg-slate-700 transition-colors duration-500">
+      <body className="bg-base-500">
         <Content>{children}</Content>
       </body>
     </html>

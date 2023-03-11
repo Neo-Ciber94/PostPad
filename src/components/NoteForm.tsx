@@ -161,10 +161,11 @@ export default function NoteForm({
       <div className="mb-2 flex flex-row gap-2">
         <Button
           type="submit"
-          className="flex flex-row items-center gap-2"
+          variant="primary"
+          className="flex flex-row gap-3"
           disabled={isSubmitting}
         >
-          {isSubmitting && <LoadingSpinner />}
+          {isSubmitting && <LoadingSpinner size={20} />}
           <span>{isEditing === true ? "Update" : "Create"}</span>
         </Button>
         <Link
@@ -176,11 +177,7 @@ export default function NoteForm({
             }
           }}
         >
-          <Button
-            type="button"
-            className={`bg-red-800 ${isSubmitting ? "" : "hover:bg-red-900"} `}
-            disabled={isSubmitting}
-          >
+          <Button type="button" variant="error" disabled={isSubmitting}>
             Cancel
           </Button>
         </Link>

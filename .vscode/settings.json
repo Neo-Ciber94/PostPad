@@ -1,4 +1,18 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "tailwindCSS.experimental.classRegex": [
+    "//\\s*@tw\\s*\n\\s*let [_a-zA-Z]\\w*\\s*=\\s*\"([^\"]*)\"",
+    "//\\s*@tw\\s*\n\\s*let [_a-zA-Z]\\w*\\s*=\\s*`([^`]*)`",
+    "//\\s*@tw\\s*\n\\s*let [_a-zA-Z]\\w*\\s*=\\s*'([^`]*)'",
+    "//\\s*@tw\\s*\n\\s*const [_a-zA-Z]\\w*\\s*=\\s*\"([^\"]*)\"",
+    "//\\s*@tw\\s*\n\\s*const [_a-zA-Z]\\w*\\s*=\\s*`([^`]*)`",
+    "//\\s*@tw\\s*\n\\s*const [_a-zA-Z]\\w*\\s*=\\s*'([^`]*)'",
+    "//\\s*@tw\\s*\n\\s*var [_a-zA-Z]\\w*\\s*=\\s*\"([^\"]*)\"",
+    "//\\s*@tw\\s*\n\\s*var [_a-zA-Z]\\w*\\s*=\\s*`([^`]*)`",
+    "//\\s*@tw\\s*\n\\s*var [_a-zA-Z]\\w*\\s*=\\s*'([^`]*)'",
+    "//\\s*@tw\\s*\n\\s*return \"([^\"]*)\"",
+    "//\\s*@tw\\s*\n\\s*return `([^`]*)`",
+    "//\\s*@tw\\s*\n\\s*return '([^`]*)'"
+  ],
 }

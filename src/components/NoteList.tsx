@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useMutation } from "react-query";
-import Chip from "./Chip";
+import Chip, { ChipProps } from "./Chip";
 import { Menu, MenuItem } from "./Menu";
 import TimeAgo from "./TimeAgo";
 
@@ -66,9 +66,9 @@ function NoteListItem({ note }: NoteListItemProps) {
     <>
       <Link href={`/notes/${note.slug}`}>
         <div
-          className="my-3 rounded-xl bg-slate-600 px-6 py-4 
-      shadow-sm shadow-[rgba(0,0,0,0.6)] transition duration-300
-      hover:bg-gray-800"
+          className="my-3 rounded-xl bg-base-600 px-6 py-4 
+      shadow-md shadow-black/50 ring-2 ring-base-300/40 transition duration-300
+      hover:bg-base-700"
         >
           <div className="flex flex-row items-center justify-between">
             <div className="flex w-full flex-col overflow-hidden">
@@ -86,7 +86,7 @@ function NoteListItem({ note }: NoteListItemProps) {
             </div>
 
             <button onClick={handleOpenMenu} ref={anchorEl}>
-              <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-slate-500" />
+              <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
             </button>
           </div>
         </div>
@@ -115,10 +115,14 @@ function NoteChipList(props: NoteChipListProps) {
   return (
     <div className="flex flex-row flex-wrap gap-1">
       {tags.map((tag) => (
-        <Chip key={tag.id} value={tag.name} />
+        <NoteChip key={tag.id} value={tag.name} />
       ))}
 
-      {hasOverflow && <Chip value="..." className="px-5" />}
+      {hasOverflow && <NoteChip value="..." className="px-5" />}
     </div>
   );
 }
+
+const NoteChip: React.FC<ChipProps> = (props) => {
+  return <Chip {...props} className="bg-black text-[#f8f8f2]"/>;
+};

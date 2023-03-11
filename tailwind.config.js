@@ -1,17 +1,60 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-
-    // Or if using `src` directory:
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       animation: {},
       keyframes: {},
+      colors: {
+        base: {
+          50: "#E9EAF1",
+          100: "#D3D4E3",
+          200: "#A4A6C6",
+          300: "#787CAA",
+          400: "#555887",
+          500: "#383A59",
+          600: "#2D2F48",
+          700: "#212335",
+          800: "#161722",
+          900: "#0C0C13",
+        },
+        alt: {
+          50: "#E8E8EE",
+          100: "#D0D2DC",
+          200: "#9EA2B7",
+          300: "#6F7595",
+          400: "#4C5067",
+          500: "#282A36",
+          600: "#21222C",
+          700: "#181920",
+          800: "#0F1015",
+          900: "#09090C",
+        },
+        accent: {
+          50: "#EBFEF0",
+          100: "#DCFEE5",
+          200: "#BAFDCA",
+          300: "#97FCB0",
+          400: "#74FB96",
+          500: "#50FA7B",
+          600: "#11F84B",
+          700: "#06C135",
+          800: "#048123",
+          900: "#024012",
+        },
+        error: {
+          50: "#FFF0F0",
+          100: "#FFDBDB",
+          200: "#FFBDBD",
+          300: "#FF9999",
+          400: "#FF7575",
+          500: "#FF5555",
+          600: "#FF0F0F",
+          700: "#CC0000",
+          800: "#8A0000",
+          900: "#420000",
+        },
+      },
     },
   },
   plugins: [],

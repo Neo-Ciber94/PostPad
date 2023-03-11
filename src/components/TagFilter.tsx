@@ -107,6 +107,7 @@ function TagSelectorDialog(props: TagSelectorDialog) {
 
   return (
     <Dialog
+      className="bg-base-500"
       BackdropProps={{
         onClick: onClose,
       }}
@@ -115,7 +116,7 @@ function TagSelectorDialog(props: TagSelectorDialog) {
         <header>
           <nav
             className="flex h-16 cursor-pointer flex-row items-center justify-between overflow-hidden 
-            rounded-t-2xl bg-slate-600 px-4 py-3 text-white shadow-md"
+            rounded-t-xl bg-alt-500 px-4 py-3 text-white shadow-md"
           >
             <div className="flex flex-row items-center">
               <TagIcon className="mr-3 h-6 w-6 text-white" />
@@ -168,14 +169,10 @@ function TagSelectorDialog(props: TagSelectorDialog) {
         )}
 
         <div className="mb-2 mt-auto flex flex-row gap-2 self-stretch px-2">
-          <Button
-            type="button"
-            className="min-w-[120px]"
-            onClick={handleChange}
-          >
+          <Button type="button" variant="primary" onClick={handleChange}>
             Save
           </Button>
-          <Button type="button" className="min-w-[120px]" onClick={onClose}>
+          <Button type="button" variant="error" onClick={onClose}>
             Cancel
           </Button>
         </div>
@@ -196,13 +193,9 @@ function TagToggle({ tag, selected, onClick }: TagToggleProps) {
       onClick={onClick}
       type="button"
       className={`text-md min-w-[70px] rounded-full py-2 px-4
-        text-white shadow-md shadow-black/25 transition
+        shadow-md shadow-black/25 transition
         duration-200
-        ${
-          selected
-            ? "bg-cyan-800"
-            : "bg-black"
-        }`}
+        ${selected ? "bg-accent-500 text-black ring-2 ring-black/50" : "bg-black  text-white"}`}
     >
       {tag.name}
     </button>
