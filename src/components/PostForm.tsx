@@ -18,9 +18,10 @@ import Alert from "./Alert";
 import { useRouter } from "next/navigation";
 import MarkdownEditor from "@uiw/react-md-editor";
 import TagList from "./TagsListInput";
-import { CONSTANTS } from "@/lib/shared/constants";
 import { TagIcon } from "@heroicons/react/24/outline";
 import { getErrorMessage } from "@/lib/utils/getErrorMessage";
+import { useQueryClient } from "react-query";
+import { tagRules } from "@/lib/server/schemas/Tag";
 
 interface CreatePostFormProps {
   onSubmit: (post: CreatePost) => Promise<void>;
@@ -48,6 +49,7 @@ export default function PostForm({
   isEditing,
 }: PostFormProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [showTags, setShowTags] = useState(
     () => post && post.tags && post.tags.length > 0
   );
@@ -71,6 +73,10 @@ export default function PostForm({
       className="flex w-full flex-col lg:px-[5%]"
       onSubmit={handleSubmit(async (post) => {
         await onSubmit(post as any);
+        await queryClient.invalidateQueries({
+          queryKey: ["posts"],
+          exact: true,
+        });
         router.refresh();
       })}
     >
@@ -105,7 +111,7 @@ export default function PostForm({
 
               return (
                 <TagList
-                  maxLength={CONSTANTS.MAX_TAG_LENGTH}
+                  maxLength={tagRules.TAG_MAX_NAME_LENGTH}
                   chipColor="#0D1117"
                   tags={currentTags}
                   onChange={field.onChange}
@@ -152,8 +158,8 @@ export default function PostForm({
 
       <>
         {error && (
-          <div className="py-2">
-            <Alert color="#ff0000">
+          <div className="py-4 text-red-500">
+            <Alert color="#e00">
               {getErrorMessage(error) || "Something went wrong"}
             </Alert>
           </div>

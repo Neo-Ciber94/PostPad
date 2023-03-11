@@ -1,6 +1,11 @@
 import * as z from "zod";
 import { createTagSchema, tagSchema, updateTagSchema } from "./Tag";
 
+export const postRules = Object.freeze({
+  POST_TITLE_MAX_LENGTH: 100,
+  POST_CONTENT_MAX_LENGTH: 200,
+});
+
 export type Post = z.infer<typeof postSchema>;
 
 export const postSchema = z.object({
@@ -28,9 +33,11 @@ export const createPostSchema = z.object({
   title: z
     .string()
     .min(1)
+    .max(postRules.POST_TITLE_MAX_LENGTH)
     .transform((s) => s.trim()),
   content: z
     .string()
+    .max(postRules.POST_CONTENT_MAX_LENGTH)
     .optional()
     .transform((s) => (s != null ? s.trim() : s)),
   tags: z.array(createTagSchema).optional(),
@@ -43,9 +50,11 @@ export const updatePostSchema = z.object({
   title: z
     .string()
     .min(1)
+    .max(postRules.POST_TITLE_MAX_LENGTH)
     .transform((s) => s.trim()),
   content: z
     .string()
+    .max(postRules.POST_CONTENT_MAX_LENGTH)
     .optional()
     .transform((s) => (s != null ? s.trim() : s)),
 

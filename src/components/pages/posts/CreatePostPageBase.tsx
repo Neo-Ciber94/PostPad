@@ -1,6 +1,7 @@
 "use client";
 import PostForm from "@/components/PostForm";
 import { CreatePost } from "@/lib/server/schemas/Post";
+import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 
@@ -14,10 +15,10 @@ export default function CreatePostPageBase() {
       headers: { "Content-Type": "application/json" },
     });
 
-    if (result.ok) {
-      // Redirect
-      router.push("/posts");
-    }
+    await throwOnResponseError(result);
+
+    // Redirect
+    router.push("/posts");
   });
 
   return (

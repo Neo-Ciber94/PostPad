@@ -1,6 +1,7 @@
 "use client";
 import { Post } from "@/lib/server/schemas/Post";
 import { Tag } from "@/lib/server/schemas/Tag";
+import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -53,14 +54,13 @@ function PostListItem({ post }: PostListItemProps) {
       method: "DELETE",
     });
 
-    if (res.ok) {
-      await queryClient.invalidateQueries({
-        queryKey: ["posts"],
-        exact: false,
-      });
-      router.refresh();
-      return;
-    }
+    await throwOnResponseError(res);
+
+    await queryClient.invalidateQueries({
+      queryKey: ["posts"],
+      exact: false,
+    });
+    router.refresh();
   });
 
   const handleClose = () => {

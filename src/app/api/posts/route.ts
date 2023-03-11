@@ -2,6 +2,7 @@ import { GetAllPostsOptions } from "@/lib/server/repositories/post.repository";
 import { PostService } from "@/lib/server/services/post.service";
 import { getSearchParams } from "@/lib/utils/requestUtils";
 import { json } from "@/lib/utils/responseUtils";
+import { notFound } from "next/navigation";
 import { ZodError } from "zod";
 
 export async function GET(request: Request) {
@@ -16,7 +17,7 @@ export async function POST(request: Request) {
 
   try {
     const input = await request.json();
-    const result = postService.createPost(input);
+    const result = await postService.createPost(input);
     console.log({ created: input });
     return json(result);
   } catch (err) {
@@ -36,7 +37,12 @@ export async function PUT(request: Request) {
 
   try {
     const input = await request.json();
-    const result = postService.updatePost(input);
+    const result = await postService.updatePost(input);
+
+    if (result == null) {
+      return json(404, { message: "Post not found" });
+    }
+
     console.log({ updated: input });
     return json(result);
   } catch (err) {

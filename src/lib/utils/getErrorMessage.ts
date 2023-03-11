@@ -19,7 +19,7 @@ export function getErrorMessage(err: any): string | null {
   }
 
   if (typeof err === "object") {
-    for (const key in POSSIBLE_ERRORS_KEY) {
+    for (const key of POSSIBLE_ERRORS_KEY) {
       if (key in err) {
         return getErrorMessage(err[key]);
       }
