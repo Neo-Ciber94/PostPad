@@ -218,6 +218,5 @@ async function fetchTags() {
     },
   });
   const json = await res.json();
-  return [...json, ...json, ...json, ...json, ...json, ...json];
   return json as SelectedTag[];
 }
