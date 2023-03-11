@@ -7,7 +7,7 @@ import Button from "./Button";
 import { Dialog } from "./Dialog";
 import LoadingSpinner from "./LoadingSpinner";
 
-export type SelectedTag = Omit<Tag, "noteId">;
+export type SelectedTag = Omit<Tag, "postId">;
 
 export interface TagFilterProps {
   selectedTags?: SelectedTag[];

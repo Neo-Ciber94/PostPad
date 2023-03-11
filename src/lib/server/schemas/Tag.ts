@@ -4,7 +4,7 @@ import { CONSTANTS } from "../../shared/constants";
 export const tagSchema = z.object({
   id: z.string(),
   name: z.string(),
-  noteId: z.string(),
+  postId: z.string(),
 });
 
 export type Tag = z.infer<typeof tagSchema>;

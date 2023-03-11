@@ -2,8 +2,8 @@ import "./globals.css";
 import Content from "@/components/Content";
 
 export const metadata = {
-  title: "Notes App",
-  description: "An app to create notes",
+  title: "Posts App",
+  description: "An app to create posts",
 };
 
 export default function RootLayout({ children }: React.PropsWithChildren) {

@@ -11,7 +11,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Note {
+model Post {
   id        String    @id @unique @default(uuid())
   title     String
   slug      String    @unique
@@ -26,6 +26,6 @@ model Note {
 model Tag {
   id     String @id @unique @default(uuid())
   name   String
-  noteId String
-  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  postId String
+  note   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
