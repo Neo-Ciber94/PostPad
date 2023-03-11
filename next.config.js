@@ -4,15 +4,6 @@ const nextConfig = {
     appDir: true,
     esmExternals: "loose",
   },
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/posts",
-        permanent: true,
-      },
-    ];
-  },
 };
 
 const removeImports = require("next-remove-imports")();
