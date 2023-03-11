@@ -3,7 +3,7 @@ import { createTagSchema, tagSchema, updateTagSchema } from "./Tag";
 
 export const postRules = Object.freeze({
   POST_TITLE_MAX_LENGTH: 100,
-  POST_CONTENT_MAX_LENGTH: 200,
+  POST_CONTENT_MAX_LENGTH: 16_777_200,
 });
 
 export type Post = z.infer<typeof postSchema>;
@@ -33,7 +33,7 @@ export const createPostSchema = z.object({
   title: z
     .string()
     .min(1)
-    .max(postRules.POST_TITLE_MAX_LENGTH)
+    .max(postRules.POST_TITLE_MAX_LENGTH, { message: "content is too long" })
     .transform((s) => s.trim()),
   content: z
     .string()
@@ -54,7 +54,7 @@ export const updatePostSchema = z.object({
     .transform((s) => s.trim()),
   content: z
     .string()
-    .max(postRules.POST_CONTENT_MAX_LENGTH)
+    .max(postRules.POST_CONTENT_MAX_LENGTH, { message: "content is too long" })
     .optional()
     .transform((s) => (s != null ? s.trim() : s)),
 
