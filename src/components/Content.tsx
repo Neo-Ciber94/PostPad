@@ -10,7 +10,7 @@ export default function Content({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <Header />
-      <main className="container mx-auto h-full">{children}</main>
+      <main className="md:container mx-auto h-full">{children}</main>
     </QueryClientProvider>
   );
 }

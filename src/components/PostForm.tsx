@@ -67,7 +67,7 @@ export default function PostForm({
 
   return (
     <form
-      className="flex w-full flex-col lg:px-[10%]"
+      className="flex w-full flex-col lg:px-[5%]"
       onSubmit={handleSubmit(async (post) => {
         await onSubmit(post as any);
         router.refresh();
