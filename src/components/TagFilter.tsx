@@ -10,7 +10,7 @@ import { useQuery } from "react-query";
 import Alert from "./Alert";
 import Button from "./Button";
 import { Dialog } from "./Dialog";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "./loading/LoadingSpinner";
 
 export type SelectedTag = Omit<Tag, "postId">;
 

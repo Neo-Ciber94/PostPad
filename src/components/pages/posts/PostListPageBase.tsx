@@ -1,5 +1,5 @@
 "use client";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import SearchInput from "@/components/SearchInput";
 import TagFilter, { SelectedTag } from "@/components/TagFilter";
 import { useDebounce, useDebounceState } from "@/lib/client/hooks/useDebounce";

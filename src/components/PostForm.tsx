@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "./Button";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "./loading/LoadingSpinner";
 import Alert from "./Alert";
 import { useRouter } from "next/navigation";
 import MarkdownEditor from "@uiw/react-md-editor";
