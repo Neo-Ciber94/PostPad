@@ -138,7 +138,8 @@ function TagSelectorDialog(props: TagSelectorDialog) {
         <div
           className="my-3 max-h-[280px] 
           overflow-y-auto scrollbar-thin
-            scrollbar-track-base-300/25 
+            scrollbar-track-base-300/25
+            scrollbar-thumb-rounded-lg 
             scrollbar-thumb-base-700"
         >
           {tags.length > 0 && (

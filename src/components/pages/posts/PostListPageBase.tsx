@@ -38,7 +38,7 @@ export default function PostsListPageBase({ initialPosts }: PostListPageBase) {
     isFetching,
   } = useQuery(["posts", search, searchTags], {
     queryFn: () => fetchPosts(search, searchTags),
-    enabled: false, // we fetch manually
+    //enabled: false, // we fetch manually
     initialData: initialPosts,
   });
 
@@ -63,7 +63,7 @@ export default function PostsListPageBase({ initialPosts }: PostListPageBase) {
           />
           <SearchInput value={searchString} onInput={handleSearchChange} />
         </div>
-        {isLoading || isFetching ? (
+        {isLoading ? (
           <div className="my-20">
             <LoadingSpinner
               size={60}
