@@ -1,5 +1,5 @@
 import { Tag } from "@/lib/server/schemas/Tag";
-import { AdjustmentsHorizontalIcon, TagIcon } from "@heroicons/react/24/solid";
+import { AdjustmentsHorizontalIcon, InboxIcon, TagIcon } from "@heroicons/react/24/solid";
 import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import Alert from "./Alert";
@@ -130,15 +130,17 @@ function TagSelectorDialog(props: TagSelectorDialog) {
         </header>
 
         {isLoading && (
-          <div className="my-3">
+          <div className="my-4">
             <LoadingSpinner />
           </div>
         )}
 
-        <div className="max-h-[280px] my-3 
+        <div
+          className="my-3 max-h-[280px] 
           overflow-y-auto scrollbar-thin
-            scrollbar-thumb-base-700 
-            scrollbar-track-base-300/25">
+            scrollbar-track-base-300/25 
+            scrollbar-thumb-base-700"
+        >
           {tags.length > 0 && (
             <>
               <div className="my-4 px-4">
@@ -164,6 +166,13 @@ function TagSelectorDialog(props: TagSelectorDialog) {
                 ))}
               </div>
             </>
+          )}
+
+          {tags.length === 0 && (
+            <div className="my-4 flex flex-col items-center justify-center gap-2 p-4 opacity-30">
+              <InboxIcon className="h-12 w-12" />
+              <span className="text-2xl">No tags were found</span>
+            </div>
           )}
         </div>
 

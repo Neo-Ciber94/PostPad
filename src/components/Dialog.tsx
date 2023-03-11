@@ -14,7 +14,7 @@ export function Dialog({
   return (
     <>
       <div
-        className={`absolute inset-x-0 z-40 mx-auto flex min-h-[300px] w-4/5 rounded-xl shadow-lg shadow-black/25 md:w-1/2 ${className}`}
+        className={`absolute inset-x-0 z-40 mx-auto flex min-h-[250px] w-4/5 rounded-xl shadow-lg shadow-black/25 md:w-1/2 ${className}`}
       >
         {children}
       </div>
