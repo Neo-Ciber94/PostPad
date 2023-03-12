@@ -108,10 +108,10 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
         >
           <div
             ref={ref}
-            className="shadow-[rgba(0,0,0,0.4) overflow-hidden rounded-2xl"
+            className="shadow-black/40 overflow-hidden rounded-2xl"
           >
             <header>
-              <nav className="flex h-12 cursor-pointer flex-row justify-between overflow-hidden rounded-t-2xl bg-slate-600 p-3 text-white shadow-md">
+              <nav className="flex h-12 cursor-pointer flex-row justify-between overflow-hidden rounded-t-2xl bg-base-500 p-3 text-white shadow-md">
                 <div className="flex flex-row items-center">
                   <PaintBrushIcon className="mr-3 h-4 w-4 text-white" />
                   <span>Pick a Color</span>
@@ -130,8 +130,8 @@ const ColorPickerDialog = forwardRef<HTMLDivElement, ColorPickerDialogProps>(
                   key={color}
                   className={`h-10 w-10 cursor-pointer rounded ${
                     color === selectedColor
-                      ? "border-[3px] border-[rgba(0,0,0,0.4)]"
-                      : "hover:border-[3px] hover:border-[rgba(0,0,0,0.2)]"
+                      ? "border-[3px] border-black/40"
+                      : "hover:border-[3px] hover:border-black/10"
                   }`}
                   style={{ backgroundColor: color }}
                   onClick={() => handleSelectColor(color)}

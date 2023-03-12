@@ -39,7 +39,7 @@ interface PostListItemProps {
 function PostListItem({ post }: PostListItemProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const anchorEl = useRef<HTMLButtonElement | null>(null);
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const queryClient = useQueryClient();
   const deletePost = useMutation(async () => {
     handleClose();
@@ -64,14 +64,14 @@ function PostListItem({ post }: PostListItemProps) {
   });
 
   const handleClose = () => {
-    if (open) {
-      setOpen(false);
-    }
+    setOpen(false);
+    setAnchor(null);
   };
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     event.preventDefault();
+    setAnchor(event.target as HTMLElement);
     setOpen(true);
   };
 
@@ -98,14 +98,14 @@ function PostListItem({ post }: PostListItemProps) {
               )}
             </div>
 
-            <button onClick={handleOpenMenu} ref={anchorEl}>
+            <button onClick={handleOpen}>
               <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
             </button>
           </div>
         </div>
       </Link>
 
-      <Menu open={open} anchor={anchorEl} onClose={handleClose}>
+      <Menu open={open} anchor={anchor} onClose={handleClose}>
         <MenuItem onClick={() => router.push(`/posts/edit/${post.slug}`)}>
           Edit
         </MenuItem>

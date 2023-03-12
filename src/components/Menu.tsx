@@ -1,9 +1,9 @@
 import { useOuterClick } from "@/lib/client/hooks/useOuterClick";
-import { useRef, useState, useEffect, PropsWithChildren } from "react";
+import { useRef, useState, useEffect, PropsWithChildren, useMemo } from "react";
 
 export interface MenuProps {
   open: boolean;
-  anchor: React.RefObject<HTMLElement>;
+  anchor: HTMLElement | null;
   leftOffset?: number;
   topOffset?: number;
   onClose: () => void;
@@ -13,7 +13,7 @@ type Position = { top: number; left: number };
 
 export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
   children,
-  leftOffset = 30,
+  leftOffset = 40,
   topOffset = 0,
   ...props
 }) => {
@@ -33,14 +33,17 @@ export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
 
   useEffect(() => {
     const moveMenu = () => {
-      const boundingRect = anchor.current?.getBoundingClientRect();
+      const boundingRect = anchor?.getBoundingClientRect();
 
       if (boundingRect == null) {
         return;
       }
 
+      // FIXME: We could add cuRef.current.getBoundingClientRect().width / 2
+      // to ensure the menu show in the left, but I haven't found a way to do it
       const top = boundingRect.top + boundingRect.height - topOffset;
       const left = boundingRect.left - boundingRect.width - leftOffset;
+
       setPos({ top, left });
     };
 
@@ -57,7 +60,7 @@ export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
         ref={curRef}
         className="absolute top-5 left-[-80px] z-50 w-[120px] rounded-md bg-white py-1 shadow-sm"
         style={{
-          display: open ? undefined : "none",
+          display: open && pos ? undefined : "none",
           top: pos?.top,
           left: pos?.left,
         }}
