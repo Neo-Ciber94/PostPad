@@ -1,6 +1,8 @@
-import { useSession, signOut } from "next-auth/react";
+import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import { Single_Day } from "next/font/google";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Avatar from "./Avatar";
 import { Menu, MenuItem } from "./Menu";
@@ -9,9 +11,11 @@ const singleDay = Single_Day({
   weight: "400",
 });
 
-export default function Header() {
-  const { data: session } = useSession();
+export interface HeaderProps {
+  session: Session | null;
+}
 
+export default function Header({ session }: HeaderProps) {
   return (
     <header>
       <nav
@@ -40,6 +44,7 @@ export interface UserAvatarProps {
 
 function UserAvatar({ user }: UserAvatarProps) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   const handleOpen = (e: React.MouseEvent) => {
@@ -52,8 +57,10 @@ function UserAvatar({ user }: UserAvatarProps) {
     setAnchor(null);
   };
 
-  const handleSignOut = () => {
-    signOut();
+  const handleSignOut = async () => {
+    signOut({
+      callbackUrl: "/",
+    });
   };
 
   return (

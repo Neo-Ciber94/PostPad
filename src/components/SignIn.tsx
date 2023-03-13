@@ -1,16 +1,13 @@
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
 export default function SignIn() {
-  const router = useRouter();
-
   const handleGoogleLogin = async () => {
-    console.log("Google login");
-    await signIn("google");
-    router.push("/posts");
+    await signIn("google", {
+      callbackUrl: "/posts",
+    });
   };
 
   const handleGithubLogin = () => {

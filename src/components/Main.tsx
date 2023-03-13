@@ -6,6 +6,7 @@ import { QueryClient } from "react-query";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import Authorized from "./Authorized";
+import SignIn from "./SignIn";
 
 const queryClient = new QueryClient();
 
@@ -17,17 +18,33 @@ const Main: React.FC<PropsWithChildren<MainProps>> = ({
   children,
   session,
 }) => {
+  if (session == null) {
+    return (
+      <MainContent session={null}>
+        <SignIn />
+      </MainContent>
+    );
+  }
+
   return (
     <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <Header />
-        <main className="mx-auto h-full md:container">
-          <Authorized>{children}</Authorized>
-        </main>
-      </QueryClientProvider>
+      <MainContent session={session}>
+        <Authorized>{children}</Authorized>
+      </MainContent>
     </SessionProvider>
   );
 };
 
+const MainContent: React.FC<PropsWithChildren<{ session: Session | null }>> = ({
+  children,
+  session,
+}) => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Header session={session} />
+      <main className="mx-auto h-full md:container">{children}</main>
+    </QueryClientProvider>
+  );
+};
 
 export default Main;

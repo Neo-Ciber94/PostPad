@@ -16,6 +16,9 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/",
+  },
 };
 
 export default NextAuth(authOptions);
