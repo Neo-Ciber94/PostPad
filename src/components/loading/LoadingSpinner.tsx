@@ -7,7 +7,7 @@ export interface LoadingSpinnerProps {
 export default function LoadingSpinner({
   size = 30,
   width = 4,
-  color,
+  color = "white",
 }: LoadingSpinnerProps) {
   return (
     <div className="flex items-center justify-center">

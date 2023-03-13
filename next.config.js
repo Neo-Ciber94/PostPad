@@ -5,7 +5,7 @@ const nextConfig = {
     esmExternals: "loose",
   },
   images: {
-    domains: ["avatar-management--avatars.us-west-2.prod.public.atl-paas.net"],
+    domains: ["lh3.googleusercontent.com"],
   },
 };
 

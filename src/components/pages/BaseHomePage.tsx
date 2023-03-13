@@ -1,45 +1,30 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { PropsWithChildren } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
+import { useSession } from "next-auth/react";
+import Delayed from "../Delayed";
+import LoadingSpinner from "../loading/LoadingSpinner";
+import Redirect from "../Redirect";
+import SignIn from "../SignIn";
 
 export default function BaseHomePage() {
-  const router = useRouter();
+  const { status } = useSession();
 
-  const handleLogin = () => {
-    router.push("/posts");
-  };
+  if (status === "loading") {
+    return <Loading />;
+  }
 
-  return (
-    <div className="my-auto flex h-full flex-col items-center gap-4 py-40">
-      <SocialIcon onClick={handleLogin}>
-        <FcGoogle size={25} /> <span>Log in with Google</span>
-      </SocialIcon>
-
-      <SocialIcon onClick={handleLogin}>
-        <FaGithub size={25} /> <span>Log in with Github</span>
-      </SocialIcon>
-    </div>
+  return status === "authenticated" ? (
+    <Redirect to="/posts" fallback={<Loading />} replace />
+  ) : (
+    <SignIn />
   );
 }
 
-type SocialIconProps = React.DetailedHTMLProps<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  HTMLButtonElement
->;
-
-const SocialIcon: React.FC<PropsWithChildren<SocialIconProps>> = ({
-  children,
-  ...props
-}) => {
+function Loading() {
   return (
-    <button
-      {...props}
-      className="flex flex-col items-center gap-3 rounded-lg bg-white p-4 px-10 
-  py-2 shadow-md transition-colors duration-200 hover:bg-neutral-300 sm:flex-row sm:px-20"
-    >
-      {children}
-    </button>
+    <div className="p-36">
+      <Delayed ms={1000}>
+        <LoadingSpinner size={40} width={5} />
+      </Delayed>
+    </div>
   );
-};
+}

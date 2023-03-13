@@ -1,21 +1,27 @@
 import "./globals.css";
-import Content from "@/components/Content";
+import Main from "@/components/Main";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export const metadata = {
-  title: "Posts App",
+  title: "PostPad",
   description: "An app to create posts",
 };
 
-export default function RootLayout({ children }: React.PropsWithChildren) {
+export default async function RootLayout({
+  children,
+}: React.PropsWithChildren) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body
         className="bg-base-500 scrollbar
             scrollbar-track-base-300/25
-            scrollbar-thumb-rounded-lg 
-            scrollbar-thumb-base-700"
+            scrollbar-thumb-base-700 
+            scrollbar-thumb-rounded-lg"
       >
-        <Content>{children}</Content>
+        <Main session={session}>{children}</Main>
       </body>
     </html>
   );
