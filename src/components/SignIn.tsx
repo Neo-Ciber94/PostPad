@@ -10,8 +10,10 @@ export default function SignIn() {
     });
   };
 
-  const handleGithubLogin = () => {
-    console.log("Github login");
+  const handleGithubLogin = async () => {
+    await signIn("github", {
+      callbackUrl: "/posts",
+    });
   };
 
   return (
