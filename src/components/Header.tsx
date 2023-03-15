@@ -44,7 +44,6 @@ export interface UserAvatarProps {
 
 function UserAvatar({ user }: UserAvatarProps) {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   const handleOpen = (e: React.MouseEvent) => {
@@ -58,9 +57,8 @@ function UserAvatar({ user }: UserAvatarProps) {
   };
 
   const handleSignOut = async () => {
-    signOut({
-      callbackUrl: "/",
-    });
+    signOut({ callbackUrl: "/" });
+    handleClose();
   };
 
   return (
