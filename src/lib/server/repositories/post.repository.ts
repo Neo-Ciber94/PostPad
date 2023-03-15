@@ -25,7 +25,10 @@ const getAllPostsOptionsSchema = z.object({
 export type GetAllPostsOptions = z.infer<typeof getAllPostsOptionsSchema>;
 
 export class PostRepository {
-  async getAll(options: GetAllPostsOptions = {}): Promise<Post[]> {
+  async getAll(
+    userId: string,
+    options: GetAllPostsOptions = {}
+  ): Promise<Post[]> {
     const {
       search,
       skip,
@@ -37,6 +40,7 @@ export class PostRepository {
       where: {
         content: { search },
         title: { search },
+        createdByUserId: userId,
         tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } },
       },
       take,
@@ -49,9 +53,9 @@ export class PostRepository {
     return result.map((x) => postSchema.parse(x));
   }
 
-  async getById(id: string): Promise<Post | null> {
+  async getById(userId: string, id: string): Promise<Post | null> {
     const result = await prisma.post.findFirst({
-      where: { id },
+      where: { id, createdByUserId: userId },
       include: { tags: true },
     });
 
@@ -62,9 +66,9 @@ export class PostRepository {
     return postSchema.parse(result);
   }
 
-  async getBySlug(slug: string): Promise<Post | null> {
+  async getBySlug(userId: string, slug: string): Promise<Post | null> {
     const result = await prisma.post.findFirst({
-      where: { slug },
+      where: { slug, createdByUserId: userId },
       include: { tags: true },
     });
 
@@ -75,18 +79,22 @@ export class PostRepository {
     return postSchema.parse(result);
   }
 
-  async create(post: CreatePost): Promise<Post> {
+  async create(userId: string, post: CreatePost): Promise<Post> {
     const data = createPostSchema.parse(post);
     const slug = generateSlug(post.title.toLowerCase());
     const tags = post.tags || [];
+
+    // Set the user
+    const tagsWithUser = tags.map((t) => ({ ...t, createdByUserId: userId }));
 
     const result = await prisma.post.create({
       data: {
         title: data.title.trim(),
         content: data.content?.trim(),
         slug,
+        createdByUserId: userId,
         tags: {
-          create: tags,
+          create: tagsWithUser,
         },
       },
     });
@@ -94,15 +102,15 @@ export class PostRepository {
     return postSchema.parse(result);
   }
 
-  async update(post: UpdatePost): Promise<Post | null> {
+  async update(userId: string, post: UpdatePost): Promise<Post | null> {
     const data = updatePostSchema.parse(trimStrings(post));
     const postToUpdate = await prisma.post.findFirst({
-      where: { id: post.id },
+      where: { id: post.id, createdByUserId: userId },
       select: {
         id: true,
         content: true,
         title: true,
-        slug: true
+        slug: true,
       },
     });
 
@@ -121,6 +129,11 @@ export class PostRepository {
       post.tags || [],
       (x) => x.id == null
     );
+
+    const newTagsWithUser = newTags.map((t) => ({
+      ...t,
+      createdByUserId: userId,
+    }));
 
     const result = await prisma.post.update({
       where: { id: post.id },
@@ -141,7 +154,7 @@ export class PostRepository {
           },
 
           // Insert the new tags
-          create: newTags,
+          create: newTagsWithUser,
         },
       },
     });
@@ -149,8 +162,8 @@ export class PostRepository {
     return postSchema.parse(result);
   }
 
-  async delete(id: string): Promise<Post | null> {
-    const postToDelete = await this.getById(id);
+  async delete(userId: string, id: string): Promise<Post | null> {
+    const postToDelete = await this.getById(userId, id);
 
     if (postToDelete == null) {
       return null;

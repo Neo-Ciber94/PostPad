@@ -2,7 +2,6 @@ import { GetAllPostsOptions } from "@/lib/server/repositories/post.repository";
 import { PostService } from "@/lib/server/services/post.service";
 import { getSearchParams } from "@/lib/utils/requestUtils";
 import { json } from "@/lib/utils/responseUtils";
-import { notFound } from "next/navigation";
 import { ZodError } from "zod";
 
 export async function GET(request: Request) {

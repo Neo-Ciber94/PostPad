@@ -3,31 +3,38 @@ import {
   PostRepository,
 } from "../repositories/post.repository";
 import { CreatePost, Post, UpdatePost } from "../schemas/Post";
+import { getUserIdFromSession } from "@/lib/utils/getUserIdFromSession";
 
 export class PostService {
-  private readonly repository = new PostRepository();
+  private readonly postRepository = new PostRepository();
 
-  getAllPosts(options: GetAllPostsOptions = {}): Promise<Post[]> {
-    return this.repository.getAll(options);
+  async getAllPosts(options: GetAllPostsOptions = {}): Promise<Post[]> {
+    const userId = await getUserIdFromSession();
+    return this.postRepository.getAll(userId, options);
   }
 
-  getPostById(id: string): Promise<Post | null> {
-    return this.repository.getById(id);
+  async getPostById(id: string): Promise<Post | null> {
+    const userId = await getUserIdFromSession();
+    return this.postRepository.getById(userId, id);
   }
 
-  getPostBySlug(slug: string): Promise<Post | null> {
-    return this.repository.getBySlug(slug);
+  async getPostBySlug(slug: string): Promise<Post | null> {
+    const userId = await getUserIdFromSession();
+    return this.postRepository.getBySlug(userId, slug);
   }
 
-  createPost(post: CreatePost): Promise<Post> {
-    return this.repository.create(post);
+  async createPost(post: CreatePost): Promise<Post> {
+    const userId = await getUserIdFromSession();
+    return this.postRepository.create(userId, post);
   }
 
-  updatePost(post: UpdatePost): Promise<Post | null> {
-    return this.repository.update(post);
+  async updatePost(post: UpdatePost): Promise<Post | null> {
+    const userId = await getUserIdFromSession();
+    return this.postRepository.update(userId, post);
   }
 
-  deletePost(id: string): Promise<Post | null> {
-    return this.repository.delete(id);
+  async deletePost(id: string): Promise<Post | null> {
+    const userId = await getUserIdFromSession();
+    return this.postRepository.delete(userId, id);
   }
 }
