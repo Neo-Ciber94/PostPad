@@ -1,10 +1,51 @@
 import { signIn } from "next-auth/react";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { SiMicrosoft } from "react-icons/si";
+import Wave from "react-wavify";
 
 export default function SignIn() {
+  return (
+    <>
+      <SocialLoginButtons />
+      <WavyBackground />
+    </>
+  );
+}
+
+function WavyBackground() {
+  const [pos, setPos] = useState(100);
+
+  useEffect(() => {
+    setTimeout(() => setPos(0), 500);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 -z-10 flex h-screen w-full flex-row">
+      <div className="w-2/3"></div>
+      <div className="w-1/3 self-stretch overflow-hidden bg-base-400">
+        <div className="origin-bottom-left rotate-90">
+          <Wave
+            className="mt-[-400px] !block !w-[1000px] bg-base-400 transition-transform duration-1000 ease-in-out"
+            fill="rgb(56, 58, 89)"
+            style={{
+              transform: `translateY(${pos}px)`,
+            }}
+            options={{
+              height: 100,
+              amplitude: 10,
+              speed: 0.3,
+              points: 7,
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SocialLoginButtons() {
   const handleGoogleSignIn = async () => {
     await signIn("google", {
       callbackUrl: "/posts",
@@ -53,7 +94,7 @@ const SocialIcon: React.FC<PropsWithChildren<SocialIconProps>> = ({
   return (
     <button
       {...props}
-      className="flex min-w-[70%] flex-col items-center justify-center gap-3 rounded-lg bg-white p-4 px-10 py-2
+      className="flex w-8/12 min-w-[200px] max-w-[500px] flex-col items-center justify-center gap-3 rounded-lg bg-white p-4 px-10 py-2
   shadow-md transition-colors duration-200 hover:bg-neutral-300 sm:flex-row sm:px-20 lg:min-w-[400px]"
     >
       {children}

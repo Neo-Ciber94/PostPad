@@ -29,7 +29,9 @@ const Main: React.FC<PropsWithChildren<MainProps>> = ({
   return (
     <SessionProvider session={session}>
       <MainContent session={session}>
-        <Authorized>{children}</Authorized>
+        <Authorized>
+          <main className="mx-auto h-full md:container">{children}</main>
+        </Authorized>
       </MainContent>
     </SessionProvider>
   );
@@ -42,7 +44,7 @@ const MainContent: React.FC<PropsWithChildren<{ session: Session | null }>> = ({
   return (
     <QueryClientProvider client={queryClient}>
       <Header session={session} />
-      <main className="mx-auto h-full md:container">{children}</main>
+      {children}
     </QueryClientProvider>
   );
 };

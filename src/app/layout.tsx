@@ -14,7 +14,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-hidden">
       <body
         className="bg-base-500 scrollbar
             scrollbar-track-base-300/25
