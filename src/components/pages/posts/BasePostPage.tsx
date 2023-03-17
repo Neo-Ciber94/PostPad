@@ -1,7 +1,7 @@
 "use client";
 import "@uiw/react-markdown-preview/markdown.css";
 import { Post } from "@/lib/server/schemas/Post";
-import MarkdownPreview from "@uiw/react-markdown-preview";
+import "react-quill/dist/quill.bubble.css";
 import { useRouter } from "next/navigation";
 import Button from "../../Button";
 import { Tag } from "@/lib/server/schemas/Tag";
@@ -67,11 +67,9 @@ export default function BasePostPage({ post }: BasePostPageProps) {
 
       <h1 className="mt-4 mb-2 py-2 text-4xl text-white">{post.title}</h1>
 
-      <hr className="border-b-gray-500 opacity-20" />
-      <div className="py-4">
-        {/* <MarkdownPreview source={post.content} className="p-10" /> */}
-
-        <ReactQuill value={post.content} readOnly theme="snow" modules={[]} />
+      <hr className="border-b-gray-500 opacity-20 mb-4" />
+      <div className="overflow-hidden rounded-lg bg-white py-4">
+        <ReactQuill value={post.content} readOnly theme="bubble" modules={[]} />
       </div>
     </div>
   );
