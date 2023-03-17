@@ -9,6 +9,4 @@ const nextConfig = {
   },
 };
 
-// This is required for: https://www.npmjs.com/package/@uiw/react-md-editor
-const removeImports = require("next-remove-imports")();
-module.exports = removeImports(nextConfig);
+module.exports = nextConfig;

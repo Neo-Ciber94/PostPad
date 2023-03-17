@@ -1,4 +1,4 @@
-import MarkdownEditorLoading from "./MarkdownEditorLoading";
+import EditorLoading from "./EditorLoading";
 
 export default function PostFormSkeleton() {
   return (
@@ -25,7 +25,7 @@ export default function PostFormSkeleton() {
         <label className="mb-2 block h-6 w-24 animate-pulse rounded-md bg-violet-300/30">
           {/* Content */}
         </label>
-        <MarkdownEditorLoading />
+        <EditorLoading />
       </div>
 
       <div className="mb-2 flex flex-row gap-2">

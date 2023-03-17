@@ -1,0 +1,61 @@
+:root {
+  --editor-transition-duration: 500ms;
+}
+
+.ql-editor {
+  min-height: 400px;
+}
+
+.text-editor {
+  background-color: white;
+  transition: all;
+  transition-duration: var(--editor-transition-duration);
+}
+
+.text-editor.dark {
+  background-color: #0d1117;
+  color: white;
+  transition-duration: var(--editor-transition-duration);
+
+  .ql-picker-options {
+    color: gray !important;
+  }
+
+  .ql-picker-options .ql-picker-item {
+    filter: brightness(0.5);
+  }
+
+  .ql-toolbar .ql-stroke {
+    fill: none;
+    stroke: #fff;
+  }
+
+  .ql-toolbar .ql-fill {
+    fill: #fff;
+    stroke: none;
+  }
+
+  .ql-toolbar .ql-picker {
+    color: #fff;
+  }
+}
+
+.text-editor.fullscreen {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  overflow: auto;
+
+
+  .quill {
+    flex: 1;
+  }
+}

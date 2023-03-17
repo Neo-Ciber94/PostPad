@@ -3,7 +3,8 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { SiMicrosoft } from "react-icons/si";
-import Wave from "./Wave";
+import Wave from "react-wavify";
+//import Wave from "./Wave";
 
 export default function SignIn() {
   return (

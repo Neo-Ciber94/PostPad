@@ -7,6 +7,11 @@ import Button from "../../Button";
 import { Tag } from "@/lib/server/schemas/Tag";
 import Chip from "@/components/Chip";
 import { TagIcon } from "@heroicons/react/24/outline";
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+});
 
 export interface BasePostPageProps {
   post: Post;
@@ -64,7 +69,9 @@ export default function BasePostPage({ post }: BasePostPageProps) {
 
       <hr className="border-b-gray-500 opacity-20" />
       <div className="py-4">
-        <MarkdownPreview source={post.content} className="p-10" />
+        {/* <MarkdownPreview source={post.content} className="p-10" /> */}
+
+        <ReactQuill value={post.content} readOnly theme="snow" modules={[]} />
       </div>
     </div>
   );

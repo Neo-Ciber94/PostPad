@@ -1,4 +1,4 @@
-import "./globals.css";
+import "./styles/globals.scss";
 import Main from "@/components/Main";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
@@ -14,7 +14,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en" className="overflow-hidden">
+    <html lang="en">
       <body
         className="bg-base-500 scrollbar
             scrollbar-track-base-300/25

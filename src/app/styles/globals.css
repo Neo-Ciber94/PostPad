@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  html {
+    font-family: "Mukta", sans-serif;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 500;
+  }
+}
+:root {
+  --editor-transition-duration: 500ms;
+}
+
+.ql-editor {
+  min-height: 400px;
+}
+
+.editor-container {
+  background-color: white;
+  transition: all;
+  transition-duration: var(--editor-transition-duration);
+}
+
+.editor-container.dark {
+  background-color: #0d1117;
+  color: white;
+  transition-duration: var(--editor-transition-duration);
+}
+.editor-container.dark .ql-picker-options,
+.editor-container.dark .ql-picker-options-2 {
+  color: gray;
+}
+.editor-container.dark .ql-toolbar .ql-stroke {
+  fill: none;
+  stroke: #fff;
+}
+.editor-container.dark .ql-toolbar .ql-fill {
+  fill: #fff;
+  stroke: none;
+}
+.editor-container.dark .ql-toolbar .ql-picker {
+  color: #fff;
+}/*# sourceMappingURL=globals.css.map */

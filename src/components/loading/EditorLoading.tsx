@@ -1,7 +1,7 @@
-export default function MarkdownEditorLoading() {
+export default function EditorLoading() {
   return (
     <div className="h-[300px] animate-pulse rounded-md bg-violet-300/30">
-      {/* Markdown Editor */}
+      {/* HTML Editor */}
     </div>
   );
 }

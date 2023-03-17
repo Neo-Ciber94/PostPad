@@ -16,12 +16,13 @@ import Button from "./Button";
 import LoadingSpinner from "./loading/LoadingSpinner";
 import Alert from "./Alert";
 import { useRouter } from "next/navigation";
-import MarkdownEditor from "@uiw/react-md-editor";
 import TagList from "./TagsListInput";
 import { TagIcon } from "@heroicons/react/24/outline";
 import { getErrorMessage } from "@/lib/utils/getErrorMessage";
 import { useQueryClient } from "react-query";
 import { tagRules } from "@/lib/server/schemas/Tag";
+
+import { PostEditor } from "./Editor/PostEditor";
 
 interface CreatePostFormProps {
   onSubmit: (post: CreatePost) => Promise<void>;
@@ -144,13 +145,7 @@ export default function PostForm({
           control={control}
           name="content"
           render={({ field }) => {
-            return (
-              <MarkdownEditor
-                value={field.value}
-                onChange={field.onChange}
-                height={400}
-              />
-            );
+            return <PostEditor value={field.value} onChange={field.onChange} />;
           }}
         />
         <p className="text-xs italic text-red-500">{errors.content?.message}</p>
