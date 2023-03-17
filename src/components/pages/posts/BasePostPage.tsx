@@ -8,6 +8,7 @@ import { Tag } from "@/lib/server/schemas/Tag";
 import Chip from "@/components/Chip";
 import { TagIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
+import { useState } from "react";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -19,6 +20,7 @@ export interface BasePostPageProps {
 
 export default function BasePostPage({ post }: BasePostPageProps) {
   const router = useRouter();
+  const [isDark, setIsDark] = useState(false);
 
   const handleEdit = () => {
     router.push(`/posts/edit/${post.slug}`);
@@ -67,9 +69,23 @@ export default function BasePostPage({ post }: BasePostPageProps) {
 
       <h1 className="mt-4 mb-2 py-2 text-4xl text-white">{post.title}</h1>
 
-      <hr className="border-b-gray-500 opacity-20 mb-4" />
-      <div className="overflow-hidden rounded-lg bg-white py-4">
-        <ReactQuill value={post.content} readOnly theme="bubble" modules={[]} />
+      <hr className="mb-4 border-b-gray-500 opacity-20" />
+
+      <button
+        onClick={() => setIsDark((dark) => !dark)}
+        className={`my-2 min-w-[100px] rounded-md p-2 ${
+          isDark ? "bg-white text-black" : "bg-black text-white"
+        }`}
+      >
+        {isDark ? "Light" : "Dark"}
+      </button>
+
+      <div
+        className={`overflow-hidden rounded-lg py-4 ${
+          isDark ? "text-dark bg-white" : "bg-[#0d1117] text-white"
+        }`}
+      >
+        <ReactQuill value={post.content} readOnly theme="bubble" modules={{}} />
       </div>
     </div>
   );
