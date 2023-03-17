@@ -15,10 +15,16 @@ export default function PostViewSkeleton() {
       <div className="h-12 w-full animate-pulse rounded-md bg-violet-300/30 py-2"></div>
       <hr className="mt-3 border-b-gray-500 opacity-50" />
 
-      {/* Markdown Preview */}
-      <div className="py-4">
-        <div className="h-[500px] w-full animate-pulse rounded-md bg-violet-300/30"></div>
-      </div>
+      {/* Post Preview */}
+      <PostPreviewLoading />
+    </div>
+  );
+}
+
+export function PostPreviewLoading() {
+  return (
+    <div className="py-4">
+      <div className="h-[500px] w-full animate-pulse rounded-md bg-violet-300/30"></div>
     </div>
   );
 }

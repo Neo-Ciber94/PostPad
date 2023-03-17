@@ -22,7 +22,9 @@ const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
         width: size,
       }}
     >
-      <Image src={src} alt={alt} fill sizes="100vw" />
+      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw" />
     </div>
   );
 };

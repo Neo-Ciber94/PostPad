@@ -23,6 +23,7 @@ import { useQueryClient } from "react-query";
 import { tagRules } from "@/lib/server/schemas/Tag";
 
 import { PostEditor } from "./Editor/PostEditor";
+import { useMediaQuery } from "@/lib/client/hooks/useMediaQuery";
 
 interface CreatePostFormProps {
   onSubmit: (post: CreatePost) => Promise<void>;
@@ -49,8 +50,12 @@ export default function PostForm({
   isSubmitting,
   isEditing,
 }: PostFormProps) {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [isDark, setIsDark] = useState(prefersDarkMode);
+
   const router = useRouter();
   const queryClient = useQueryClient();
+
   const [showTags, setShowTags] = useState(
     () => post && post.tags && post.tags.length > 0
   );
@@ -126,15 +131,12 @@ export default function PostForm({
       <div className="mb-2">
         <label className="mb-2 block font-bold text-white">Title</label>
         <input
-          placeholder="Title"
-          className={`focus:shadow-outline w-full appearance-none rounded border
-                border-gray-600 py-2 px-3 leading-tight text-white shadow focus:outline-none ${
-                  errors.title?.message ? "border-red-500" : ""
-                }`}
-          style={{
-            backgroundColor: "#0D1117",
-          }}
           {...register("title")}
+          placeholder="Title"
+          className={`focus:shadow-outline w-full appearance-none rounded border border-gray-600
+                 py-2 px-3 leading-tight shadow transition-colors duration-500 focus:outline-none ${
+                   isDark ? "bg-white" : "bg-[#0D1117] text-white"
+                 } ${errors.title?.message ? "border-red-500" : ""}`}
         />
         <p className="text-xs italic text-red-500">{errors.title?.message}</p>
       </div>
@@ -145,7 +147,14 @@ export default function PostForm({
           control={control}
           name="content"
           render={({ field }) => {
-            return <PostEditor value={field.value} onChange={field.onChange} />;
+            return (
+              <PostEditor
+                isDark={isDark}
+                onToggleDarkMode={() => setIsDark((dark) => !dark)}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            );
           }}
         />
         <p className="text-xs italic text-red-500">{errors.content?.message}</p>

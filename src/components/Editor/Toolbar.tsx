@@ -1,9 +1,8 @@
 import {
-  SunIcon,
-  MoonIcon,
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
 } from "@heroicons/react/24/solid";
+import { DarkModeToggle } from "../DarkModeToggle";
 
 export interface ToolbarProps {
   isDarkMode: boolean;
@@ -64,10 +63,7 @@ const Toolbar = ({
         </span>
       </div>
       <div>
-        <button type="button" className="!h-8 !w-8" onClick={onToggleDarkMode}>
-          {isDarkMode ? <SunIcon /> : <MoonIcon />}
-        </button>
-
+        <DarkModeToggle isDark={isDarkMode} onToggle={onToggleDarkMode} />
         <button
           type="button"
           className="!h-8 !w-8"
