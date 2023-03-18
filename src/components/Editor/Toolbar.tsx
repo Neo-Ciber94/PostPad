@@ -2,7 +2,20 @@ import {
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
 } from "@heroicons/react/24/solid";
+import ReactQuill from "react-quill";
 import { DarkModeToggle } from "../DarkModeToggle";
+
+const Font = ReactQuill.Quill.import("formats/font");
+Font.whitelist = [
+  "arial",
+  "courier-new",
+  "georgia",
+  "helvetica",
+  "lucida",
+  "roboto",
+  "quicksand",
+];
+ReactQuill.Quill.register(Font, true);
 
 export interface ToolbarProps {
   isDarkMode: boolean;
@@ -24,13 +37,14 @@ const Toolbar = ({
     <span className="flex flex-row items-center justify-between">
       <div>
         <span className="ql-formats">
-          <select className="ql-font" defaultValue="arial">
+          <select className="ql-font" defaultValue="quicksand">
             <option value="arial">Arial</option>
-            <option value="comic-sans">Comic Sans</option>
             <option value="courier-new">Courier New</option>
             <option value="georgia">Georgia</option>
             <option value="helvetica">Helvetica</option>
             <option value="lucida">Lucida</option>
+            <option value="roboto">Roboto</option>
+            <option value="quicksand">Quicksand</option>
           </select>
 
           <select className="ql-size" defaultValue="medium">

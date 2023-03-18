@@ -160,9 +160,7 @@ export default function PostForm({
             return (
               <PostEditor
                 isDark={darkMode.value}
-                onToggleDarkMode={() => {
-                  darkMode.set(!darkMode.value);
-                }}
+                onToggleDarkMode={() => darkMode.set(!darkMode.value)}
                 value={field.value}
                 onChange={field.onChange}
               />

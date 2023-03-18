@@ -51,4 +51,32 @@
 }
 .text-editor.fullscreen .quill {
   flex: 1;
+}
+
+.ql-font-arial {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.ql-font-courier-new {
+  font-family: "Courier New", Courier, monospace;
+}
+
+.ql-font-georgia {
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.ql-font-helvetica {
+  font-family: Helvetica, sans-serif;
+}
+
+.ql-font-lucida {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.ql-font-roboto {
+  font-family: Roboto;
+}
+
+.ql-font-quicksand {
+  font-family: "Quicksand", sans-serif;
 }/*# sourceMappingURL=quill.css.map */
