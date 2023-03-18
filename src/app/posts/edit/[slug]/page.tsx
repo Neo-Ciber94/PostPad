@@ -1,7 +1,6 @@
 import BaseEditPostPage from "@/components/pages/posts/BaseEditPostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
-import { wait } from "@/lib/utils/wait";
 
 export const metadata = {
   title: "PostPad | Edit",

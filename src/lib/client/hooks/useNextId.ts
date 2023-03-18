@@ -12,7 +12,7 @@ export function useNextId(prefix?: string) {
     const next = nextIdRef.current;
     nextIdRef.current += 1;
     return prefix == null ? String(next) : `${prefix}${next}`;
-  }, [prefix, , nextIdRef]);
+  }, [prefix, nextIdRef]);
 
   return getNextId;
 }

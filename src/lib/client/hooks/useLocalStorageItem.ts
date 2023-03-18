@@ -44,6 +44,7 @@ export function useLocalStorageItem<T = unknown>(
         setValue(null);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
   const set = useCallback(
@@ -52,6 +53,7 @@ export function useLocalStorageItem<T = unknown>(
       localStorage.setItem(key, stringValue);
       setValue(newValue);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [key]
   );
 

@@ -88,6 +88,8 @@ export default function PostForm({
     <form
       className="flex w-full flex-col lg:px-[5%]"
       onSubmit={handleSubmit(async (post) => {
+        // SAFETY: This can be either CreatePost or UpdatePost
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await onSubmit(post as any);
         await queryClient.invalidateQueries({
           queryKey: ["posts"],
@@ -161,7 +163,7 @@ export default function PostForm({
               <PostEditor
                 isDark={darkMode.value}
                 onToggleDarkMode={() => darkMode.set(!darkMode.value)}
-                value={field.value}
+                value={field.value || ""}
                 onChange={field.onChange}
               />
             );

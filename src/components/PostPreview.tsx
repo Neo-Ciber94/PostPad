@@ -26,7 +26,12 @@ export default function PostPreview({ post }: PostPreviewProps) {
         <hr className="border-neutral-400 opacity-30" />
       </div>
 
-      <ReactQuill value={post.content} readOnly theme="bubble" modules={{}} />
+      <ReactQuill
+        value={post.content || ""}
+        readOnly
+        theme="bubble"
+        modules={{}}
+      />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import Chip, { ChipProps } from "./Chip";
 import { Menu, MenuItem } from "./Menu";

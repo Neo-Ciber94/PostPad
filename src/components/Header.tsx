@@ -2,7 +2,6 @@ import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { Single_Day } from "next/font/google";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Avatar from "./Avatar";
 import { Menu, MenuItem } from "./Menu";
@@ -57,7 +56,7 @@ function UserAvatar({ user }: UserAvatarProps) {
   };
 
   const handleSignOut = async () => {
-    signOut({ callbackUrl: "/" });
+    signOut({ callbackUrl: "/" }).catch(console.error);
     handleClose();
   };
 

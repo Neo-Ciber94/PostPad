@@ -31,7 +31,7 @@ export function useDebounceState<T>(
 ): [T, React.Dispatch<T>] {
   const [value, setValue] = useState(getValueOrFactory(initialValue));
   const prevValueRef = useRef<T>(value);
-  let timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   const setNewValue = useCallback(
     (newValue: React.SetStateAction<T>) => {

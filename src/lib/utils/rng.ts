@@ -11,7 +11,7 @@ export class Rng {
     input =
       input != null ? Math.floor(input) : Math.floor(Math.random() * 10000);
 
-    let state: [number, number, number, number] = [0, 0, 0, 0];
+    const state: [number, number, number, number] = [0, 0, 0, 0];
 
     for (let i = 0; i < primes.length; i++) {
       const prime = primes[i];

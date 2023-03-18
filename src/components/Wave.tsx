@@ -62,7 +62,9 @@ const Wave: React.FC<PropsWithChildren<WaveProps>> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [path, setPath] = useState("");
-  let { current: frameId } = useRef<number>(null);
+  const frameIdRef = useRef<number | null>(null);
+  const { current: frameId } = frameIdRef;
+
   const { current: state } = useRef<WaveState>({
     lastUpdate: 0,
     elapsed: 0,
@@ -93,8 +95,9 @@ const Wave: React.FC<PropsWithChildren<WaveProps>> = ({
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   function resume() {
-    frameId = window.requestAnimationFrame(updateCallback);
+    frameIdRef.current = window.requestAnimationFrame(updateCallback);
     state.lastUpdate = Date.now();
   }
 
@@ -105,10 +108,10 @@ const Wave: React.FC<PropsWithChildren<WaveProps>> = ({
     return () => {
       if (frameId) {
         window.cancelAnimationFrame(frameId);
-        frameId = 0;
+        frameIdRef.current = 0;
       }
     };
-  }, []);
+  }, [frameId, resume]);
 
   return (
     <div

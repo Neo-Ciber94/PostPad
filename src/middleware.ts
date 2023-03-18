@@ -4,6 +4,6 @@ import { NextResponse } from "next/server";
 
 // export const config = { matcher: ["/posts", "/api"] };
 
-export default function () {
+export default function middleware() {
   return NextResponse.next();
 }

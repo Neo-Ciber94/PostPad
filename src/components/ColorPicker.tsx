@@ -38,7 +38,7 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
 
   useKeyboardEvent({
     keys: "Escape",
-    onKeyDown(event) {
+    onKeyDown() {
       handleClose();
     },
   });

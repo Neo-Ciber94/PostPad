@@ -17,7 +17,7 @@ export default function Redirect({
   const router = useRouter();
   useEffect(() => {
     replace === true ? router.replace(to) : router.push(to);
-  }, []);
+  }, [replace, router, to]);
 
   return <>{fallback}</>;
 }

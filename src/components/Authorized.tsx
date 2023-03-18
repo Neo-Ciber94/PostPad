@@ -18,9 +18,9 @@ const Authorized: React.FC<PropsWithChildren> = ({ children }) => {
 
     if (!session && pathname !== "/") {
       router.push("/");
-      console.log("redirect")
+      console.log("redirect");
     }
-  }, [pathname]);
+  }, [pathname, router, session]);
 
   if (status === "loading") {
     return <Loading />;

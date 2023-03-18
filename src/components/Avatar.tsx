@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { PropsWithChildren } from "react";
 
 export interface AvatarProps {
   src: string;
@@ -8,10 +7,7 @@ export interface AvatarProps {
   className?: string;
 }
 
-const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
-  children,
-  ...props
-}) => {
+const Avatar: React.FC<AvatarProps> = (props) => {
   const { src, alt, className = "", size = 36 } = props;
 
   return (
@@ -22,9 +18,14 @@ const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
         width: size,
       }}
     >
-      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw,
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 50vw,
-              33vw" />
+              33vw"
+      />
     </div>
   );
 };

@@ -9,7 +9,7 @@ export function useMediaQuery(mediaQuery: string): boolean {
     window.matchMedia(mediaQuery).addEventListener("change", (event) => {
       setMatches(event.matches);
     });
-  }, []);
+  }, [mediaQuery]);
 
   return matches;
 }

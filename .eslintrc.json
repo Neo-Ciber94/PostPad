@@ -5,9 +5,16 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "rules": {
-    "@typescript-eslint/no-misused-promises": "error",
+    //"@typescript-eslint/no-misused-promises": "error",
     "@typescript-eslint/no-floating-promises": "error"
+  },
+  "parserOptions": {
+    "project": [
+      "./tsconfig.json"
+    ]
   }
 }

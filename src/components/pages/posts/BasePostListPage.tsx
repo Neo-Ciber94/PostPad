@@ -2,7 +2,7 @@
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import SearchInput from "@/components/SearchInput";
 import TagFilter, { SelectedTag } from "@/components/TagFilter";
-import { useDebounce, useDebounceState } from "@/lib/client/hooks/useDebounce";
+import { useDebounce } from "@/lib/client/hooks/useDebounce";
 import { Post } from "@/lib/server/schemas/Post";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,9 +42,9 @@ export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
 
   useEffect(() => {
     if (search.trim().length > 0 || searchTags.length > 0) {
-      refetch();
+      refetch().catch(console.error);
     }
-  }, [search, searchTags]);
+  }, [refetch, search, searchTags]);
 
   return (
     <div className="p-2 text-white">

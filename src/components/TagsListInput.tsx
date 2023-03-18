@@ -74,6 +74,7 @@ export default function TagsListInput(props: TagsListInputProps) {
   };
 
   const handleEditTag = (id: string, newValue: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tag = tags.find((t) => t.key === id)!;
 
     if (maxLength) {

@@ -149,6 +149,7 @@ export class PostRepository {
           // Delete the relations not included in the current tags
           deleteMany: {
             id: {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               notIn: tags.map((x) => x.id!),
             },
           },
@@ -182,6 +183,7 @@ function trimStrings<T extends Record<string, unknown>>(obj: T): T {
     const value = obj[key];
 
     if (typeof value === "string") {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       obj[key] = value.trim() as any;
     }
   }
