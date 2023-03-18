@@ -22,8 +22,14 @@ import { getErrorMessage } from "@/lib/utils/getErrorMessage";
 import { useQueryClient } from "react-query";
 import { tagRules } from "@/lib/server/schemas/Tag";
 import { useMediaQuery } from "@/lib/client/hooks/useMediaQuery";
-import { PostEditor } from "./Editor/PostEditor";
 import { useLocalStorageItem } from "@/lib/client/hooks/useLocalStorageItem";
+import dynamic from "next/dynamic";
+import EditorLoading from "./loading/EditorLoading";
+
+const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
+  ssr: false,
+  loading: () => <EditorLoading />,
+});
 
 interface CreatePostFormProps {
   onSubmit: (post: CreatePost) => Promise<void>;
