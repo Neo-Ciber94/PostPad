@@ -12,7 +12,7 @@ export const postSchema = z.object({
   id: z.string(),
   slug: z.string(),
   title: z.string(),
-  content: z.string().optional(),
+  content: z.string().nullish(),
   tags: z.array(tagSchema).optional(),
   createdAt: z
     .string()
