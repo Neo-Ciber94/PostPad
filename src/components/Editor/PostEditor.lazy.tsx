@@ -36,7 +36,7 @@ export default function PostEditor({
 
   return (
     <div
-      className={`text-editor ${isDark ? "" : "dark"} ${
+      className={`text-editor ${isDark ? "dark" : ""} ${
         isFullScreen ? "fullscreen" : ""
       } scrollbar
     scrollbar-track-base-300/25

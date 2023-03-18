@@ -21,9 +21,9 @@ import { TagIcon } from "@heroicons/react/24/outline";
 import { getErrorMessage } from "@/lib/utils/getErrorMessage";
 import { useQueryClient } from "react-query";
 import { tagRules } from "@/lib/server/schemas/Tag";
-
-import { PostEditor } from "./Editor/PostEditor";
 import { useMediaQuery } from "@/lib/client/hooks/useMediaQuery";
+import { PostEditor } from "./Editor/PostEditor";
+import { useLocalStorageItem } from "@/lib/client/hooks/useLocalStorageItem";
 
 interface CreatePostFormProps {
   onSubmit: (post: CreatePost) => Promise<void>;
@@ -51,14 +51,18 @@ export default function PostForm({
   isEditing,
 }: PostFormProps) {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const [isDark, setIsDark] = useState(prefersDarkMode);
+  const darkMode = useLocalStorageItem<boolean>("dark", {
+    defaultValue: prefersDarkMode,
+  });
 
+  //const [isDark, setIsDark] = useState(prefersDarkMode);
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const [showTags, setShowTags] = useState(
     () => post && post.tags && post.tags.length > 0
   );
+
   const schema = useMemo(
     () => (isEditing === true ? updatePostSchema : createPostSchema),
     [isEditing]
@@ -135,7 +139,7 @@ export default function PostForm({
           placeholder="Title"
           className={`focus:shadow-outline w-full appearance-none rounded border border-gray-600
                  py-2 px-3 leading-tight shadow transition-colors duration-500 focus:outline-none ${
-                   isDark ? "bg-white" : "bg-[#0D1117] text-white"
+                   darkMode.value ? "bg-[#0D1117] text-white" : "bg-white"
                  } ${errors.title?.message ? "border-red-500" : ""}`}
         />
         <p className="text-xs italic text-red-500">{errors.title?.message}</p>
@@ -149,8 +153,10 @@ export default function PostForm({
           render={({ field }) => {
             return (
               <PostEditor
-                isDark={isDark}
-                onToggleDarkMode={() => setIsDark((dark) => !dark)}
+                isDark={darkMode.value}
+                onToggleDarkMode={() => {
+                  darkMode.set(!darkMode.value);
+                }}
                 value={field.value}
                 onChange={field.onChange}
               />

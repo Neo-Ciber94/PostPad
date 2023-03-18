@@ -17,29 +17,49 @@
   min-height: 400px;
 }
 
-.editor-container {
+.text-editor {
   background-color: white;
   transition: all;
   transition-duration: var(--editor-transition-duration);
 }
 
-.editor-container.dark {
+.text-editor.dark {
   background-color: #0d1117;
   color: white;
   transition-duration: var(--editor-transition-duration);
 }
-.editor-container.dark .ql-picker-options,
-.editor-container.dark .ql-picker-options-2 {
-  color: gray;
+.text-editor.dark .ql-picker-options {
+  color: gray !important;
 }
-.editor-container.dark .ql-toolbar .ql-stroke {
+.text-editor.dark .ql-picker-options .ql-picker-item {
+  filter: brightness(0.5);
+}
+.text-editor.dark .ql-toolbar .ql-stroke {
   fill: none;
   stroke: #fff;
 }
-.editor-container.dark .ql-toolbar .ql-fill {
+.text-editor.dark .ql-toolbar .ql-fill {
   fill: #fff;
   stroke: none;
 }
-.editor-container.dark .ql-toolbar .ql-picker {
+.text-editor.dark .ql-toolbar .ql-picker {
   color: #fff;
+}
+
+.text-editor.fullscreen {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  overflow: auto;
+}
+.text-editor.fullscreen .quill {
+  flex: 1;
 }/*# sourceMappingURL=globals.css.map */

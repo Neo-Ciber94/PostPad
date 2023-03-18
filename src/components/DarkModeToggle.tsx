@@ -22,11 +22,11 @@ export function DarkModeToggle({
       }}
       className={`transition-colors duration-200 ${
         isDark
-          ? "text-black hover:text-purple-300"
-          : "text-white hover:text-yellow-400"
+          ? "text-white hover:text-yellow-400"
+          : "text-black hover:text-purple-300"
       }`}
     >
-      {isDark ? <MoonIcon /> : <SunIcon />}
+      {isDark ? <SunIcon /> : <MoonIcon />}
     </button>
   );
 }

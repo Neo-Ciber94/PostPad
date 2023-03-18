@@ -13,7 +13,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
   return (
     <div
       className={`overflow-hidden rounded-lg py-4 transition-colors duration-500 ${
-        isDark ? "text-dark bg-white" : "bg-[#0d1117] text-white"
+        isDark ? "bg-[#0d1117] text-white" : "text-dark bg-white"
       }`}
     >
       <div className="px-4">
