@@ -1,32 +1,29 @@
+import { useDarkMode } from "@/lib/client/contexts/DarkModeContext";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 
 export interface DarkModeToggleProps {
-  isDark: boolean;
-  onToggle: () => void;
   size?: number;
 }
 
-export function DarkModeToggle({
-  isDark,
-  onToggle,
-  size = 32,
-}: DarkModeToggleProps) {
+export function DarkModeToggle({ size = 32 }: DarkModeToggleProps) {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+
   return (
     <button
       type="button"
       title="Toggle Dark Mode"
-      onClick={() => onToggle()}
+      onClick={() => toggleDarkMode()}
       style={{
         height: `${size}px`,
         width: `${size}px`,
       }}
       className={`transition-colors duration-200 ${
-        isDark
+        isDarkMode
           ? "text-white hover:text-yellow-400"
           : "text-black hover:text-purple-300"
       }`}
     >
-      {isDark ? <SunIcon /> : <MoonIcon />}
+      {isDarkMode ? <SunIcon /> : <MoonIcon />}
     </button>
   );
 }

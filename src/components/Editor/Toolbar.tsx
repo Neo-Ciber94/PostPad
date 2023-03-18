@@ -18,8 +18,6 @@ Font.whitelist = [
 ReactQuill.Quill.register(Font, true);
 
 export interface ToolbarProps {
-  isDarkMode: boolean;
-  onToggleDarkMode: () => void;
   isFullScreen: boolean;
   onToggleFullScreen: () => void;
 }
@@ -27,12 +25,7 @@ export interface ToolbarProps {
 /*
  * Custom toolbar component including the custom heart button and dropdowns
  */
-const Toolbar = ({
-  isDarkMode,
-  onToggleDarkMode,
-  isFullScreen,
-  onToggleFullScreen,
-}: ToolbarProps) => (
+const Toolbar = ({ isFullScreen, onToggleFullScreen }: ToolbarProps) => (
   <div id="toolbar" className="flex flex-col">
     <span className="flex flex-row items-center justify-between">
       <div>
@@ -77,7 +70,7 @@ const Toolbar = ({
         </span>
       </div>
       <div>
-        <DarkModeToggle isDark={isDarkMode} onToggle={onToggleDarkMode} />
+        <DarkModeToggle />
         <button
           type="button"
           className="!h-8 !w-8"

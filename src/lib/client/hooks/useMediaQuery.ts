@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 
-export function useMediaQuery(mediaQuery: string): boolean {
-  const [matches, setMatches] = useState(false);
+export function useMediaQuery(
+  mediaQuery: string,
+  defaultValue: boolean = true
+): boolean {
+  const [matches, setMatches] = useState(defaultValue);
 
   useEffect(() => {
     setMatches(window.matchMedia(mediaQuery).matches);

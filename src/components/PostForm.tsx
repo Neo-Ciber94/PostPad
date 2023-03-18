@@ -21,10 +21,9 @@ import { TagIcon } from "@heroicons/react/24/outline";
 import { getErrorMessage } from "@/lib/utils/getErrorMessage";
 import { useQueryClient } from "react-query";
 import { tagRules } from "@/lib/server/schemas/Tag";
-import { useMediaQuery } from "@/lib/client/hooks/useMediaQuery";
-import { useLocalStorageItem } from "@/lib/client/hooks/useLocalStorageItem";
 import dynamic from "next/dynamic";
 import EditorLoading from "./loading/EditorLoading";
+import { useDarkMode } from "@/lib/client/contexts/DarkModeContext";
 
 const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
   ssr: false,
@@ -56,15 +55,9 @@ export default function PostForm({
   isSubmitting,
   isEditing,
 }: PostFormProps) {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const darkMode = useLocalStorageItem<boolean>("dark", {
-    defaultValue: prefersDarkMode,
-  });
-
-  //const [isDark, setIsDark] = useState(prefersDarkMode);
   const router = useRouter();
   const queryClient = useQueryClient();
-
+  const { isDarkMode } = useDarkMode();
   const [showTags, setShowTags] = useState(
     () => post && post.tags && post.tags.length > 0
   );
@@ -147,7 +140,7 @@ export default function PostForm({
           placeholder="Title"
           className={`focus:shadow-outline w-full appearance-none rounded border border-gray-600
                  py-2 px-3 leading-tight shadow transition-colors duration-500 focus:outline-none ${
-                   darkMode.value ? "bg-[#0D1117] text-white" : "bg-white"
+                   isDarkMode ? "bg-[#0D1117] text-white" : "bg-white"
                  } ${errors.title?.message ? "border-red-500" : ""}`}
         />
         <p className="text-xs italic text-red-500">{errors.title?.message}</p>
@@ -160,12 +153,7 @@ export default function PostForm({
           name="content"
           render={({ field }) => {
             return (
-              <PostEditor
-                isDark={darkMode.value}
-                onToggleDarkMode={() => darkMode.set(!darkMode.value)}
-                value={field.value || ""}
-                onChange={field.onChange}
-              />
+              <PostEditor value={field.value || ""} onChange={field.onChange} />
             );
           }}
         />

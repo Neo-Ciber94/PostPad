@@ -3,20 +3,15 @@ import { useState, useMemo } from "react";
 import React from "react";
 import Toolbar from "./Toolbar";
 import ReactQuill from "react-quill";
+import { useDarkMode } from "@/lib/client/contexts/DarkModeContext";
 
 export interface PostEditorProps {
   value: string | undefined;
   onChange: (value: string) => void;
-  isDark: boolean;
-  onToggleDarkMode: () => void;
 }
 
-export default function PostEditor({
-  value,
-  onChange,
-  isDark,
-  onToggleDarkMode,
-}: PostEditorProps) {
+export default function PostEditor({ value, onChange }: PostEditorProps) {
+  const { isDarkMode } = useDarkMode();
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   const editorModules = useMemo(
@@ -30,7 +25,7 @@ export default function PostEditor({
 
   return (
     <div
-      className={`text-editor ${isDark ? "dark" : ""} ${
+      className={`text-editor ${isDarkMode ? "dark" : ""} ${
         isFullScreen ? "fullscreen" : ""
       } scrollbar
     scrollbar-track-base-300/25
@@ -38,8 +33,6 @@ export default function PostEditor({
     `}
     >
       <Toolbar
-        isDarkMode={isDark}
-        onToggleDarkMode={onToggleDarkMode}
         isFullScreen={isFullScreen}
         onToggleFullScreen={() => setIsFullScreen((fullScreen) => !fullScreen)}
       />
