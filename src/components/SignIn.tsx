@@ -4,7 +4,6 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { SiMicrosoft } from "react-icons/si";
 import Wave from "react-wavify";
-//import Wave from "./Wave";
 
 export default function SignIn() {
   return (
@@ -16,23 +15,24 @@ export default function SignIn() {
 }
 
 function WavyBackground() {
-  const [pos, setPos] = useState(100);
+  const [showWave, setShowWave] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setPos(0), 500);
+    setTimeout(() => setShowWave(true), 500);
   }, []);
 
   return (
     <div className="absolute inset-0 -z-10 flex h-screen w-full flex-row">
       <div className="w-2/3"></div>
       <div className="w-1/3 self-stretch overflow-hidden bg-base-400">
-        <div className="origin-bottom-left rotate-90">
+        <div
+          className={`transition-transform duration-1000 ease-in-out ${
+            showWave ? "translate-x-0" : "translate-x-[-60px]"
+          }`}
+        >
           <Wave
-            className="mt-[-400px] !block !w-[1000px] bg-base-400 transition-transform duration-1000 ease-in-out"
+            className="ml-[150px] !w-[100vh] origin-top-left rotate-90 bg-base-400"
             fill="rgb(56, 58, 89)"
-            style={{
-              transform: `translateY(${pos}px)`,
-            }}
             options={{
               height: 100,
               amplitude: 10,
