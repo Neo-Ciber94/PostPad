@@ -31,6 +31,3 @@ jobs:
     # Run linter
     - run: yarn lint
     
-    # Build
-    - run: yarn build
-    
