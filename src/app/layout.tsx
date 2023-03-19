@@ -8,6 +8,9 @@ import { getUserPrefersDarkMode } from "@/lib/server/utils/getUserPrefersDarkMod
 export const metadata = {
   title: "PostPad",
   description: "An app to create posts",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default async function RootLayout({
