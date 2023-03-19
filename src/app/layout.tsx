@@ -2,8 +2,8 @@ import "./styles/globals.scss";
 import Main from "@/components/Main";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { getUserPreferredColorScheme } from "@/lib/server/utils/getUserPreferredColorScheme";
 import { DarkModeProvider } from "@/lib/client/contexts/DarkModeContext";
+import { getUserPrefersDarkMode } from "@/lib/server/utils/getUserPrefersDarkMode";
 
 export const metadata = {
   title: "PostPad",
@@ -14,7 +14,7 @@ export default async function RootLayout({
   children,
 }: React.PropsWithChildren) {
   const session = await getServerSession(authOptions);
-  const preferredColorScheme = getUserPreferredColorScheme();
+  const prefersDarkMode = getUserPrefersDarkMode();
 
   return (
     <html lang="en">
@@ -24,7 +24,7 @@ export default async function RootLayout({
             scrollbar-thumb-base-700 
             scrollbar-thumb-rounded-lg"
       >
-        <DarkModeProvider preferredColorScheme={preferredColorScheme}>
+        <DarkModeProvider prefersDarkMode={prefersDarkMode}>
           <Main session={session}>{children}</Main>
         </DarkModeProvider>
       </body>

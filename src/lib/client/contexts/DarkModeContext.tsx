@@ -1,5 +1,5 @@
 "use client";
-import { PreferredColorScheme } from "@/lib/server/utils/getUserPreferredColorScheme";
+
 import React, {
   createContext,
   PropsWithChildren,
@@ -21,19 +21,26 @@ const DarkModeContext = createContext<DarkModeContextProps>(
 );
 
 interface DarkModeProviderProps {
-  preferredColorScheme?: PreferredColorScheme | null;
+  prefersDarkMode?: boolean | null;
 }
 
 export const DarkModeProvider: React.FC<
   PropsWithChildren<DarkModeProviderProps>
-> = ({ children, preferredColorScheme }) => {
-  const prefersDarkMode = useMediaQuery(
+> = ({ children, ...props }) => {
+  let { prefersDarkMode } = props;
+
+  // By default we use dark mode
+  if (prefersDarkMode == null) {
+    prefersDarkMode = true;
+  }
+
+  const prefersDarkColorScheme = useMediaQuery(
     "(prefers-color-scheme: dark)",
-    preferredColorScheme === "dark" // default values comes from the client hints
+    prefersDarkMode
   );
 
   const darkMode = useLocalStorageItem<boolean>("dark", {
-    defaultValue: prefersDarkMode,
+    defaultValue: prefersDarkColorScheme,
   });
 
   const isDarkMode = useMemo(() => darkMode.get(), [darkMode]);
@@ -41,6 +48,7 @@ export const DarkModeProvider: React.FC<
   const setDarkMode = useCallback(
     (value: boolean) => {
       darkMode.set(value);
+      fetch(`/api/p?dark=${value}`, { method: "POST" }).catch(console.error);
     },
     [darkMode]
   );
