@@ -4,12 +4,12 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
-  relationMode    = "prisma"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Post {
@@ -25,6 +25,7 @@ model Post {
   createdByUserId String
   createdByUser   User   @relation(fields: [createdByUserId], references: [id])
 
+  @@index([createdByUserId])
   @@fulltext([title, content])
 }
 
@@ -37,6 +38,9 @@ model Tag {
   //
   createdByUserId String
   createdByUser   User   @relation(fields: [createdByUserId], references: [id])
+
+  @@index([postId])
+  @@index([createdByUserId])
 }
 
 model Account {
@@ -56,6 +60,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -64,6 +69,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
