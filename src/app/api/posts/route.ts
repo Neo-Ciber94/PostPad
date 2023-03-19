@@ -1,14 +1,13 @@
 import { GetAllPostsOptions } from "@/lib/server/repositories/post.repository";
 import { PostService } from "@/lib/server/services/post.service";
-import { getSearchParams } from "@/lib/utils/requestUtils";
-import { json } from "@/lib/utils/responseUtils";
+import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 export async function GET(request: Request) {
   const postService = new PostService();
   const options = getGetAllPostsOptionsFromRequest(request);
   const result = await postService.getAllPosts(options);
-  return json(result);
+  return NextResponse.json(result);
 }
 
 export async function POST(request: Request) {
@@ -18,16 +17,23 @@ export async function POST(request: Request) {
     const input = await request.json();
     const result = await postService.createPost(input);
     console.log({ created: input });
-    return json(result);
+    return NextResponse.json(result);
   } catch (err) {
     console.error(err);
 
     if (err instanceof ZodError) {
       const zodError = err as ZodError;
-      return json(400, { message: zodError.message });
+      return NextResponse.json(zodError.message, {
+        status: 400,
+      });
     }
 
-    return json(500, { message: "Something went wrong" });
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      {
+        status: 500,
+      }
+    );
   }
 }
 
@@ -39,25 +45,37 @@ export async function PUT(request: Request) {
     const result = await postService.updatePost(input);
 
     if (result == null) {
-      return json(404, { message: "Post not found" });
+      return NextResponse.json(
+        { message: "Post not found" },
+        {
+          status: 404,
+        }
+      );
     }
 
     console.log({ updated: input });
-    return json(result);
+    return NextResponse.json(result);
   } catch (err) {
     console.error(err);
 
     if (err instanceof ZodError) {
       const zodError = err as ZodError;
-      return json(400, { message: zodError.message });
+      return NextResponse.json(zodError.message, {
+        status: 400,
+      });
     }
 
-    return json(500, { message: "Something went wrong" });
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      {
+        status: 500,
+      }
+    );
   }
 }
 
 function getGetAllPostsOptionsFromRequest(request: Request) {
-  const searchParams = getSearchParams(request);
+  const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") ?? undefined;
   const page = searchParams.get("page") ?? undefined;
   const limit = searchParams.get("limit") ?? undefined;

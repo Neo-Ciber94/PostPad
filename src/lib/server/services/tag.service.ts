@@ -1,4 +1,4 @@
-import { getUserIdFromSession } from "@/lib/utils/getUserIdFromSession";
+import { getUserIdFromSession } from "@/lib/server/utils/getUserIdFromSession";
 import { TagRepository } from "../repositories/tag.repository";
 
 export class TagService {

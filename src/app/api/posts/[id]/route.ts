@@ -1,6 +1,6 @@
 import { PostService } from "@/lib/server/services/post.service";
 import { RequestContext } from "@/lib/server/types/RequestContext";
-import { json } from "@/lib/utils/responseUtils";
+import { json } from "@/lib/server/utils/responseUtils";
 
 export async function DELETE(_: Request, ctx: RequestContext<{ id: string }>) {
   const postService = new PostService();

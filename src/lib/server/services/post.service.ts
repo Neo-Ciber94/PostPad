@@ -3,7 +3,7 @@ import {
   PostRepository,
 } from "../repositories/post.repository";
 import { CreatePost, Post, UpdatePost } from "../schemas/Post";
-import { getUserIdFromSession } from "@/lib/utils/getUserIdFromSession";
+import { getUserIdFromSession } from "@/lib/server/utils/getUserIdFromSession";
 
 export class PostService {
   private readonly postRepository = new PostRepository();
