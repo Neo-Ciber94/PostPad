@@ -7,7 +7,7 @@ export interface UseLocalStorageItemOptions<T> {
 }
 
 export type UseLocalStorageItemResult<T> = {
-  value: T;
+  get: () => T;
   set: (newValue: T) => void;
   remove: () => void;
 };
@@ -47,6 +47,10 @@ export function useLocalStorageItem<T = unknown>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
+  const get = useCallback(() => {
+    return value;
+  }, [value]);
+
   const set = useCallback(
     (newValue: T | null) => {
       const stringValue = stringify(newValue);
@@ -61,5 +65,5 @@ export function useLocalStorageItem<T = unknown>(
     localStorage.removeItem(key);
   }, [key]);
 
-  return { value, set, remove };
+  return { get, set, remove };
 }

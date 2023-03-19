@@ -7,7 +7,6 @@ import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import Authorized from "./Authorized";
 import SignIn from "./SignIn";
-import { DarkModeProvider } from "@/lib/client/contexts/DarkModeContext";
 
 const queryClient = new QueryClient();
 
@@ -28,15 +27,13 @@ const Main: React.FC<PropsWithChildren<MainProps>> = ({
   }
 
   return (
-    <DarkModeProvider>
-      <SessionProvider session={session}>
-        <MainContent session={session}>
-          <Authorized>
-            <main className="mx-auto h-full md:container">{children}</main>
-          </Authorized>
-        </MainContent>
-      </SessionProvider>
-    </DarkModeProvider>
+    <SessionProvider session={session}>
+      <MainContent session={session}>
+        <Authorized>
+          <main className="mx-auto h-full md:container">{children}</main>
+        </Authorized>
+      </MainContent>
+    </SessionProvider>
   );
 };
 
