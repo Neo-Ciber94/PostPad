@@ -12,7 +12,7 @@ export default async function middleware(req: NextRequest) {
   // https://github.com/nextauthjs/next-auth/issues/523
   const token = await getToken({ req, raw: true });
 
-  if (token == null && pathname !== "/") {
+  if (token == null && pathname !== "/" && !pathname.startsWith("/api/auth/")) {
     return NextResponse.redirect(`${origin}`);
   }
 
