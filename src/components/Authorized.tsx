@@ -8,6 +8,7 @@ const Authorized: React.FC<PropsWithChildren> = ({ children }) => {
   const { data: session, status } = useSession({
     required: true,
   });
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -18,7 +19,6 @@ const Authorized: React.FC<PropsWithChildren> = ({ children }) => {
 
     if (!session && pathname !== "/") {
       router.push("/");
-      console.log("redirect");
     }
   }, [pathname, router, session]);
 

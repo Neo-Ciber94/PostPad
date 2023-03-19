@@ -1,11 +1,20 @@
-// export { default } from "next-auth/middleware";
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-export default function middleware(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
   const headers = new Headers(req.headers);
+  const { origin, pathname } = req.nextUrl;
 
   // https://web.dev/user-preference-media-features-headers/
   headers.append("Accept-CH", "Sec-CH-Prefers-Color-Scheme");
+
+  // This is only returning the token is `raw: true`, not sure why.
+  // https://github.com/nextauthjs/next-auth/issues/523
+  const token = await getToken({ req, raw: true });
+
+  if (token == null && pathname !== "/") {
+    return NextResponse.redirect(`${origin}`);
+  }
 
   return NextResponse.next({
     headers,
@@ -23,3 +32,15 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
+
+// import withAuth from "next-auth/middleware";
+
+// export default withAuth({
+//   pages: {
+//     signIn: "/",
+//   },
+// });
+
+// export const config = {
+//   matcher: ["/posts/(.*)", "/api/(.*)"],
+// };
