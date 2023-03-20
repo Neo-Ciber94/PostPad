@@ -5,7 +5,7 @@ export interface DialogProps {
   className?: string;
 }
 
-export function Dialog({
+export default function Dialog({
   children,
   ...props
 }: React.PropsWithChildren<DialogProps>) {

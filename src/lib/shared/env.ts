@@ -18,6 +18,10 @@ const envSchema = z.object({
   AZURE_AD_B2C_CLIENT_ID: z.string(),
   AZURE_AD_B2C_CLIENT_SECRET: z.string(),
   AZURE_AD_B2C_PRIMARY_USER_FLOW: z.string(),
+
+  // openAI
+  OPENAI_API_KEY: z.string(),
+  OPENAI_ORGANIZATION_ID: z.string(),
 });
 
 export const environment: Environment = envSchema.parse({
@@ -36,4 +40,8 @@ export const environment: Environment = envSchema.parse({
   AZURE_AD_B2C_CLIENT_ID: process.env.AZURE_AD_B2C_CLIENT_ID,
   AZURE_AD_B2C_CLIENT_SECRET: process.env.AZURE_AD_B2C_CLIENT_SECRET,
   AZURE_AD_B2C_PRIMARY_USER_FLOW: process.env.AZURE_AD_B2C_PRIMARY_USER_FLOW,
+
+  // openAI
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  OPENAI_ORGANIZATION_ID: process.env.OPENAI_ORGANIZATION_ID
 } satisfies Partial<Environment>);
