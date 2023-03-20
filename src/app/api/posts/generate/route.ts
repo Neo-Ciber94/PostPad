@@ -18,6 +18,7 @@ const generatePostSchema = z.object({
 
 export async function POST(req: Request) {
   const result = generatePostSchema.safeParse(req.body);
+  console.log({result});
 
   if (result.success === false) {
     return NextResponse.json(
@@ -29,6 +30,7 @@ export async function POST(req: Request) {
   }
 
   const { prompt } = result.data;
+  console.log(prompt);
   const messages: ChatCompletionRequestMessage[] = [
     {
       role: "system",
