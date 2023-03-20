@@ -82,12 +82,19 @@ const PromptDialog: React.FC<PromptDialogProps> = (props) => {
     >
       <div className="p-4">
         <textarea
-          className="w-full resize-none rounded-md border-none
-              bg-base-600 p-4 text-white shadow-sm outline-none"
+          className="max-h-[300px] w-full resize-none overflow-hidden
+              rounded-md border-none bg-base-600 p-4 text-white shadow-sm outline-none"
           placeholder={placeholder}
           rows={1}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
+          onInput={(e) => {
+            // Auto resize text area
+            // https://stackoverflow.com/a/24676492/9307869
+            const element = e.currentTarget;
+            element.style.height = "auto";
+            element.style.height = element.scrollHeight + "px";
+          }}
         />
       </div>
     </ConfirmDialog>

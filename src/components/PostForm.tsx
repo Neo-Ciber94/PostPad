@@ -10,7 +10,7 @@ import {
 } from "@/lib/server/schemas/Post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "./Button";
 import LoadingSpinner from "./loading/LoadingSpinner";
@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import TagList from "./TagsListInput";
 import { TagIcon } from "@heroicons/react/24/outline";
 import { getErrorMessage } from "@/lib/utils/getErrorMessage";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { tagRules } from "@/lib/server/schemas/Tag";
 import dynamic from "next/dynamic";
 import EditorLoading from "./loading/EditorLoading";
@@ -64,18 +64,6 @@ export default function PostForm({
     () => post && post.tags && post.tags.length > 0
   );
 
-  const promptDialog = usePromptDialog();
-
-  const handleOpenPromptDialog = () => {
-    promptDialog.open({
-      title: "Generate AI Post",
-      placeholder: "What would you like your post to be about?",
-      onConfirm(prompt) {
-        console.log({ prompt });
-      },
-    });
-  };
-
   const schema = useMemo(
     () => (isEditing === true ? updatePostSchema : createPostSchema),
     [isEditing]
@@ -84,12 +72,79 @@ export default function PostForm({
   const {
     control,
     register,
+    setValue,
+    resetField,
     formState: { errors },
     handleSubmit,
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: post,
   });
+
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const [generatedContent, setGeneratedContent] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const promptDialog = usePromptDialog();
+
+  const generatePost = useMutation(async (prompt: string) => {
+    console.log({ prompt });
+    resetField("content");
+    setGeneratedContent("");
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    abortControllerRef.current = new AbortController();
+    const { signal } = abortControllerRef.current;
+
+    const res = await fetch("/api/posts/generate", {
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ prompt }),
+      signal,
+    });
+
+    const stream = res.body;
+    const decoder = new TextDecoder();
+
+    if (stream == null) {
+      throw new Error("response stream is null");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    for await (const chunk of stream as unknown as AsyncIterable<any>) {
+      const text = decoder.decode(chunk);
+      setGeneratedContent((prev) => {
+        const newText = prev + text;
+        setValue("content", newText);
+        return newText;
+      });
+    }
+  });
+
+  const handleOpenPromptDialog = () => {
+    if (isGenerating) {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      //setIsGenerating(false);
+      return;
+    }
+
+    promptDialog.open({
+      title: "Generate AI Post",
+      placeholder: "What would you like your post to be about?",
+      onConfirm(prompt) {
+        setIsGenerating(true);
+        generatePost.mutate(prompt, {
+          onSettled() {
+            setIsGenerating(false);
+          },
+        });
+      },
+    });
+  };
 
   return (
     <>
@@ -110,7 +165,10 @@ export default function PostForm({
       >
         <div className="mb-2 flex flex-row justify-end">
           <div className="flex flex-row items-center gap-4">
-            <GenerateAIPostButton onClick={handleOpenPromptDialog} />
+            <GenerateAIPostButton
+              onClick={handleOpenPromptDialog}
+              isLoading={generatePost.isLoading}
+            />
             <div className="flex flex-row gap-2">
               <button
                 type="button"

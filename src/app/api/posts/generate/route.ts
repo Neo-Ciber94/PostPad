@@ -1,11 +1,19 @@
-import { environment } from "@/lib/shared/env";
+import { createChatCompletion } from "@/lib/utils/createChatCompletion";
 import { NextResponse } from "next/server";
-//import { Configuration, OpenAIApi } from "openai";
-import { CreateCompletionRequest } from "openai/dist/api";
+import { ChatCompletionRequestMessage } from "openai/dist/api";
 import { z } from "zod";
 
+const nonempty = z
+  .string()
+  .transform((t) => t?.trim())
+  .pipe(
+    z.string().min(6, {
+      message: "The prompt should be more detailed",
+    })
+  );
+
 const generatePostSchema = z.object({
-  prompt: z.string(),
+  prompt: z.string().pipe(nonempty),
 });
 
 export async function POST(req: Request) {
@@ -21,89 +29,28 @@ export async function POST(req: Request) {
   }
 
   const { prompt } = result.data;
-//   const configuration = new Configuration({
-//     organization: environment.OPENAI_ORGANIZATION_ID,
-//     apiKey: environment.OPENAI_API_KEY,
-//   });
+  const messages: ChatCompletionRequestMessage[] = [
+    {
+      role: "system",
+      content:
+        "You are an assistant generate written posts in HTML about a topic",
+    },
+    {
+      role: "user",
+      content: `Write a post about: ${prompt}`,
+    },
+  ];
 
-  //const openai = new OpenAIApi(configuration);
-  const competitionRequest: CreateCompletionRequest = {
+  const stream = await createChatCompletion({
     model: "gpt-3.5-turbo",
-    prompt,
+    messages,
     max_tokens: 2048,
     temperature: 0,
     top_p: 1,
     n: 1,
-    stream: true,
-  };
-
-  const completion = await fetch("https://api.openai.com/v1/chat/completions", {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${environment.OPENAI_API_KEY}`,
-      "OpenAI-Organization": environment.OPENAI_ORGANIZATION_ID,
-    },
-    method: "POST",
-    body: JSON.stringify(competitionRequest),
     signal: req.signal,
   });
 
-  if (!completion.ok) {
-    const error = getErrorFromResponse(completion);
-    return NextResponse.json({ error }, { status: 500 });
-  }
-
-  const reader = completion.body?.getReader();
-
-  if (reader == null) {
-    return NextResponse.json(
-      {
-        message: "Failed to generate completion",
-      },
-      { status: 500 }
-    );
-  }
-
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
-
-  return new ReadableStream({
-    async start(controller) {
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        const { done, value: data } = await reader.read();
-
-        const message = decoder.decode(data);
-
-        if (message === "[DONE]" || done) {
-          break;
-        }
-
-        const chunk = encoder.encode(message);
-        controller.enqueue(chunk);
-      }
-    },
-  });
+  return new Response(stream);
 }
 
-async function getErrorFromResponse(
-  response: Response
-): Promise<unknown | null> {
-  if (response.headers.get("Content-Type") === "application/json") {
-    const json = await response.json();
-
-    if (json == null) {
-      return null;
-    }
-
-    try {
-      return JSON.stringify(json);
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  }
-
-  const text = await response.text();
-  return text;
-}
