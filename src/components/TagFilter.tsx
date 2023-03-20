@@ -112,7 +112,7 @@ function TagSelectorDialog(props: TagSelectorDialog) {
 
   return (
     <Dialog
-      className="bg-base-500"
+      className="bg-base-500 min-h-[250px] w-4/5"
       BackdropProps={{
         onClick: onClose,
       }}

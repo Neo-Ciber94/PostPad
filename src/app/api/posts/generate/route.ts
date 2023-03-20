@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   const competitionRequest: CreateCompletionRequest = {
     model: "gpt-3.5-turbo",
     prompt,
-    max_tokens: 4096,
+    max_tokens: 2048,
     temperature: 0,
     top_p: 1,
     n: 1,

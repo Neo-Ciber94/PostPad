@@ -25,7 +25,7 @@ import dynamic from "next/dynamic";
 import EditorLoading from "./loading/EditorLoading";
 import { useDarkMode } from "@/lib/client/contexts/DarkModeContext";
 import { GenerateAIPostButton } from "./GenerateAIPostButton";
-import ConfirmDialog from "./ConfirmDialog";
+import { usePromptDialog } from "@/lib/client/hooks/usePromptDialog";
 
 const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
   ssr: false,
@@ -64,7 +64,17 @@ export default function PostForm({
     () => post && post.tags && post.tags.length > 0
   );
 
-  const [open, setOpen] = useState(false);
+  const promptDialog = usePromptDialog();
+
+  const handleOpenPromptDialog = () => {
+    promptDialog.open({
+      title: "Generate AI Post",
+      placeholder: "What would you like your post to be about?",
+      onConfirm(prompt) {
+        console.log({ prompt });
+      },
+    });
+  };
 
   const schema = useMemo(
     () => (isEditing === true ? updatePostSchema : createPostSchema),
@@ -83,11 +93,7 @@ export default function PostForm({
 
   return (
     <>
-      {open && (
-        <ConfirmDialog title="Hello World" onClose={() => setOpen(false)}>
-          Hole Mundo
-        </ConfirmDialog>
-      )}
+      <promptDialog.DialogComponent />
 
       <form
         className="flex w-full flex-col lg:px-[5%]"
@@ -104,7 +110,7 @@ export default function PostForm({
       >
         <div className="mb-2 flex flex-row justify-end">
           <div className="flex flex-row items-center gap-4">
-            <GenerateAIPostButton onClick={() => setOpen(true)} />
+            <GenerateAIPostButton onClick={handleOpenPromptDialog} />
             <div className="flex flex-row gap-2">
               <button
                 type="button"

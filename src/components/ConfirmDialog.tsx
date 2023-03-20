@@ -1,19 +1,32 @@
-import { PropsWithChildren } from "react";
+import { CSSProperties, PropsWithChildren } from "react";
 import Button from "./Button";
 import Dialog from "./Dialog";
 
 export interface ConfirmDialogProps {
   title: React.ReactNode;
+  className?: string;
+  style?: CSSProperties;
   onClose: () => void;
   onConfirm?: () => void;
   onCancel?: () => void;
+  confirmLabel?: string;
+  cancelLabel?: string;
 }
 
 const ConfirmDialog: React.FC<PropsWithChildren<ConfirmDialogProps>> = ({
   children,
   ...props
 }) => {
-  const { title, onConfirm, onCancel, onClose } = props;
+  const {
+    title,
+    className = "",
+    style,
+    onConfirm,
+    onCancel,
+    onClose,
+    confirmLabel = "Confirm",
+    cancelLabel = "Cancel",
+  } = props;
 
   const handleConfirm = () => {
     if (onConfirm) {
@@ -29,7 +42,8 @@ const ConfirmDialog: React.FC<PropsWithChildren<ConfirmDialogProps>> = ({
 
   return (
     <Dialog
-      className="bg-base-500"
+      className={`bg-base-500 ${className}`}
+      style={style}
       BackdropProps={{
         onClick: onClose,
       }}
@@ -37,7 +51,7 @@ const ConfirmDialog: React.FC<PropsWithChildren<ConfirmDialogProps>> = ({
       <div className="flex flex-1 flex-col">
         <header>
           <nav
-            className="flex h-16 cursor-pointer flex-row items-center justify-between overflow-hidden 
+            className="flex cursor-pointer flex-row items-center justify-between overflow-hidden 
           rounded-t-xl bg-alt-500 px-4 py-3 text-white shadow-md"
           >
             <div className="flex flex-row items-center">
@@ -58,10 +72,10 @@ const ConfirmDialog: React.FC<PropsWithChildren<ConfirmDialogProps>> = ({
 
         <div className="mb-2 mt-auto flex flex-row gap-2 self-stretch px-2">
           <Button type="button" variant="primary" onClick={handleConfirm}>
-            Confirm
+            {confirmLabel}
           </Button>
           <Button type="button" variant="error" onClick={handleCancel}>
-            Cancel
+            {cancelLabel}
           </Button>
         </div>
       </div>
