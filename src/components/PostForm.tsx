@@ -100,19 +100,25 @@ export default function PostForm({
 
     const res = await fetch("/api/posts/generate", {
       headers: { "content-type": "application/json" },
+      method: "POST",
       body: JSON.stringify({ prompt }),
       signal,
     });
 
-    const stream = res.body;
+    const stream = res.body?.getReader();
     const decoder = new TextDecoder();
 
     if (stream == null) {
       throw new Error("response stream is null");
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    for await (const chunk of stream as unknown as AsyncIterable<any>) {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { done, value: chunk } = await stream.read();
+      if (done) {
+        break;
+      }
+      
       const text = decoder.decode(chunk);
       setGeneratedContent((prev) => {
         const newText = prev + text;

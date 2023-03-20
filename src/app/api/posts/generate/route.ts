@@ -41,16 +41,23 @@ export async function POST(req: Request) {
     },
   ];
 
-  const stream = await createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages,
-    max_tokens: 2048,
-    temperature: 0,
-    top_p: 1,
-    n: 1,
-    signal: req.signal,
-  });
+  try {
+    const stream = await createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages,
+      max_tokens: 2048,
+      temperature: 0,
+      top_p: 1,
+      n: 1,
+      signal: req.signal,
+    });
 
-  return new Response(stream);
+    return new Response(stream);
+  } catch (err) {
+    console.error(err);
+
+    return NextResponse.json(err, {
+      status: 500,
+    });
+  }
 }
-

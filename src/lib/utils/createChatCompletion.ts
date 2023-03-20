@@ -54,6 +54,8 @@ export async function createChatCompletion(
   });
 
   if (!completion.ok) {
+    const error = getErrorFromResponse(completion);
+    console.error(error);
     throw new Error("Failed to generate completion");
   }
 
@@ -76,6 +78,7 @@ export async function createChatCompletion(
             const chunk = encoder.encode(content || "");
             controller.enqueue(chunk);
           } catch (err) {
+            console.error(err);
             controller.error(err);
           }
         }
@@ -93,11 +96,6 @@ export async function createChatCompletion(
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       for await (const chunk of completion.body as any) {
-        if (signal.aborted) {
-          console.log("\n\n[ABORTED]");
-          break;
-        }
-
         parser.feed(decoder.decode(chunk));
       }
     },
