@@ -1,24 +1,16 @@
 import { createChatCompletion } from "@/lib/utils/createChatCompletion";
+import { noEmptyPrompt } from "@/lib/utils/schemas/noempty";
 import { NextResponse } from "next/server";
 import { ChatCompletionRequestMessage } from "openai/dist/api";
 import { z } from "zod";
 
-const nonempty = z
-  .string()
-  .transform((t) => t?.trim())
-  .pipe(
-    z.string().min(6, {
-      message: "The prompt should be more detailed",
-    })
-  );
-
 const generatePostSchema = z.object({
-  prompt: z.string().pipe(nonempty),
+  prompt: z.string().pipe(noEmptyPrompt),
 });
 
-export async function POST(req: Request) {
-  const result = generatePostSchema.safeParse(req.body);
-  console.log({result});
+export async function POST(request: Request) {
+  const json = await request.json();
+  const result = generatePostSchema.safeParse(json);
 
   if (result.success === false) {
     return NextResponse.json(
@@ -30,12 +22,10 @@ export async function POST(req: Request) {
   }
 
   const { prompt } = result.data;
-  console.log(prompt);
   const messages: ChatCompletionRequestMessage[] = [
     {
       role: "system",
-      content:
-        "You are an assistant generate written posts in HTML about a topic",
+      content: "You are a bott that generates posts in HTML about a topic",
     },
     {
       role: "user",
@@ -47,11 +37,12 @@ export async function POST(req: Request) {
     const stream = await createChatCompletion({
       model: "gpt-3.5-turbo",
       messages,
-      max_tokens: 2048,
+      max_tokens: 1024,
       temperature: 0,
       top_p: 1,
       n: 1,
-      signal: req.signal,
+      stream: true,
+      signal: request.signal,
     });
 
     return new Response(stream);

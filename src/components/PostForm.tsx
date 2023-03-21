@@ -10,8 +10,8 @@ import {
 } from "@/lib/server/schemas/Post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useMemo, useState } from "react";
+import { Controller, useController, useForm } from "react-hook-form";
 import Button from "./Button";
 import LoadingSpinner from "./loading/LoadingSpinner";
 import Alert from "./Alert";
@@ -26,6 +26,8 @@ import EditorLoading from "./loading/EditorLoading";
 import { useDarkMode } from "@/lib/client/contexts/DarkModeContext";
 import { GenerateAIPostButton } from "./GenerateAIPostButton";
 import { usePromptDialog } from "@/lib/client/hooks/usePromptDialog";
+import { useAbortController } from "@/lib/client/hooks/useAbortController";
+import { useStateWithChange } from "@/lib/client/hooks/useStateWithChange";
 
 const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
   ssr: false,
@@ -72,8 +74,6 @@ export default function PostForm({
   const {
     control,
     register,
-    setValue,
-    resetField,
     formState: { errors },
     handleSubmit,
   } = useForm({
@@ -81,74 +81,85 @@ export default function PostForm({
     defaultValues: post,
   });
 
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const [generatedContent, setGeneratedContent] = useState("");
+  const editorController = useController({
+    name: "content",
+    defaultValue: "",
+    control,
+  });
+
+  const abortController = useAbortController({
+    onAbort() {
+      console.log("[ABORTED]");
+    },
+  });
+
+  const editorContent = useStateWithChange(
+    editorController.field.value || "",
+    (content) => {
+      editorController.field.onChange(content);
+    }
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_generated, setGenerated] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const promptDialog = usePromptDialog();
 
   const generatePost = useMutation(async (prompt: string) => {
     console.log({ prompt });
-    resetField("content");
-    setGeneratedContent("");
+    setGenerated("");
+    editorContent.set("");
 
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
+    if (isGenerating && !abortController.isAborted) {
+      abortController.abort();
     }
 
-    abortControllerRef.current = new AbortController();
-    const { signal } = abortControllerRef.current;
+    setIsGenerating(true);
 
-    const res = await fetch("/api/posts/generate", {
-      headers: { "content-type": "application/json" },
-      method: "POST",
-      body: JSON.stringify({ prompt }),
-      signal,
-    });
-
-    const stream = res.body?.getReader();
-    const decoder = new TextDecoder();
-
-    if (stream == null) {
-      throw new Error("response stream is null");
-    }
-
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const { done, value: chunk } = await stream.read();
-      if (done) {
-        break;
-      }
-      
-      const text = decoder.decode(chunk);
-      setGeneratedContent((prev) => {
-        const newText = prev + text;
-        setValue("content", newText);
-        return newText;
+    try {
+      const res = await fetch("/api/posts/generate2", {
+        headers: { "content-type": "application/json" },
+        method: "POST",
+        body: JSON.stringify({ prompt }),
+        signal: abortController.signal,
       });
+
+      const stream = res.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (stream == null) {
+        throw new Error("response stream is null");
+      }
+
+      let done = false;
+
+      while (!done) {
+        const { done: doneReading, value: data } = await stream.read();
+        done = doneReading;
+
+        const chunk = decoder.decode(data);
+
+        setGenerated((prev) => {
+          const nextChunk = prev + chunk;
+          editorContent.set(nextChunk);
+          return nextChunk;
+        });
+      }
+    } finally {
+      setIsGenerating(false);
     }
   });
 
   const handleOpenPromptDialog = () => {
     if (isGenerating) {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-
-      //setIsGenerating(false);
+      abortController.abort();
       return;
     }
 
     promptDialog.open({
       title: "Generate AI Post",
       placeholder: "What would you like your post to be about?",
-      onConfirm(prompt) {
-        setIsGenerating(true);
-        generatePost.mutate(prompt, {
-          onSettled() {
-            setIsGenerating(false);
-          },
-        });
-      },
+      onConfirm: (prompt) => generatePost.mutate(prompt),
     });
   };
 
@@ -179,7 +190,7 @@ export default function PostForm({
               <button
                 type="button"
                 className="rounded-full bg-slate-600 p-3 shadow-lg 
-        transition-colors duration-200 hover:bg-slate-900"
+                          transition-colors duration-200 hover:bg-slate-900"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowTags((show) => !show);
@@ -232,16 +243,15 @@ export default function PostForm({
 
         <div className="mb-2">
           <label className="mb-2 block font-bold text-white">Content</label>
-          <Controller
-            control={control}
-            name="content"
-            render={({ field }) => {
-              return (
-                <PostEditor
-                  value={field.value || ""}
-                  onChange={field.onChange}
-                />
-              );
+          <PostEditor
+            value={editorContent.value}
+            readOnly={isGenerating}
+            onChange={(value) => {
+              if (isGenerating) {
+                return;
+              }
+
+              editorContent.set(value);
             }}
           />
           <p className="text-xs italic text-red-500">

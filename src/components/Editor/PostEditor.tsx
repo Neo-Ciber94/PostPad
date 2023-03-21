@@ -7,10 +7,15 @@ import { useDarkMode } from "@/lib/client/contexts/DarkModeContext";
 
 export interface PostEditorProps {
   value: string | undefined;
+  readOnly?: boolean;
   onChange: (value: string) => void;
 }
 
-export default function PostEditor({ value, onChange }: PostEditorProps) {
+export default function PostEditor({
+  value,
+  onChange,
+  readOnly,
+}: PostEditorProps) {
   const { isDarkMode } = useDarkMode();
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -41,6 +46,7 @@ export default function PostEditor({ value, onChange }: PostEditorProps) {
         theme="snow"
         value={value}
         modules={editorModules}
+        readOnly={readOnly}
         onChange={onChange}
         onKeyDown={(e) => {
           if (e.key === "Escape") {
