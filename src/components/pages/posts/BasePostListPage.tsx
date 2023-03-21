@@ -52,7 +52,7 @@ export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
         <NewPostButton />
       </div>
 
-      <div className="px-10 md:px-[10%] lg:px-[20%]">
+      <div className="px-2 md:px-[10%] lg:px-[20%]">
         <hr className="my-8 bg-gray-400 opacity-10" />
         <div className="mt-4 mb-8 flex flex-col gap-2">
           <TagFilter
