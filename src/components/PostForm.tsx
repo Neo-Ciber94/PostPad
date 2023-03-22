@@ -100,14 +100,11 @@ export default function PostForm({
     }
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_generated, setGenerated] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const promptDialog = usePromptDialog();
 
   const generatePost = useMutation(async (prompt: string) => {
     console.log({ prompt });
-    setGenerated("");
     editorContent.set("");
 
     if (isGenerating && !abortController.isAborted) {
@@ -117,33 +114,16 @@ export default function PostForm({
     setIsGenerating(true);
 
     try {
-      const res = await fetch("/api/posts/generate", {
-        headers: { "content-type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({ prompt }),
-        signal: abortController.signal,
-      });
+      const completionStream = fetchPostCompletionStream(
+        prompt,
+        abortController.signal
+      );
 
-      const stream = res.body?.getReader();
-      const decoder = new TextDecoder();
-
-      if (stream == null) {
-        throw new Error("response stream is null");
-      }
-
-      let done = false;
-
-      while (!done) {
-        const { done: doneReading, value: data } = await stream.read();
-        done = doneReading;
-
-        const chunk = decoder.decode(data);
-
-        setGenerated((prev) => {
-          const nextChunk = prev + chunk;
-          editorContent.set(nextChunk);
-          return nextChunk;
-        });
+      let generated = "";
+      for await (const chunk of completionStream) {
+        const nextChunk = generated + chunk;
+        generated = nextChunk;
+        editorContent.set(generated);
       }
     } finally {
       setIsGenerating(false);
@@ -177,6 +157,7 @@ export default function PostForm({
             queryKey: ["posts"],
             exact: true,
           });
+
           router.refresh();
         })}
       >
@@ -296,4 +277,30 @@ export default function PostForm({
       </form>
     </>
   );
+}
+
+async function* fetchPostCompletionStream(prompt: string, signal: AbortSignal) {
+  const res = await fetch("/api/posts/generate", {
+    headers: { "content-type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({ prompt }),
+    signal,
+  });
+
+  const stream = res.body?.getReader();
+  const decoder = new TextDecoder();
+
+  if (stream == null) {
+    throw new Error("response stream is null");
+  }
+
+  let done = false;
+
+  while (!done) {
+    const { done: doneReading, value: data } = await stream.read();
+    done = doneReading;
+
+    const chunk = decoder.decode(data);
+    yield chunk;
+  }
 }

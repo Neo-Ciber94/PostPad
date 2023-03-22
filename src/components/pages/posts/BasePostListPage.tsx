@@ -101,7 +101,11 @@ async function fetchPosts(searchString: string, tags: SelectedTag[]) {
   const queryString = searchParams.toString();
   const q = queryString.length > 0 ? `?${queryString}` : "";
 
-  const res = await fetch(`/api/posts${q}`);
+  const res = await fetch(`/api/posts${q}`, {
+    next: {
+      revalidate: 10,
+    },
+  });
   const json = await res.json();
   return json as Post[];
 }

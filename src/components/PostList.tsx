@@ -23,6 +23,11 @@ export default function PostList({ posts: initialPosts }: PostListProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [posts, setPosts] = useState(initialPosts);
 
+  const handleDelete = (postId: string) => {
+    const newPosts = posts.filter((post) => post.id !== postId);
+    setPosts(newPosts);
+  };
+
   return (
     <>
       {posts.length === 0 && (
@@ -35,7 +40,13 @@ export default function PostList({ posts: initialPosts }: PostListProps) {
       {
         <>
           {posts.map((post) => {
-            return <PostListItem post={post} key={post.id} />;
+            return (
+              <PostListItem
+                post={post}
+                key={post.id}
+                onDelete={() => handleDelete(post.id)}
+              />
+            );
           })}
 
           <div className="h-8"></div>
@@ -47,9 +58,10 @@ export default function PostList({ posts: initialPosts }: PostListProps) {
 
 interface PostListItemProps {
   post: Post;
+  onDelete: () => void;
 }
 
-function PostListItem({ post }: PostListItemProps) {
+function PostListItem({ post, onDelete }: PostListItemProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -73,6 +85,7 @@ function PostListItem({ post }: PostListItemProps) {
       exact: false,
     });
     router.refresh();
+    onDelete();
   });
 
   const handleClose = () => {
