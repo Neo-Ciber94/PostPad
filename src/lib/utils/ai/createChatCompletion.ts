@@ -4,7 +4,7 @@ import {
   ReconnectInterval,
 } from "eventsource-parser";
 import { CreateChatCompletionRequest } from "openai";
-import { environment } from "../shared/env";
+import { environment } from "../../shared/env";
 
 export interface ChatCompletionPayload extends CreateChatCompletionRequest {
   signal: AbortSignal;

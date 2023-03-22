@@ -1,16 +1,17 @@
-import { createChatCompletion } from "@/lib/utils/createChatCompletion";
+import { createChatCompletion } from "@/lib/utils/ai/createChatCompletion";
 import { noEmptyPrompt } from "@/lib/utils/schemas/noempty";
 import { ChatCompletionRequestMessage } from "openai/dist/api";
 import { json } from "@/lib/utils/responseUtils";
 import { z } from "zod";
+import { contentModeration } from "@/lib/utils/ai/contentModeration";
 
 const generatePostSchema = z.object({
   prompt: z.string().pipe(noEmptyPrompt),
 });
 
 export async function POST(request: Request) {
-  const json = await request.json();
-  const result = generatePostSchema.safeParse(json);
+  const input = await request.json();
+  const result = generatePostSchema.safeParse(input);
 
   if (result.success === false) {
     return json(
@@ -22,10 +23,24 @@ export async function POST(request: Request) {
   }
 
   const { prompt } = result.data;
+  const moderationResult = await contentModeration(prompt, request.signal);
+  const anyFlagged = moderationResult.results.some((x) => x.flagged === true);
+
+  if (anyFlagged) {
+    return json(
+      {
+        message:
+          "We're unable to process your prompt at this time, as it has been flagged for moderation",
+      },
+      { status: 400 }
+    );
+  }
+
   const messages: ChatCompletionRequestMessage[] = [
     {
       role: "system",
-      content: "You are a bott that generates posts in HTML about a topic",
+      content:
+        "Generate posts in HTML which at least 2 paragraphs, include a title with <h1> and separate the paragraphs with <br>",
     },
     {
       role: "user",
