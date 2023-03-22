@@ -60,7 +60,7 @@ export const Menu: React.FC<PropsWithChildren<MenuProps>> = ({
         ref={curRef}
         className="absolute top-5 left-[-80px] z-50 w-[120px] rounded-md bg-white py-1 shadow-sm"
         style={{
-          display: open && pos ? undefined : "none",
+          display: open ? undefined : "none",
           top: pos?.top,
           left: pos?.left,
         }}

@@ -9,15 +9,16 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import Chip, { ChipProps } from "./Chip";
 import LoadingSpinner from "./loading/LoadingSpinner";
-import { Menu, MenuItem } from "./Menu";
+import MenuButton from "./MenuButton";
 import TimeAgo from "./TimeAgo";
+import { MdEdit, MdDelete } from "react-icons/md";
 
 export interface PostListProps {
   posts: Post[];
 }
 
 export default function PostList({ posts: initialPosts }: PostListProps) {
-  // TODO: When deleting a post we can clear this list, 
+  // TODO: When deleting a post we can clear this list,
   // so we can reflect the changes on the client immediately
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [posts, setPosts] = useState(initialPosts);
@@ -31,9 +32,15 @@ export default function PostList({ posts: initialPosts }: PostListProps) {
         </div>
       )}
 
-      {posts.map((post) => {
-        return <PostListItem post={post} key={post.id} />;
-      })}
+      {
+        <>
+          {posts.map((post) => {
+            return <PostListItem post={post} key={post.id} />;
+          })}
+
+          <div className="h-8"></div>
+        </>
+      }
     </>
   );
 }
@@ -45,7 +52,6 @@ interface PostListItemProps {
 function PostListItem({ post }: PostListItemProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const queryClient = useQueryClient();
   const deletePost = useMutation(async () => {
     handleClose();
@@ -71,13 +77,9 @@ function PostListItem({ post }: PostListItemProps) {
 
   const handleClose = () => {
     setOpen(false);
-    setAnchor(null);
   };
 
-  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    event.preventDefault();
-    setAnchor(event.target as HTMLElement);
+  const handleOpen = () => {
     setOpen(true);
   };
 
@@ -96,10 +98,9 @@ function PostListItem({ post }: PostListItemProps) {
               <div className="flex max-w-full flex-row items-center gap-4 overflow-hidden text-ellipsis whitespace-nowrap">
                 {deletePost.isLoading && (
                   <LoadingSpinner size={20} color="rgba(255, 255, 255, 0.2)" />
-                )}{" "}
+                )}
                 <span>{post.title}</span>
               </div>
-
               {post.tags && (
                 <div className="mt-2">
                   <PostChipList tags={post.tags} />
@@ -107,19 +108,16 @@ function PostListItem({ post }: PostListItemProps) {
               )}
             </div>
 
-            <button onClick={handleOpen}>
-              <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
-            </button>
+            <PostListButtonMenu
+              open={open}
+              post={post}
+              onOpen={handleOpen}
+              onClose={handleClose}
+              onDelete={() => deletePost.mutate()}
+            />
           </div>
         </div>
       </Link>
-
-      <Menu open={open} anchor={anchor} onClose={handleClose}>
-        <MenuItem onClick={() => router.push(`/posts/edit/${post.slug}`)}>
-          Edit
-        </MenuItem>
-        <MenuItem onClick={() => deletePost.mutate()}>Delete</MenuItem>
-      </Menu>
     </>
   );
 }
@@ -148,3 +146,44 @@ function PostChipList(props: PostChipListProps) {
 const PostChip: React.FC<ChipProps> = (props) => {
   return <Chip {...props} className="bg-black text-[#f8f8f2]" />;
 };
+
+interface PostListButtonMenuProps {
+  post: Post;
+  open: boolean;
+  onDelete: () => void;
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+function PostListButtonMenu({
+  open,
+  onOpen,
+  onClose,
+  post,
+  onDelete,
+}: PostListButtonMenuProps) {
+  const router = useRouter();
+
+  return (
+    <MenuButton onClose={onClose} onClick={onOpen} open={open}>
+      <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
+
+      <MenuButton.List className="absolute min-w-[150px] rounded-md bg-white p-1 shadow-lg">
+        <MenuButton.Item
+          className="flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg hover:bg-base-100"
+          onClick={() => router.push(`/posts/edit/${post.slug}`)}
+        >
+          <MdEdit size={28} className="text-base-400" />
+          Edit
+        </MenuButton.Item>
+        <MenuButton.Item
+          className="flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg hover:bg-base-100"
+          onClick={onDelete}
+        >
+          <MdDelete size={28} className="text-base-400" />
+          Delete
+        </MenuButton.Item>
+      </MenuButton.List>
+    </MenuButton>
+  );
+}

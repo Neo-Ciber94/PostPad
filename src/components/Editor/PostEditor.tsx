@@ -38,7 +38,7 @@ const modules = {
     ["blockquote", "code-block"],
     [{ indent: "-1" }, { indent: "+1" }],
     [{ script: "sub" }, { script: "super" }],
-    [{ color: ['red', 'blue'] }, { background: [] }],
+    [{ color: ["red", "blue"] }, { background: [] }],
     ["link", "image", "video"],
     ["clean"],
   ],
@@ -62,6 +62,7 @@ const formats = [
   "bullet",
   "indent",
   "link",
+  "align",
   "image",
   "video",
 ];
