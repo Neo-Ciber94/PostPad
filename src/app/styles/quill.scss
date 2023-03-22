@@ -89,6 +89,20 @@ $headers: 1, 2, 3, 4;
     font-size: 14px;
     color: #444;
   }
+
+  .text-editor.dark {
+    .ql-header[value="#{$header}"]:after {
+      color: white;
+    }
+
+    .ql-header[value="#{$header}"]:hover:after {
+      color: #06c;
+    }
+  }
+
+  .ql-header[value="#{$header}"]:hover:after {
+    color: #06c;
+  }
 }
 
 button.ql-header.ql-active {
@@ -106,7 +120,7 @@ button.ql-header.ql-active {
 // Text sizes
 .ql-editor {
   p {
-    font-size: 1.5em !important;
+    font-size: 1.2em !important;
   }
 
   blockquote,
