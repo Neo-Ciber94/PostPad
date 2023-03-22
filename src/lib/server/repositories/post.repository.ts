@@ -92,9 +92,10 @@ export class PostRepository {
 
     const result = await prisma.post.create({
       data: {
+        slug,
         title: data.title.trim(),
         content: data.content?.trim(),
-        slug,
+        isAIGenerated: data.isAIGenerated,
         createdByUserId: userId,
         tags: {
           create: tagsWithUser,
