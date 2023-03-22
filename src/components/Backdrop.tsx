@@ -10,7 +10,7 @@ export default function Backdrop(props: BackdropProps) {
   return (
     <div
       onClick={onClick}
-      className="absolute inset-0 z-20 h-full w-full"
+      className="fixed inset-0 z-20 h-full w-full"
       style={{
         zIndex,
         backdropFilter: `blur(${blur}px)`,
