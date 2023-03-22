@@ -40,18 +40,9 @@ const Toolbar = ({ isFullScreen, onToggleFullScreen }: ToolbarProps) => (
             <option value="quicksand">Quicksand</option>
           </select>
 
-          <select className="ql-size" defaultValue="medium">
-            <option value="extra-small">Size 1</option>
-            <option value="small">Size 2</option>
-            <option value="medium">Size 3</option>
-            <option value="large">Size 4</option>
-          </select>
+          <select className="ql-size" defaultValue="medium" />
 
-          <select className="ql-header" defaultValue="3">
-            <option value="1">Heading</option>
-            <option value="2">Subheading</option>
-            <option value="3">Normal</option>
-          </select>
+          <select className="ql-header" defaultValue="1" />
 
           <span className="ql-formats">
             <button className="ql-bold" />

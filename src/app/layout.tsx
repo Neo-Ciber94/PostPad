@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { DarkModeProvider } from "@/lib/client/contexts/DarkModeContext";
 import { getUserPrefersDarkMode } from "@/lib/server/utils/getUserPrefersDarkMode";
+import Script from "next/script";
 
 export const metadata = {
   title: "PostPad",
@@ -21,6 +22,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <HightLight />
+      </head>
       <body
         className="bg-base-500 scrollbar
             scrollbar-track-base-300/25
@@ -32,5 +36,18 @@ export default async function RootLayout({
         </DarkModeProvider>
       </body>
     </html>
+  );
+}
+
+// This is used by quill to highlight the code
+function HightLight() {
+  return (
+    <>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
+      />
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" />
+    </>
   );
 }

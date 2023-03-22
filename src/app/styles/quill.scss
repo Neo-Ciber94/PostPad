@@ -59,31 +59,159 @@
   }
 }
 
-.ql-font-arial {
-  font-family: Arial, Helvetica, sans-serif;
+.ql-snow {
+  .ql-picker {
+    &.ql-size {
+      .ql-picker-label,
+      .ql-picker-item {
+        &::before {
+          content: attr(data-value) !important;
+        }
+      }
+    }
+  }
 }
+
+button.ql-header svg {
+  display: none;
+}
+
+$headers: 1, 2, 3, 4;
+
+@each $header in $headers {
+  .ql-header[value="#{$header}"]:after {
+    clear: both;
+    content: "H#{$header}";
+    display: table;
+    font-weight: 600;
+    margin-top: -1px;
+    margin-left: 1px;
+    font-size: 14px;
+    color: #444;
+  }
+}
+
+button.ql-header.ql-active {
+  color: #3891d0;
+}
+
+.ql-formats {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  margin-top: 2px;
+  margin-bottom: 1px;
+  margin-right: 10px !important;
+}
+
+// Text sizes
+.ql-editor {
+  p {
+    font-size: 1.5em !important;
+  }
+
+  blockquote,
+  pre {
+    font-size: 1.2em !important;
+  }
+
+  h4 {
+    font-size: 1em !important;
+  }
+
+  h3 {
+    font-size: 2em !important;
+  }
+
+  h2 {
+    font-size: 2.5em !important;
+  }
+
+  h1 {
+    font-size: 3em !important;
+  }
+}
+
+// Custom fonts
+// https://github.com/zenoamaro/react-quill/issues/273#issuecomment-646820548
+
+// Arial
+.ql-font-arial {
+  font-family: Arial, sans-serif;
+}
+
+.ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
+  font-family: "Arial";
+  content: "Arial" !important;
+}
+
+// Courier-new
 
 .ql-font-courier-new {
   font-family: "Courier New", Courier, monospace;
 }
 
+.ql-picker.ql-font .ql-picker-label[data-value="courier-new"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="courier-new"]::before {
+  font-family: "Courier New";
+  content: "Courier New" !important;
+}
+
+// Georgia
+
 .ql-font-georgia {
   font-family: Georgia, "Times New Roman", Times, serif;
 }
 
+.ql-picker.ql-font .ql-picker-label[data-value="georgia"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="georgia"]::before {
+  font-family: "Georgia";
+  content: "Georgia" !important;
+}
+
+// Helvetica
+
 .ql-font-helvetica {
   font-family: Helvetica, sans-serif;
 }
+
+.ql-picker.ql-font .ql-picker-label[data-value="helvetica"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="helvetica"]::before {
+  font-family: "Helvetica";
+  content: "Helvetica" !important;
+}
+
+// Lucida
 
 .ql-font-lucida {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
-.ql-font-roboto {
-  font-family: Roboto;
+.ql-picker.ql-font .ql-picker-label[data-value="lucida"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="lucida"]::before {
+  font-family: "Lucida Sans";
+  content: "Lucida Sans" !important;
 }
 
+// Roboto
+.ql-font-roboto {
+  font-family: Roboto !important;
+}
+
+.ql-picker.ql-font .ql-picker-label[data-value="roboto"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before {
+  font-family: "Roboto";
+  content: "Roboto" !important;
+}
+
+// Quicksand
 .ql-font-quicksand {
-  font-family: "Quicksand", sans-serif;
+  font-family: "Quicksand", sans-serif !important;
+}
+
+.ql-picker.ql-font .ql-picker-label[data-value="quicksand"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="quicksand"]::before {
+  font-family: "Quicksand";
+  content: "Quicksand" !important;
 }
