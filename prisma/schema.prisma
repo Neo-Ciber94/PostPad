@@ -13,13 +13,14 @@ datasource db {
 }
 
 model Post {
-  id        String    @id @unique @default(uuid())
-  title     String
-  slug      String    @unique
-  content   String?   @db.MediumText
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  tags      Tag[]
+  id            String    @id @unique @default(uuid())
+  title         String
+  slug          String    @unique
+  content       String?   @db.MediumText
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime? @updatedAt
+  isAIGenerated Boolean   @default(false) @map("aiGenerated")
+  tags          Tag[]
 
   //
   createdByUserId String

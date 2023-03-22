@@ -23,7 +23,7 @@ export default function PostViewSkeleton() {
 
 export function PostPreviewLoading() {
   return (
-    <div className="py-4">
+    <div className="py-4 mb-10">
       <div className="h-[500px] w-full animate-pulse rounded-md bg-violet-300/30"></div>
     </div>
   );

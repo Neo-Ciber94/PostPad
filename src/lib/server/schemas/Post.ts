@@ -14,6 +14,7 @@ export const postSchema = z.object({
   title: z.string(),
   content: z.string().nullish(),
   tags: z.array(tagSchema).optional(),
+  isAIGenerated: z.boolean(),
   createdAt: z
     .string()
     .or(z.date())
@@ -41,6 +42,7 @@ export const createPostSchema = z.object({
     .optional()
     .transform((s) => (s != null ? s.trim() : s)),
   tags: z.array(createTagSchema).optional(),
+  isAIGenerated: z.boolean().default(false).optional(),
 });
 
 export type UpdatePost = z.infer<typeof updatePostSchema>;

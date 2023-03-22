@@ -74,6 +74,8 @@ export default function PostForm({
   const {
     control,
     register,
+    getValues,
+    setValue,
     formState: { errors },
     handleSubmit,
   } = useForm({
@@ -120,10 +122,31 @@ export default function PostForm({
       );
 
       let generated = "";
+
       for await (const chunk of completionStream) {
         const nextChunk = generated + chunk;
         generated = nextChunk;
         editorContent.set(generated);
+      }
+
+      // Update the is AI generated flag
+      setValue("isAIGenerated", true);
+
+      // If had a title, continue, otherwise set the generated title
+      const currentTitle = getValues("title");
+      if (currentTitle != null && currentTitle.trim().length > 0) {
+        return;
+      }
+
+      // The generated title will be within a <h1> tag
+      const titleMatches = /^<h1>(.+)<\/h1>/g.exec(generated);
+
+      if (titleMatches) {
+        console.log({ titleMatches });
+        const generatedTitle = titleMatches[1];
+        if (generatedTitle) {
+          setValue("title", generatedTitle);
+        }
       }
     } finally {
       setIsGenerating(false);
@@ -212,6 +235,7 @@ export default function PostForm({
           <label className="mb-2 block font-bold text-white">Title</label>
           <input
             {...register("title")}
+            disabled={isGenerating}
             placeholder="Title"
             className={`focus:shadow-outline w-full appearance-none rounded border border-gray-600
                  py-2 px-3 leading-tight shadow transition-colors duration-500 focus:outline-none ${
@@ -238,6 +262,8 @@ export default function PostForm({
             {errors.content?.message}
           </p>
         </div>
+
+        <input type="hidden" {...register("isAIGenerated")} />
 
         <>
           {error && (

@@ -38,6 +38,7 @@
     "react-quill": "^2.0.0",
     "react-wavify": "^1.8.0",
     "sass": "^1.59.3",
+    "tailwind-merge": "^1.10.0",
     "typescript": "^4.9.5",
     "zod": "^3.20.6"
   },
