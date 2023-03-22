@@ -117,7 +117,7 @@ export default function PostForm({
     setIsGenerating(true);
 
     try {
-      const res = await fetch("/api/posts/generate2", {
+      const res = await fetch("/api/posts/generate", {
         headers: { "content-type": "application/json" },
         method: "POST",
         body: JSON.stringify({ prompt }),
