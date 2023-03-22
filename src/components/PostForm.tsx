@@ -155,7 +155,6 @@ export default function PostForm({
           await onSubmit(post as any);
           await queryClient.invalidateQueries({
             queryKey: ["posts"],
-            exact: true,
           });
 
           router.refresh();

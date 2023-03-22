@@ -43,6 +43,9 @@ export class PostRepository {
         createdByUserId: userId,
         tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } },
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
       take,
       skip,
       include: {
