@@ -19,7 +19,7 @@ model Post {
   content       String?   @db.MediumText
   createdAt     DateTime  @default(now())
   updatedAt     DateTime? @updatedAt
-  isAIGenerated Boolean   @default(false) @map("aiGenerated")
+  isAIGenerated Boolean   @default(false)
   tags          Tag[]
 
   //
