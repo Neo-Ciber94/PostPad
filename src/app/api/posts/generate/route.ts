@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     {
       role: "system",
       content:
-        "Generate posts in HTML which at least 2 paragraphs, include a title with <h1> and separate the paragraphs with <br>",
+        "Generate posts in HTML, include a title with <h1> and at leasts 2 paragraphs <p> separated by <br>",
     },
     {
       role: "user",

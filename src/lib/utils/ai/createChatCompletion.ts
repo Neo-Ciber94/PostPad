@@ -32,8 +32,6 @@ export async function createChatCompletion(
   payload: ChatCompletionPayload
 ): Promise<ReadableStream> {
   const { signal, ...request } = payload;
-
-  console.log({ request });
   const completion = await fetch("https://api.openai.com/v1/chat/completions", {
     headers: {
       "Content-Type": "application/json",
@@ -88,8 +86,6 @@ export async function createChatCompletion(
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       for await (const chunk of completion.body as any) {
-        const text = decoder.decode(chunk);
-        console.log({ text });
         parser.feed(decoder.decode(chunk));
       }
     },
