@@ -79,11 +79,7 @@ function PostListItem({ post, onDelete }: PostListItemProps) {
     });
 
     await throwOnResponseError(res);
-
-    await queryClient.invalidateQueries({
-      queryKey: ["posts"],
-      exact: false,
-    });
+    await queryClient.invalidateQueries({ queryKey: ["posts"] });
     router.refresh();
     onDelete();
   });
@@ -181,7 +177,7 @@ function PostListButtonMenu({
     <MenuButton onClose={onClose} onClick={onOpen} open={open}>
       <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
 
-      <MenuButton.List className="absolute min-w-[150px] rounded-md bg-white p-1 shadow-lg">
+      <MenuButton.List className="absolute z-40 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
         <MenuButton.Item
           className="flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg hover:bg-base-100"
           onClick={() => router.push(`/posts/edit/${post.slug}`)}
