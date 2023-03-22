@@ -27,7 +27,9 @@ export default function PostPreview({ post }: PostPreviewProps) {
         value={post.content || ""}
         readOnly
         theme="bubble"
-        modules={{}}
+        modules={{
+          syntax: true,
+        }}
       />
     </div>
   );

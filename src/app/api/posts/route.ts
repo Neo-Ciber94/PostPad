@@ -1,13 +1,13 @@
 import { GetAllPostsOptions } from "@/lib/server/repositories/post.repository";
 import { PostService } from "@/lib/server/services/post.service";
-import { NextResponse } from "next/server";
+import { json } from "@/lib/utils/responseUtils";
 import { ZodError } from "zod";
 
 export async function GET(request: Request) {
   const postService = new PostService();
   const options = getGetAllPostsOptionsFromRequest(request);
   const result = await postService.getAllPosts(options);
-  return NextResponse.json(result);
+  return json(result);
 }
 
 export async function POST(request: Request) {
@@ -17,18 +17,18 @@ export async function POST(request: Request) {
     const input = await request.json();
     const result = await postService.createPost(input);
     console.log({ created: input });
-    return NextResponse.json(result);
-  } catch (err) {
-    console.error(err);
+    return json(result);
+  } catch (error) {
+    console.error({ error });
 
-    if (err instanceof ZodError) {
-      const zodError = err as ZodError;
-      return NextResponse.json(zodError.message, {
+    if (error instanceof ZodError) {
+      const zodError = error as ZodError;
+      return json(zodError.message, {
         status: 400,
       });
     }
 
-    return NextResponse.json(
+    return json(
       { message: "Something went wrong" },
       {
         status: 500,
@@ -45,7 +45,7 @@ export async function PUT(request: Request) {
     const result = await postService.updatePost(input);
 
     if (result == null) {
-      return NextResponse.json(
+      return json(
         { message: "Post not found" },
         {
           status: 404,
@@ -54,18 +54,18 @@ export async function PUT(request: Request) {
     }
 
     console.log({ updated: input });
-    return NextResponse.json(result);
-  } catch (err) {
-    console.error(err);
+    return json(result);
+  } catch (error) {
+    console.error({ error });
 
-    if (err instanceof ZodError) {
-      const zodError = err as ZodError;
-      return NextResponse.json(zodError.message, {
+    if (error instanceof ZodError) {
+      const zodError = error as ZodError;
+      return json(zodError.message, {
         status: 400,
       });
     }
 
-    return NextResponse.json(
+    return json(
       { message: "Something went wrong" },
       {
         status: 500,

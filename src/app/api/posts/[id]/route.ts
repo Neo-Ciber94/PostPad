@@ -1,6 +1,6 @@
 import { PostService } from "@/lib/server/services/post.service";
 import { RequestContext } from "@/lib/server/types/RequestContext";
-import { NextResponse } from "next/server";
+import { json } from "@/lib/utils/responseUtils";
 
 export async function DELETE(_: Request, ctx: RequestContext<{ id: string }>) {
   const postService = new PostService();
@@ -9,7 +9,7 @@ export async function DELETE(_: Request, ctx: RequestContext<{ id: string }>) {
     const result = await postService.deletePost(ctx.params.id);
 
     if (result == null) {
-      return NextResponse.json(
+      return json(
         { message: "Post not found" },
         {
           status: 404,
@@ -18,10 +18,10 @@ export async function DELETE(_: Request, ctx: RequestContext<{ id: string }>) {
     }
 
     console.log({ deleted: result });
-    return NextResponse.json(result);
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
+    return json(result);
+  } catch (error) {
+    console.error({ error });
+    return json(
       { message: "Something went wrong" },
       {
         status: 500,

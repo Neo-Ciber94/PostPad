@@ -1,7 +1,7 @@
 import { createChatCompletion } from "@/lib/utils/createChatCompletion";
 import { noEmptyPrompt } from "@/lib/utils/schemas/noempty";
-import { NextResponse } from "next/server";
 import { ChatCompletionRequestMessage } from "openai/dist/api";
+import { json } from "@/lib/utils/responseUtils";
 import { z } from "zod";
 
 const generatePostSchema = z.object({
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   const result = generatePostSchema.safeParse(json);
 
   if (result.success === false) {
-    return NextResponse.json(
+    return json(
       { message: result.error },
       {
         status: 400,
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error(err);
 
-    return NextResponse.json(err, {
+    return json(err, {
       status: 500,
     });
   }

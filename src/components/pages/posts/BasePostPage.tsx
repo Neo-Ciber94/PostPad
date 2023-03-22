@@ -41,7 +41,7 @@ export default function BasePostPage({ post }: BasePostPageProps) {
   };
 
   return (
-    <div className="container mx-auto px-4 md:px-20">
+    <div className="mx-auto px-4 md:px-20">
       <div className="flex flex-row justify-end p-2">
         <div className="flex flex-row gap-2">
           <Button variant="primary" onClick={handleEdit}>

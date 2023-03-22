@@ -30,7 +30,7 @@ const Main: React.FC<PropsWithChildren<MainProps>> = ({
     <SessionProvider session={session}>
       <MainContent session={session}>
         <Authorized>
-          <main className="mx-auto h-full md:container">{children}</main>
+          <main className="mx-auto h-full">{children}</main>
         </Authorized>
       </MainContent>
     </SessionProvider>
