@@ -2,17 +2,15 @@ export default function PostViewSkeleton() {
   return (
     <div className="container mx-auto px-10 md:px-20">
       <div className="flex flex-row justify-between p-2">
-        <div className="flex flex-row justify-between">
-          {/* Share Button */}
+        {/* Share Button */}
+        <div className="h-10 w-[100px] animate-pulse rounded-md bg-violet-300/30"></div>
+
+        <div className="flex flex-row gap-2">
+          {/* Edit Button */}
           <div className="h-10 w-[100px] animate-pulse rounded-md bg-violet-300/30"></div>
 
-          <div className="flex flex-row gap-2">
-            {/* Edit Button */}
-            <div className="h-10 w-[100px] animate-pulse rounded-md bg-violet-300/30"></div>
-
-            {/* Delete Button */}
-            <div className="h-10 w-[100px] animate-pulse rounded-md bg-violet-300/30"></div>
-          </div>
+          {/* Delete Button */}
+          <div className="h-10 w-[100px] animate-pulse rounded-md bg-violet-300/30"></div>
         </div>
       </div>
 
