@@ -18,12 +18,13 @@ export default function SharePostDialog(props: SharePostDialogProps) {
   const { onClose, post } = props;
 
   const [shareUrl, setShareUrl] = useState<string | null>(() => {
-    if (post.sharedPosts == null || post.sharedPosts.length === 0) {
+    if (post.sharedPosts == null || post.sharedPosts[0] == null) {
       return null;
     }
 
+    const shared = post.sharedPosts[0];
     const origin = window.location.origin;
-    return `${origin}/p/${post.sharedPosts[0].id}`;
+    return `${origin}/s/${shared.id}`;
   });
 
   const deleteShareUrl = useMutation(async () => {

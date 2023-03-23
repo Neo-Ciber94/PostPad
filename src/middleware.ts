@@ -28,9 +28,10 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - p (route for shared posts)
+     * - p (route for user preferences for also anonymous)
+     * - s (route for shared posts)
      */
-    "/((?!_next/static|_next/image|favicon.ico|p).*)",
+    "/((?!_next/static|_next/image|favicon.ico|p|s).*)",
   ],
 };
 

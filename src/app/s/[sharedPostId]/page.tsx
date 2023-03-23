@@ -1,3 +1,5 @@
+// `s` stands for shared
+
 import { HightLight } from "@/components/Editor/HighLight";
 import BaseSharedPostPage from "@/components/pages/p/BaseSharePostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";

@@ -1,5 +1,5 @@
 "use client";
-import PostPreview from "@/components/PostPreview";
+import PostPreviewWithTags from "@/components/PostPreviewWithTags";
 import { Post } from "@/lib/server/schemas/Post";
 
 interface BaseSharedPostPageProps {
@@ -9,7 +9,7 @@ interface BaseSharedPostPageProps {
 export default function BaseSharedPostPage({ post }: BaseSharedPostPageProps) {
   return (
     <div className="mx-auto mt-4 px-4 md:px-20">
-      <PostPreview post={post}></PostPreview>;
+      <PostPreviewWithTags post={post} />;
     </div>
   );
 }
