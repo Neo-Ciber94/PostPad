@@ -8,6 +8,14 @@ export const postRules = Object.freeze({
 
 export type Post = z.infer<typeof postSchema>;
 
+export type SharedPost = z.infer<typeof sharedPostSchema>;
+
+export const sharedPostSchema = z.object({
+  id: z.string(),
+  postId: z.string(),
+  createdAt: z.date(),
+});
+
 export const postSchema = z.object({
   id: z.string(),
   slug: z.string(),
@@ -15,17 +23,21 @@ export const postSchema = z.object({
   content: z.string().nullish(),
   tags: z.array(tagSchema).optional(),
   isAIGenerated: z.boolean(),
+
   createdAt: z
     .string()
     .or(z.date())
     .pipe(z.coerce.date())
     .transform((d) => d.toUTCString()),
+
   updatedAt: z
     .string()
     .or(z.date())
     .pipe(z.coerce.date())
     .nullable()
     .transform((d) => (d == null ? null : d.toUTCString())),
+
+  sharedPost: z.array(sharedPostSchema).optional(),
 });
 
 export type CreatePost = z.infer<typeof createPostSchema>;

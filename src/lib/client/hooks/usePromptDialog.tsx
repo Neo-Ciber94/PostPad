@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { noEmptyPrompt } from "@/lib/utils/schemas/noempty";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export interface PromptDialogOptions {
@@ -11,6 +10,7 @@ export interface PromptDialogOptions {
   onConfirm?: (prompt: string) => void;
   onCancel?: () => void;
   onClose?: () => void;
+  schema?: z.ZodObject<{ prompt: z.ZodType }>;
 }
 
 export function usePromptDialog() {
@@ -53,6 +53,7 @@ export function usePromptDialog() {
             title={dialogOptions.title}
             onClose={handleClose}
             onConfirm={handleConfirm}
+            schema={dialogOptions.schema}
           />
         )}
       </>
@@ -70,22 +71,29 @@ interface PromptDialogProps {
   placeholder?: string;
   onClose: () => void;
   onConfirm: (value: string) => void;
+  schema?: z.ZodObject<{ prompt: z.ZodType }>;
 }
 
-const promptInputSchema = z.object({
-  prompt: z.string().pipe(noEmptyPrompt),
+const defaultInputSchema = z.object({
+  prompt: z.string(),
 });
 
-type PromptInput = z.infer<typeof promptInputSchema>;
+type PromptInput = z.infer<typeof defaultInputSchema>;
 
 const PromptDialog: React.FC<PromptDialogProps> = (props) => {
-  const { title, placeholder = "Prompt...", onConfirm, onClose } = props;
+  const {
+    title,
+    placeholder = "Prompt...",
+    onConfirm,
+    onClose,
+    schema = defaultInputSchema,
+  } = props;
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<PromptInput>({
-    resolver: zodResolver(promptInputSchema),
+    resolver: zodResolver(schema),
   });
 
   return (

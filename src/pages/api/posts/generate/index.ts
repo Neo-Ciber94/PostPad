@@ -1,9 +1,8 @@
 import { createChatCompletion } from "@/lib/utils/ai/createChatCompletion";
-import { noEmptyPrompt } from "@/lib/utils/schemas/noempty";
 import { ChatCompletionRequestMessage } from "openai/dist/api";
 import { json } from "@/lib/utils/responseUtils";
-import { z } from "zod";
 import { contentModeration } from "@/lib/utils/ai/contentModeration";
+import { promptSchema } from "@/lib/server/schemas/Prompt";
 
 // TODO: When edge api handlers in app directory are stable move this to there
 
@@ -14,14 +13,10 @@ export const config = {
   runtime: "edge",
 };
 
-const generatePostSchema = z.object({
-  prompt: z.string().pipe(noEmptyPrompt),
-});
-
 export default async function POST(request: Request) {
   try {
     const input = await request.json();
-    const result = generatePostSchema.safeParse(input);
+    const result = promptSchema.safeParse(input);
 
     if (result.success === false) {
       return json({ message: result.error }, { status: 400 });

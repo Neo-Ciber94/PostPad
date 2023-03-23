@@ -29,6 +29,7 @@ import { usePromptDialog } from "@/lib/client/hooks/usePromptDialog";
 import { useAbortController } from "@/lib/client/hooks/useAbortController";
 import { useStateWithChange } from "@/lib/client/hooks/useStateWithChange";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
+import { promptSchema } from "@/lib/server/schemas/Prompt";
 
 const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
   ssr: false,
@@ -163,6 +164,7 @@ export default function PostForm({
       title: "Generate AI Post",
       placeholder: "What would you like your post to be about?",
       onConfirm: (prompt) => generatePost.mutate(prompt),
+      schema: promptSchema,
     });
   };
 

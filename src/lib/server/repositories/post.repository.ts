@@ -50,6 +50,7 @@ export class PostRepository {
       skip,
       include: {
         tags: true,
+        sharedPosts: true,
       },
     });
 
@@ -59,7 +60,7 @@ export class PostRepository {
   async getById(userId: string, id: string): Promise<Post | null> {
     const result = await prisma.post.findFirst({
       where: { id, createdByUserId: userId },
-      include: { tags: true },
+      include: { tags: true, sharedPosts: true },
     });
 
     if (result == null) {
@@ -72,7 +73,7 @@ export class PostRepository {
   async getBySlug(userId: string, slug: string): Promise<Post | null> {
     const result = await prisma.post.findFirst({
       where: { slug, createdByUserId: userId },
-      include: { tags: true },
+      include: { tags: true, sharedPosts: true },
     });
 
     if (result == null) {

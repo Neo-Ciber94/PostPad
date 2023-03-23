@@ -14,7 +14,7 @@ datasource db {
 
 model Post {
   id            String    @id @unique @default(uuid())
-  title         String
+  title         String    @db.Text
   slug          String    @unique
   content       String?   @db.MediumText
   createdAt     DateTime  @default(now())
@@ -24,7 +24,8 @@ model Post {
 
   //
   createdByUserId String
-  createdByUser   User   @relation(fields: [createdByUserId], references: [id])
+  createdByUser   User         @relation(fields: [createdByUserId], references: [id])
+  sharedPosts      SharedPost[]
 
   @@index([createdByUserId])
   @@fulltext([title, content])
@@ -32,7 +33,7 @@ model Post {
 
 model Tag {
   id     String @id @unique @default(uuid())
-  name   String
+  name   String @db.TinyText
   postId String
   note   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
@@ -42,6 +43,15 @@ model Tag {
 
   @@index([postId])
   @@index([createdByUserId])
+}
+
+model SharedPost {
+  id        String   @id @unique @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([postId])
 }
 
 model Account {
