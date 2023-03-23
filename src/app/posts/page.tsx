@@ -1,4 +1,4 @@
-import BasePostsListPage from "@/components/pages/posts/BasePostListPage";
+import BasePostsListPage from "@/components/base/posts/BasePostListPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
 

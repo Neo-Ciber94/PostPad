@@ -1,5 +1,5 @@
 import { HightLight } from "@/components/Editor/HighLight";
-import BaseCreatePostPage from "@/components/pages/posts/BaseCreatePostPage";
+import BaseCreatePostPage from "@/components/base/posts/BaseCreatePostPage";
 
 export const metadata = {
   title: "PostPad | Create",

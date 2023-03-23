@@ -1,5 +1,5 @@
 import { HightLight } from "@/components/Editor/HighLight";
-import BaseEditPostPage from "@/components/pages/posts/BaseEditPostPage";
+import BaseEditPostPage from "@/components/base/posts/BaseEditPostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
 

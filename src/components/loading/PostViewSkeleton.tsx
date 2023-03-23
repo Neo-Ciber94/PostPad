@@ -1,7 +1,7 @@
 export default function PostViewSkeleton() {
   return (
     <div className="container mx-auto px-10 md:px-20">
-      <div className="flex flex-row justify-end p-2">
+      <div className="flex flex-row justify-between p-2">
         <div className="flex flex-row justify-between">
           {/* Share Button */}
           <div className="h-10 w-[100px] animate-pulse rounded-md bg-violet-300/30"></div>

@@ -43,5 +43,5 @@ export const environment: Environment = envSchema.parse({
 
   // openAI
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-  OPENAI_ORGANIZATION_ID: process.env.OPENAI_ORGANIZATION_ID
+  OPENAI_ORGANIZATION_ID: process.env.OPENAI_ORGANIZATION_ID,
 } satisfies Partial<Environment>);

@@ -1,5 +1,5 @@
 import { HightLight } from "@/components/Editor/HighLight";
-import BasePostPage from "@/components/pages/posts/BasePostPage";
+import BasePostPage from "@/components/base/posts/BasePostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
 import { truncateString } from "@/lib/utils/truncateString";
