@@ -14,45 +14,45 @@ const generatePostSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const input = await request.json();
-  const result = generatePostSchema.safeParse(input);
-
-  if (result.success === false) {
-    return json(
-      { message: result.error },
-      {
-        status: 400,
-      }
-    );
-  }
-
-  const { prompt } = result.data;
-  // const moderationResult = await contentModeration(prompt, request.signal);
-  // const anyFlagged = moderationResult.results.some((x) => x.flagged === true);
-
-  // if (anyFlagged) {
-  //   return json(
-  //     {
-  //       message:
-  //         "We're unable to process your prompt at this time, as it has been flagged for moderation",
-  //     },
-  //     { status: 400 }
-  //   );
-  // }
-
-  const messages: ChatCompletionRequestMessage[] = [
-    {
-      role: "system",
-      content:
-        "Generate posts in HTML, include a title with <h1> and at leasts 2 paragraphs <p> separated by <br>",
-    },
-    {
-      role: "user",
-      content: `Write a post about: ${prompt}`,
-    },
-  ];
-
   try {
+    const input = await request.json();
+    const result = generatePostSchema.safeParse(input);
+
+    if (result.success === false) {
+      return json(
+        { message: result.error },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const { prompt } = result.data;
+    // const moderationResult = await contentModeration(prompt, request.signal);
+    // const anyFlagged = moderationResult.results.some((x) => x.flagged === true);
+
+    // if (anyFlagged) {
+    //   return json(
+    //     {
+    //       message:
+    //         "We're unable to process your prompt at this time, as it has been flagged for moderation",
+    //     },
+    //     { status: 400 }
+    //   );
+    // }
+
+    const messages: ChatCompletionRequestMessage[] = [
+      {
+        role: "system",
+        content:
+          "Generate posts in HTML, include a title with <h1> and at leasts 2 paragraphs <p> separated by <br>",
+      },
+      {
+        role: "user",
+        content: `Write a post about: ${prompt}`,
+      },
+    ];
+
     const stream = await createChatCompletion({
       model: "gpt-3.5-turbo",
       messages,
