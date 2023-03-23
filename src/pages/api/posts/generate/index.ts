@@ -5,22 +5,26 @@ import { json } from "@/lib/utils/responseUtils";
 import { z } from "zod";
 import { contentModeration } from "@/lib/utils/ai/contentModeration";
 
+// TODO: When edge api handlers in app directory are stable move this to there
+
+// We use the edge runtime to allow streaming responses:
+// https://nextjs.org/docs/api-reference/edge-runtime
+
+export const config = {
+  runtime: "edge",
+};
+
 const generatePostSchema = z.object({
   prompt: z.string().pipe(noEmptyPrompt),
 });
 
-export async function POST(request: Request) {
+export default async function POST(request: Request) {
   try {
     const input = await request.json();
     const result = generatePostSchema.safeParse(input);
 
     if (result.success === false) {
-      return json(
-        { message: result.error },
-        {
-          status: 400,
-        }
-      );
+      return json({ message: result.error }, { status: 400 });
     }
 
     const { prompt } = result.data;
@@ -41,7 +45,7 @@ export async function POST(request: Request) {
       {
         role: "system",
         content:
-          "Generate posts in HTML, include a title with <h1> and at leasts 2 paragraphs <p> separated by <br>",
+          "Generate an HTML post with a title in <h1>, at leasts 2 paragraphs <p>, add <br> after headers, paragraphs, lists, and blocks",
       },
       {
         role: "user",
@@ -53,7 +57,7 @@ export async function POST(request: Request) {
       model: "gpt-3.5-turbo",
       messages,
       max_tokens: 1024,
-      temperature: 0,
+      temperature: 0.5,
       top_p: 1,
       n: 1,
       stream: true,
@@ -63,9 +67,6 @@ export async function POST(request: Request) {
     return new Response(stream);
   } catch (err) {
     console.error(err);
-
-    return json(err, {
-      status: 500,
-    });
+    return json(err, { status: 500 });
   }
 }
