@@ -2,7 +2,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import { prisma } from "../database/prisma";
 
-export async function getUserIdFromSession() {
+export async function getCurrentUserId() {
   const session = await getServerSession(authOptions);
 
   if (session == null || session.user == null) {

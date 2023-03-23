@@ -1,11 +1,11 @@
-import { getUserIdFromSession } from "@/lib/server/utils/getUserIdFromSession";
+import { getCurrentUserId } from "@/lib/server/utils/getUserIdFromSession";
 import { TagRepository } from "../repositories/tag.repository";
 
 export class TagService {
   protected readonly repository = new TagRepository();
 
   async getAllTags() {
-    const userId = await getUserIdFromSession();
+    const userId = await getCurrentUserId();
     const result = await this.repository.getAll(userId);
     return result;
   }

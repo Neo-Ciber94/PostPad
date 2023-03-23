@@ -1,23 +1,23 @@
 import { SharedPostRepository } from "../repositories/sharedPost.repository";
 import { Post, SharedPost } from "../schemas/Post";
-import { getUserIdFromSession } from "../utils/getUserIdFromSession";
+import { getCurrentUserId } from "../utils/getUserIdFromSession";
 
 export class SharedPostService {
   private readonly sharedPostRepository = new SharedPostRepository();
 
-  async findPost(sharedPostId: string): Promise<Post> {
+  async findPost(sharedPostId: string): Promise<Post | null> {
     const post = await this.sharedPostRepository.findPost(sharedPostId);
     return post;
   }
 
   async createSharedPost(postId: string): Promise<SharedPost> {
-    const userId = await getUserIdFromSession();
+    const userId = await getCurrentUserId();
     const sharedPost = await this.sharedPostRepository.create(postId, userId);
     return sharedPost;
   }
 
-  async deleteSharedPost(sharedPostId: string): Promise<void> {
-    const userId = await getUserIdFromSession();
-    await this.sharedPostRepository.delete(sharedPostId, userId);
+  async deleteSharedPost(postId: string): Promise<void> {
+    const userId = await getCurrentUserId();
+    await this.sharedPostRepository.delete(postId, userId);
   }
 }

@@ -2,6 +2,7 @@ import { PostService } from "@/lib/server/services/post.service";
 import { SearchParams } from "@/lib/server/types/RequestContext";
 import { getArray } from "@/lib/utils/getArray";
 import { notFound } from "next/navigation";
+import { SharedPostService } from "../services/sharedPost.service";
 
 const postsLoader = {
   /**
@@ -26,6 +27,17 @@ const postsLoader = {
     const search = getArray(searchParams["search"] || [])[0];
     const posts = await postService.getAllPosts({ search });
     return posts;
+  },
+
+  async getSharedPost(sharedPostId: string) {
+    const sharedPostService = new SharedPostService();
+    const post = await sharedPostService.findPost(sharedPostId);
+
+    if (post == null) {
+      return notFound();
+    }
+
+    return post;
   },
 };
 

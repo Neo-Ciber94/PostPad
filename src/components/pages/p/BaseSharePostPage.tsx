@@ -1,0 +1,15 @@
+"use client";
+import PostPreview from "@/components/PostPreview";
+import { Post } from "@/lib/server/schemas/Post";
+
+interface BaseSharedPostPageProps {
+  post: Post;
+}
+
+export default function BaseSharedPostPage({ post }: BaseSharedPostPageProps) {
+  return (
+    <div className="mx-auto mt-4 px-4 md:px-20">
+      <PostPreview post={post}></PostPreview>;
+    </div>
+  );
+}

@@ -1,5 +1,5 @@
 import { HightLight } from "@/components/Editor/HighLight";
-import BasePostPage from "@/components/pages/posts/BasePostPage";
+import BaseSharedPostPage from "@/components/pages/p/BaseSharePostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
 import { truncateString } from "@/lib/utils/truncateString";
@@ -23,15 +23,16 @@ export async function generateMetadata(
   };
 }
 
-type Params = { slug: string };
+type Params = {
+  sharedPostId: string;
+};
 
-export default async function PostPage(ctx: RequestContext<Params>) {
-  const slug = ctx.params.slug;
-  const post = await postsLoader.getPostBySlug(slug);
+export default async function SharedPostPage(ctx: RequestContext<Params>) {
+  const post = await postsLoader.getSharedPost(ctx.params.sharedPostId);
   return (
     <>
-      <BasePostPage post={post} />
       <HightLight />
+      <BaseSharedPostPage post={post} />
     </>
   );
 }

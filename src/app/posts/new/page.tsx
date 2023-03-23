@@ -1,3 +1,4 @@
+import { HightLight } from "@/components/Editor/HighLight";
 import BaseCreatePostPage from "@/components/pages/posts/BaseCreatePostPage";
 
 export const metadata = {
@@ -6,5 +7,10 @@ export const metadata = {
 };
 
 export default function NewPostPage() {
-  return <BaseCreatePostPage />;
+  return (
+    <>
+      <BaseCreatePostPage />
+      <HightLight />
+    </>
+  );
 }

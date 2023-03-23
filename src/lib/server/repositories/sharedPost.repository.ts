@@ -8,7 +8,7 @@ import {
 } from "../schemas/Post";
 
 export class SharedPostRepository {
-  async findPost(sharedPostId: string): Promise<Post> {
+  async findPost(sharedPostId: string): Promise<Post | null> {
     const sharedPost = await prisma.sharedPost.findFirst({
       where: {
         id: sharedPostId,
@@ -16,14 +16,14 @@ export class SharedPostRepository {
       include: {
         post: {
           include: {
-            tags: true
+            tags: true,
           },
         },
       },
     });
 
     if (sharedPost == null) {
-      throw new ApplicationError("shared post not found", ErrorCode.NOT_FOUND);
+      return null;
     }
 
     return postSchema.parse(sharedPost.post);
@@ -60,11 +60,11 @@ export class SharedPostRepository {
     return sharedPostSchema.parse(shared);
   }
 
-  async delete(sharedPostId: string, userId: string) {
+  async delete(postId: string, userId: string) {
     const toDelete = await prisma.sharedPost.findFirst({
       where: {
-        id: sharedPostId,
         post: {
+          id: postId,
           createdByUserId: userId,
         },
       },

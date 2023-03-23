@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const { origin } = new URL(req.url);
 
     const data = JSON.stringify({
-      shareUrl: `${origin}/api/posts/shared/${sharedPost.id}`,
+      shareUrl: `${origin}/p/${sharedPost.id}`,
     });
 
     return new Response(data, {
@@ -27,14 +27,14 @@ export async function POST(req: Request) {
 }
 
 const deleteSharedPostSchema = z.object({
-  sharedPostId: z.string(),
+  postId: z.string(),
 });
 
 export async function DELETE(req: Request) {
   try {
     const service = new SharedPostService();
     const input = await req.json().then(deleteSharedPostSchema.parse);
-    await service.deleteSharedPost(input.sharedPostId);
+    await service.deleteSharedPost(input.postId);
 
     // OK 200
     return new Response();

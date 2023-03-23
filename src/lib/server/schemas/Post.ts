@@ -13,7 +13,11 @@ export type SharedPost = z.infer<typeof sharedPostSchema>;
 export const sharedPostSchema = z.object({
   id: z.string(),
   postId: z.string(),
-  createdAt: z.date(),
+  createdAt: z
+    .string()
+    .or(z.date())
+    .pipe(z.coerce.date())
+    .transform((d) => d.toUTCString()),
 });
 
 export const postSchema = z.object({
