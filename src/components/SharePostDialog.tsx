@@ -1,5 +1,6 @@
 import { Post } from "@/lib/server/schemas/Post";
 import { getErrorMessage } from "@/lib/utils/getErrorMessage";
+import { getSharedPostUrl } from "@/lib/utils/getSharedPostUrl";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { ClipboardIcon, LinkIcon } from "@heroicons/react/24/solid";
 import { PropsWithChildren, useState } from "react";
@@ -23,8 +24,7 @@ export default function SharePostDialog(props: SharePostDialogProps) {
     }
 
     const shared = post.sharedPosts[0];
-    const origin = window.location.origin;
-    return `${origin}/s/${shared.id}`;
+    return getSharedPostUrl(new URL(window.location.href), shared.id);
   });
 
   const deleteShareUrl = useMutation(async () => {
@@ -46,7 +46,7 @@ export default function SharePostDialog(props: SharePostDialogProps) {
   };
 
   return (
-    <Dialog className="top-[10vw] w-[90vw] lg:w-1/2 bg-base-500 md:w-2/3">
+    <Dialog className="top-[10vw] w-[90vw] bg-base-500 md:w-2/3 lg:w-1/2">
       <div className="flex flex-1 flex-col">
         <header className="overflow-hidden rounded-t-lg">
           <nav

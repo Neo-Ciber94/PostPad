@@ -1,5 +1,6 @@
 import { SharedPostService } from "@/lib/server/services/sharedPost.service";
 import { createJsonResponseFromError } from "@/lib/server/utils/createJsonResponseFromError";
+import { getSharedPostUrl } from "@/lib/utils/getSharedPostUrl";
 import { z } from "zod";
 
 const shareInputSchema = z.object({
@@ -11,12 +12,9 @@ export async function POST(req: Request) {
     const service = new SharedPostService();
     const input = await req.json().then(shareInputSchema.parse);
     const sharedPost = await service.createSharedPost(input.postId);
-    const { origin } = new URL(req.url);
-
-    const data = JSON.stringify({
-      shareUrl: `${origin}/s/${sharedPost.id}`,
-    });
-
+    const shareUrl = getSharedPostUrl(new URL(req.url), sharedPost.id);
+    const data = JSON.stringify({ shareUrl });
+    
     return new Response(data, {
       headers: { "content-type": "application/json" },
     });
