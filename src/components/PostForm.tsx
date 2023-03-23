@@ -168,6 +168,7 @@ export default function PostForm({
 
   return (
     <>
+      {/* Only when creating we can generate using AI  */}
       <promptDialog.DialogComponent />
 
       <form
@@ -185,10 +186,13 @@ export default function PostForm({
       >
         <div className="mb-2 flex flex-row justify-end">
           <div className="flex flex-row items-center gap-4">
-            <GenerateAIPostButton
-              onClick={handleOpenPromptDialog}
-              isLoading={generatePost.isLoading}
-            />
+            {post == null && (
+              <GenerateAIPostButton
+                onClick={handleOpenPromptDialog}
+                isLoading={generatePost.isLoading}
+              />
+            )}
+
             <div className="flex flex-row gap-2">
               <button
                 type="button"
