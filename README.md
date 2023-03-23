@@ -28,10 +28,12 @@ PostPad allow you to create and share publications.
 
 ## TODO:
 
-- i18n
+- [ ] i18n
   - English
   - Español
-- AI
+- [x] AI
   - Generate Post using OpenAI
-- Share
+- [ ] Share
   - Allow to generate an url to share a post
+- [ ] Ratelimiter
+- [ ] Logging
