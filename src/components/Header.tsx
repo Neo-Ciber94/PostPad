@@ -19,7 +19,7 @@ export default function Header({ session }: HeaderProps) {
     <header>
       <nav
         className="sticky z-10 flex h-16 w-full flex-row
-            items-center justify-between bg-[#282a36] px-4 shadow-md"
+            items-center justify-between bg-[#282a36] px-8 shadow-md"
       >
         <Link href={"/"}>
           <Logo />

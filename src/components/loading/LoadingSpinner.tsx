@@ -1,18 +1,25 @@
+import { twMerge } from "tailwind-merge";
+
 export interface LoadingSpinnerProps {
   size?: number;
   width?: number;
   color?: string;
+  className?: string;
 }
 
 export default function LoadingSpinner({
   size = 30,
   width = 4,
-  color = "white",
+  color,
+  className,
 }: LoadingSpinnerProps) {
+  // @tw
+  const spinnerBaseClassName = `inline-block text-white animate-spin rounded-full  border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]`;
+
   return (
     <div className="flex items-center justify-center">
       <div
-        className="inline-block animate-spin rounded-full  border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        className={twMerge(spinnerBaseClassName, className)}
         role="status"
         style={{
           height: size,

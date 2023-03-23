@@ -1,4 +1,5 @@
 import { CSSProperties, PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 import Button from "./Button";
 import Dialog from "./Dialog";
 
@@ -42,18 +43,15 @@ const ConfirmDialog: React.FC<PropsWithChildren<ConfirmDialogProps>> = ({
 
   return (
     <Dialog
-      className={`bg-base-500 ${className}`}
+      className={twMerge(`bg-base-500`, className)}
       style={style}
       BackdropProps={{
         onClick: onClose,
       }}
     >
       <div className="flex flex-1 flex-col">
-        <header>
-          <nav
-            className="flex cursor-pointer flex-row items-center justify-between overflow-hidden 
-          rounded-t-xl bg-alt-500 px-4 py-3 text-white shadow-md"
-          >
+        <header className="overflow-hidden rounded-t-xl">
+          <nav className="flex cursor-pointer flex-row items-center justify-between bg-alt-500 px-4 py-3 text-white shadow-md">
             <div className="flex flex-row items-center">
               {typeof title === "string" ? (
                 <span className="text-xl">{title}</span>

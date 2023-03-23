@@ -1,5 +1,6 @@
 import React from "react";
 import { PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 
 export type ButtonVariant = "primary" | "secondary" | "error" | "accent";
 
@@ -18,11 +19,14 @@ export default function Button({
   const { variant, disabled = false, className } = rest;
   const variantClassName = getVariantClassName({ variant, disabled }) || "";
 
+  // @tw
+  const baseButtonClassName = `flex min-w-[100px] flex-row items-center justify-center rounded px-6 py-2 
+  shadow-md transition duration-300`;
+
   return (
     <button
       {...rest}
-      className={`flex min-w-[100px] flex-row items-center justify-center rounded px-6 py-2 
-      shadow-md transition duration-300 ${variantClassName} ${className}`}
+      className={twMerge(baseButtonClassName, variantClassName, className)}
     >
       {children}
     </button>
