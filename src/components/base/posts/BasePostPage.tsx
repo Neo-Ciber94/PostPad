@@ -1,5 +1,4 @@
 "use client";
-import "@uiw/react-markdown-preview/markdown.css";
 import "react-quill/dist/quill.bubble.css";
 import { Post } from "@/lib/server/schemas/Post";
 import { useRouter } from "next/navigation";

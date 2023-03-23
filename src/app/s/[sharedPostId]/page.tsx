@@ -1,5 +1,4 @@
 // `s` stands for shared
-
 import { HightLight } from "@/components/Editor/HighLight";
 import BaseSharedPostPage from "@/components/base/p/BaseSharePostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
@@ -8,10 +7,10 @@ import { truncateString } from "@/lib/utils/truncateString";
 import { Metadata } from "next";
 
 export async function generateMetadata(
-  ctx: RequestContext<{ slug: string }>
+  ctx: RequestContext<Params>
 ): Promise<Metadata> {
-  const slug = ctx.params.slug;
-  const post = await postsLoader.getPostBySlug(slug);
+  const sharedPostId = ctx.params.sharedPostId;
+  const post = await postsLoader.getSharedPost(sharedPostId);
 
   let description = post.content;
 

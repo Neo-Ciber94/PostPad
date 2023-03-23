@@ -15,22 +15,16 @@
     "@hookform/resolvers": "^2.9.11",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.11.0",
-    "@types/color": "^3.0.3",
     "@types/node": "18.14.2",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
-    "@uiw/react-markdown-preview": "4.1.10",
-    "@uiw/react-md-editor": "^3.20.5",
     "color": "^4.2.3",
-    "eslint": "^8.35.0",
-    "eslint-config-next": "13.2.1",
     "eventsource-parser": "^0.1.0",
     "nanoid": "^4.0.1",
     "next": "^13.2.4",
     "next-auth": "^4.20.1",
     "openai": "^3.2.1",
     "react": "18.2.0",
-    "react-color": "^2.19.3",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.3",
     "react-icons": "^4.8.0",
@@ -43,9 +37,9 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
-    "@types/react-draft-wysiwyg": "^1.13.4",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
+    "@types/color": "^3.0.3",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",
     "prettier": "^2.8.4",
@@ -54,6 +48,8 @@
     "tailwind-scrollbar": "^2.1.0",
     "tailwindcss": "^3.2.7",
     "vite-tsconfig-paths": "^4.0.7",
-    "vitest": "^0.29.3"
+    "vitest": "^0.29.3",
+    "eslint": "^8.35.0",
+    "eslint-config-next": "13.2.1"
   }
 }
