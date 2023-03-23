@@ -16,19 +16,20 @@ interface SharePostDialogProps {
 
 export default function SharePostDialog(props: SharePostDialogProps) {
   const { onClose, post } = props;
+  console.log({ post });
   const [shareUrl, setShareUrl] = useState<string | null>(() => {
-    if (post.sharedPost == null || post.sharedPost.length === 0) {
+    if (post.sharedPosts == null || post.sharedPosts.length === 0) {
       return null;
     }
 
     const origin = window.location.origin;
-    return `${origin}/api/shared/${post.sharedPost[0].id}`;
+    return `${origin}/api/posts/shared/${post.sharedPosts[0].id}`;
   });
 
   const deleteShareUrl = useMutation(async () => {
     const res = await fetch("/api/posts/shared", {
       method: "DELETE",
-      body: JSON.stringify({ sharedPostId: post.id }),
+      body: JSON.stringify({ sharedPostId: post.sharedPosts![0].id }),
       headers: { "Content-Type": "application/json" },
     });
 

@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const { origin } = new URL(req.url);
 
     const data = JSON.stringify({
-      shareUrl: `${origin}/api/shared/${sharedPost.id}`,
+      shareUrl: `${origin}/api/posts/shared/${sharedPost.id}`,
     });
 
     return new Response(data, {

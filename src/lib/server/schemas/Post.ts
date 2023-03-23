@@ -37,7 +37,7 @@ export const postSchema = z.object({
     .nullable()
     .transform((d) => (d == null ? null : d.toUTCString())),
 
-  sharedPost: z.array(sharedPostSchema).optional(),
+  sharedPosts: z.array(sharedPostSchema).optional(),
 });
 
 export type CreatePost = z.infer<typeof createPostSchema>;
