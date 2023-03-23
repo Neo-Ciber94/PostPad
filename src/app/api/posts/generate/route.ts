@@ -15,7 +15,10 @@ const generatePostSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    console.log(request);
+    console.log(request, {
+      body: await request.text(),
+    });
+    
     const input = await request.json();
     const result = generatePostSchema.safeParse(input);
 
