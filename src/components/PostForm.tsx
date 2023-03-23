@@ -28,6 +28,7 @@ import { GenerateAIPostButton } from "./GenerateAIPostButton";
 import { usePromptDialog } from "@/lib/client/hooks/usePromptDialog";
 import { useAbortController } from "@/lib/client/hooks/useAbortController";
 import { useStateWithChange } from "@/lib/client/hooks/useStateWithChange";
+import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 
 const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
   ssr: false,
@@ -142,7 +143,6 @@ export default function PostForm({
       const titleMatches = /^<h1>(.+)<\/h1>/g.exec(generated);
 
       if (titleMatches) {
-        console.log({ titleMatches });
         const generatedTitle = titleMatches[1];
         if (generatedTitle) {
           setValue("title", generatedTitle);
@@ -305,12 +305,16 @@ export default function PostForm({
 }
 
 async function* fetchPostCompletionStream(prompt: string, signal: AbortSignal) {
-  const res = await fetch("/api/posts/generate", {
+  const res = await fetch("/api/posts/generate2", {
     headers: { "content-type": "application/json" },
     method: "POST",
     body: JSON.stringify({ prompt }),
     signal,
   });
+
+  if (!res.ok) {
+    await throwOnResponseError(res);
+  }
 
   const stream = res.body?.getReader();
   const decoder = new TextDecoder();
