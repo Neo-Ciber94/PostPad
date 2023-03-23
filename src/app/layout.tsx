@@ -12,6 +12,12 @@ export const metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+
+  // This is not working
+  viewport: {
+    width: "device-width",
+    initialScale: 1.0,
+  },
 };
 
 export default async function RootLayout({
@@ -23,6 +29,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <HightLight />
       </head>
       <body
