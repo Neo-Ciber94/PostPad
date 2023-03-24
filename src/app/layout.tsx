@@ -31,14 +31,7 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
-        />
-        <Script
-          strategy="beforeInteractive"
-          src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
-        />
+        <HightLight/>
       </head>
       <body
         className="bg-base-500 scrollbar
@@ -51,5 +44,23 @@ export default async function RootLayout({
         </DarkModeProvider>
       </body>
     </html>
+  );
+}
+
+// We include highlight.js in this way for `quill.js` to use,
+// is not preferred to include it globally, but is failing to load for some routes
+
+function HightLight() {
+  return (
+    <>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
+      />
+      <Script
+        strategy="beforeInteractive"
+        src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
+      />
+    </>
   );
 }

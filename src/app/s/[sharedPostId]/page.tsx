@@ -1,5 +1,4 @@
 // `s` stands for shared
-import { HightLight } from "@/components/Editor/HighLight";
 import BaseSharedPostPage from "@/components/base/p/BaseSharePostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
@@ -31,11 +30,6 @@ type Params = {
 export default async function SharedPostPage(ctx: RequestContext<Params>) {
   const sharedPostId = ctx.params.sharedPostId;
   const post = await postsLoader.getSharedPost(sharedPostId);
-  
-  return (
-    <>
-      <HightLight />
-      <BaseSharedPostPage post={post} />
-    </>
-  );
+
+  return <BaseSharedPostPage post={post} />;
 }

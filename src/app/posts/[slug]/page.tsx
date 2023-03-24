@@ -1,4 +1,3 @@
-import { HightLight } from "@/components/Editor/HighLight";
 import BasePostPage from "@/components/base/posts/BasePostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
@@ -28,10 +27,5 @@ type Params = { slug: string };
 export default async function PostPage(ctx: RequestContext<Params>) {
   const slug = ctx.params.slug;
   const post = await postsLoader.getPostBySlug(slug);
-  return (
-    <>
-      <HightLight />
-      <BasePostPage post={post} />
-    </>
-  );
+  return <BasePostPage post={post} />;
 }
