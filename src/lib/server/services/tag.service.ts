@@ -6,6 +6,11 @@ export class TagService {
 
   async getAllTags() {
     const userId = await getCurrentUserId();
+
+    if (userId == null) {
+      throw new Error("user not found");
+    }
+
     const result = await this.repository.getAll(userId);
     return result;
   }

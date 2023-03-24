@@ -284,7 +284,21 @@ export default function PostForm({
           </p>
         </div>
 
-        <input type="hidden" {...register("isAIGenerated")} />
+        <Controller
+          control={control}
+          defaultValue={false}
+          name="isAIGenerated"
+          render={({ field }) => (
+            <input
+              type="hidden"
+              value={String(field.value)}
+              onChange={(e) => {
+                const value: boolean = e.target.value === "true";
+                field.onChange(value);
+              }}
+            />
+          )}
+        />
 
         <>
           {error && (

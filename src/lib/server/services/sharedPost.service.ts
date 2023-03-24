@@ -12,12 +12,22 @@ export class SharedPostService {
 
   async createSharedPost(postId: string): Promise<SharedPost> {
     const userId = await getCurrentUserId();
+
+    if (userId == null) {
+      throw new Error("user not found");
+    }
+
     const sharedPost = await this.sharedPostRepository.create(postId, userId);
     return sharedPost;
   }
 
   async deleteSharedPost(postId: string): Promise<void> {
     const userId = await getCurrentUserId();
+
+    if (userId == null) {
+      throw new Error("user not found");
+    }
+
     await this.sharedPostRepository.delete(postId, userId);
   }
 }

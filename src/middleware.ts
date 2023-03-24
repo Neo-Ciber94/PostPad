@@ -23,9 +23,6 @@ export default async function middleware(req: NextRequest) {
   // This is only returning the token is `raw: true`, not sure why.
   // https://github.com/nextauthjs/next-auth/issues/523
   const token = await getToken({ req, raw: true });
-  // const payload = await decode({ token, secret });
-
-  console.log({ token });
 
   if (token == null && pathname !== "/" && !pathname.startsWith("/api/auth/")) {
     return NextResponse.redirect(origin);

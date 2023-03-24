@@ -1,8 +1,9 @@
 import { PostService } from "@/lib/server/services/post.service";
 import { SearchParams } from "@/lib/server/types/RequestContext";
 import { getArray } from "@/lib/utils/getArray";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { SharedPostService } from "../services/sharedPost.service";
+import { getCurrentUserId } from "../utils/getCurrentUserId";
 
 const postsLoader = {
   /**
@@ -35,6 +36,13 @@ const postsLoader = {
 
     if (post == null) {
       return notFound();
+    }
+
+    // If the current user is which created the post, redirect to it
+    const userId = await getCurrentUserId();
+
+    if (userId != null && userId == post.createdByUser.id) {
+      return redirect(`posts/${post.slug}`);
     }
 
     return post;
