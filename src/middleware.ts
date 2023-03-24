@@ -1,9 +1,6 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-// export default async function middleware() {
-//   return NextResponse.next();
-// }
 export default async function middleware(req: NextRequest) {
   const headers = new Headers(req.headers);
   const { origin, pathname } = req.nextUrl;
@@ -11,11 +8,9 @@ export default async function middleware(req: NextRequest) {
   // https://web.dev/user-preference-media-features-headers/
   headers.append("Accept-CH", "Sec-CH-Prefers-Color-Scheme");
 
-  // We skip the user preferences and shared posts route
+  // We skip the user preferences and shared posts
   if (pathname.startsWith("/p") || pathname.startsWith("/s/")) {
-    return NextResponse.next({
-      headers,
-    });
+    return NextResponse.next({ headers });
   }
 
   // This is only returning the token is `raw: true`, not sure why.

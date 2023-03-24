@@ -174,7 +174,7 @@ export default function PostForm({
       {/* Only when creating we can generate using AI  */}
       <promptDialog.DialogComponent />
 
-      {shareOpen && post && (
+      {shareOpen && post != null && (
         <SharePostDialog onClose={() => setShareOpen(false)} post={post} />
       )}
 
@@ -192,8 +192,14 @@ export default function PostForm({
         })}
       >
         <div className="mb-2 flex flex-row justify-end">
-          <div className="flex w-full flex-row justify-between">
-            <SharePostButton onClick={() => setShareOpen(true)} />
+          <div
+            className={`flex w-full flex-row ${
+              post ? "justify-between" : "justify-end"
+            }`}
+          >
+            {post != null && (
+              <SharePostButton onClick={() => setShareOpen(true)} />
+            )}
 
             <div className="flex flex-row items-center gap-4">
               {post == null && (

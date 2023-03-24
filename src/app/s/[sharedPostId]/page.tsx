@@ -29,7 +29,9 @@ type Params = {
 };
 
 export default async function SharedPostPage(ctx: RequestContext<Params>) {
-  const post = await postsLoader.getSharedPost(ctx.params.sharedPostId);
+  const sharedPostId = ctx.params.sharedPostId;
+  const post = await postsLoader.getSharedPost(sharedPostId);
+  
   return (
     <>
       <HightLight />

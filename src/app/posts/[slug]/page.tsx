@@ -30,8 +30,8 @@ export default async function PostPage(ctx: RequestContext<Params>) {
   const post = await postsLoader.getPostBySlug(slug);
   return (
     <>
-      <BasePostPage post={post} />
       <HightLight />
+      <BasePostPage post={post} />
     </>
   );
 }
