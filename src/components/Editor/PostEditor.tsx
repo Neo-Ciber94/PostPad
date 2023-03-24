@@ -8,14 +8,14 @@ import {
   ArrowsPointingOutIcon,
 } from "@heroicons/react/24/solid";
 import { DarkModeToggle } from "../DarkModeToggle";
+import BlotFormatter from "quill-blot-formatter";
+import CustomImage from "./CustomImage";
 
-export interface PostEditorProps {
-  value: string | undefined;
-  readOnly?: boolean;
-  onChange: (value: string) => void;
-}
+ReactQuill.Quill.register("modules/blotFormatter", BlotFormatter);
+ReactQuill.Quill.register("formats/image", CustomImage);
 
 const Font = ReactQuill.Quill.import("formats/font");
+
 Font.whitelist = [
   "arial",
   "courier-new",
@@ -30,6 +30,7 @@ ReactQuill.Quill.register(Font, true);
 
 const modules = {
   syntax: true,
+  blotFormatter: {},
   toolbar: [
     [{ font: Font.whitelist }],
     ["bold", "italic", "underline", "strike"],
@@ -65,7 +66,18 @@ const formats = [
   "align",
   "image",
   "video",
+  "height",
+  "width",
+  "class",
+  "style",
+  "left",
 ];
+
+export interface PostEditorProps {
+  value: string | undefined;
+  readOnly?: boolean;
+  onChange: (value: string) => void;
+}
 
 export default function PostEditor({
   value,

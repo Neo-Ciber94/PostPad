@@ -9,16 +9,26 @@ export default async function middleware(req: NextRequest) {
   headers.append("Accept-CH", "Sec-CH-Prefers-Color-Scheme");
 
   // We skip the user preferences and shared posts
-  if (pathname.startsWith("/p") || pathname.startsWith("/s/")) {
+  if (pathname.startsWith("/p")) {
+    return NextResponse.next({ headers });
+  }
+
+  // We also skip the shared posts
+  if (pathname.startsWith("/s/")) {
+    // Skip the leading slash and skip empty paths
+    // const pathSegments = pathname.split("/").filter(Boolean);
     return NextResponse.next({ headers });
   }
 
   // This is only returning the token is `raw: true`, not sure why.
   // https://github.com/nextauthjs/next-auth/issues/523
   const token = await getToken({ req, raw: true });
+  // const payload = await decode({ token, secret });
+
+  console.log({ token });
 
   if (token == null && pathname !== "/" && !pathname.startsWith("/api/auth/")) {
-    return NextResponse.redirect(`${origin}`);
+    return NextResponse.redirect(origin);
   }
 
   return NextResponse.next({

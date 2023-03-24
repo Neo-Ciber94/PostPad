@@ -3,6 +3,9 @@ import { PostWithUser } from "@/lib/server/schemas/Post";
 import ReactQuill from "react-quill";
 import AIGeneratedTag from "./AIGeneratedTag";
 import { DarkModeToggle } from "./DarkModeToggle";
+import CustomImage from "./Editor/CustomImage";
+
+ReactQuill.Quill.register("formats/image", CustomImage);
 
 export interface PostPreviewProps {
   post: PostWithUser;
@@ -55,7 +58,7 @@ function PostCreationInfo({ post }: PostCreationInfoProps) {
   return (
     <div className="mb-2 flex w-full flex-row justify-between px-2">
       <span></span>
-      <span className="text-xs opacity-70 italic text-slate-300">{`Created by ${
+      <span className="text-xs italic text-slate-300 opacity-70">{`Created by ${
         post.createdByUser.name
       } on: ${new Date(
         post.createdAt ?? post.updatedAt
