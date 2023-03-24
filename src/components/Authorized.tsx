@@ -1,3 +1,4 @@
+// TODO: Remove
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { PropsWithChildren, useEffect } from "react";

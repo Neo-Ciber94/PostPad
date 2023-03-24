@@ -5,7 +5,6 @@ import { QueryClientProvider } from "react-query";
 import { QueryClient } from "react-query";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import Authorized from "./Authorized";
 import SignIn from "./SignIn";
 import { useSelectedLayoutSegments } from "next/navigation";
 
@@ -21,16 +20,7 @@ const Main: React.FC<PropsWithChildren<MainProps>> = ({
 }) => {
   const segments = useSelectedLayoutSegments();
 
-  // We skip authorization for the /s (shared) post route.
-  if (segments[0] === "s") {
-    return (
-      <MainContent session={session}>
-        <main className="mx-auto h-full">{children}</main>
-      </MainContent>
-    );
-  }
-
-  if (session == null) {
+  if (session == null && segments[0] !== "s") {
     return (
       <MainContent session={null}>
         <SignIn />
@@ -41,9 +31,7 @@ const Main: React.FC<PropsWithChildren<MainProps>> = ({
   return (
     <SessionProvider session={session}>
       <MainContent session={session}>
-        <Authorized>
-          <main className="mx-auto h-full">{children}</main>
-        </Authorized>
+        <main className="mx-auto h-full">{children}</main>
       </MainContent>
     </SessionProvider>
   );

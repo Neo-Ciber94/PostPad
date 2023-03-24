@@ -6,6 +6,8 @@ import AIGeneratedTag from "./AIGeneratedTag";
 import { DarkModeToggle } from "./DarkModeToggle";
 import CustomImage from "./Editor/CustomImage";
 import CustomVideo from "./Editor/CustomVideo";
+import { useSession } from "next-auth/react";
+import { useMemo } from "react";
 
 ReactQuill.Quill.register("formats/image", CustomImage, true);
 ReactQuill.Quill.register("formats/video", CustomVideo, true);
@@ -61,15 +63,25 @@ export default function PostPreview({ post }: PostPreviewProps) {
 interface PostCreationInfoProps {
   post: PostWithUser;
 }
+
 function PostCreationInfo({ post }: PostCreationInfoProps) {
+  const { data: session } = useSession();
+
+  const label = useMemo(() => {
+    const user = session?.user;
+    const date = new Date(post.createdAt ?? post.updatedAt).toLocaleString();
+
+    if (user && user.id === post.createdByUser.id) {
+      return `Last updated: ${date}`;
+    } else {
+      return `Created by ${post.createdByUser.name} on: ${date}`;
+    }
+  }, [post, session]);
+
   return (
     <div className="mb-2 flex w-full flex-row justify-between px-2">
       <span></span>
-      <span className="text-xs italic text-slate-300 opacity-70">{`Created by ${
-        post.createdByUser.name
-      } on: ${new Date(
-        post.createdAt ?? post.updatedAt
-      ).toLocaleString()}`}</span>
+      <span className="text-xs italic text-slate-300 opacity-70">{label}</span>
     </div>
   );
 }

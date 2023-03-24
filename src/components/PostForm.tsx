@@ -337,7 +337,7 @@ export default function PostForm({
 
         {post != null && (
           <div className="flex w-full flex-row justify-end px-4">
-            <span className="text-xs italic text-slate-300  opacity-70">{`Last update: ${new Date(
+            <span className="text-xs italic text-slate-300 opacity-70">{`Last update: ${new Date(
               post.createdAt ?? post.updatedAt
             ).toLocaleString()}`}</span>
           </div>

@@ -7,6 +7,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/server/database/prisma";
 
 export const authOptions: AuthOptions = {
+  pages: { signIn: "/" },
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -32,8 +33,11 @@ export const authOptions: AuthOptions = {
       authorization: { params: { scope: "offline_access openid" } },
     }),
   ],
-  pages: {
-    signIn: "/",
+  callbacks: {
+    session({ session, user }) {
+      session.user.id = user.id;
+      return session;
+    },
   },
 };
 
