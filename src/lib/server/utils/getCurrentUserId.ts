@@ -2,7 +2,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import { prisma } from "../database/prisma";
 
-export async function getCurrentUserId() {
+export async function getCurrentUser() {
   const session = await getServerSession(authOptions);
 
   if (session == null || session.user == null) {
@@ -21,5 +21,10 @@ export async function getCurrentUserId() {
     throw new Error("user id not found");
   }
 
+  return user;
+}
+
+export async function getCurrentUserId() {
+  const user = await getCurrentUser();
   return user.id;
 }

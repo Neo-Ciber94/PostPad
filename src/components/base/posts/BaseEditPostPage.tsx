@@ -1,12 +1,12 @@
 "use client";
 import PostForm from "@/components/PostForm";
-import { Post, UpdatePost } from "@/lib/server/schemas/Post";
+import { PostWithUser, UpdatePost } from "@/lib/server/schemas/Post";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 
 interface BaseEditPostPage {
-  post: Post;
+  post: PostWithUser;
 }
 
 export default function BaseEditPostPage({ post }: BaseEditPostPage) {
@@ -18,7 +18,7 @@ export default function BaseEditPostPage({ post }: BaseEditPostPage) {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
     });
-    
+
     await throwOnResponseError(result);
 
     // Redirect

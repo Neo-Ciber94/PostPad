@@ -5,6 +5,8 @@ import {
   createPostSchema,
   Post,
   postSchema,
+  PostWithUser,
+  postWithUserSchema,
   UpdatePost,
   updatePostSchema,
 } from "../schemas/Post";
@@ -57,30 +59,30 @@ export class PostRepository {
     return result.map((x) => postSchema.parse(x));
   }
 
-  async getById(userId: string, id: string): Promise<Post | null> {
+  async getById(userId: string, id: string): Promise<PostWithUser | null> {
     const result = await prisma.post.findFirst({
       where: { id, createdByUserId: userId },
-      include: { tags: true, sharedPosts: true },
+      include: { tags: true, sharedPosts: true, createdByUser: true },
     });
 
     if (result == null) {
       return null;
     }
 
-    return postSchema.parse(result);
+    return postWithUserSchema.parse(result);
   }
 
-  async getBySlug(userId: string, slug: string): Promise<Post | null> {
+  async getBySlug(userId: string, slug: string): Promise<PostWithUser | null> {
     const result = await prisma.post.findFirst({
       where: { slug, createdByUserId: userId },
-      include: { tags: true, sharedPosts: true },
+      include: { tags: true, sharedPosts: true, createdByUser: true },
     });
 
     if (result == null) {
       return null;
     }
 
-    return postSchema.parse(result);
+    return postWithUserSchema.parse(result);
   }
 
   async create(userId: string, post: CreatePost): Promise<Post> {

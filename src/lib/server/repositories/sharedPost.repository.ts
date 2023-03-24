@@ -1,14 +1,14 @@
 import { ApplicationError, ErrorCode } from "@/lib/shared/error";
 import { prisma } from "../database/prisma";
 import {
-  Post,
-  postSchema,
+  PostWithUser,
+  postWithUserSchema,
   SharedPost,
   sharedPostSchema,
 } from "../schemas/Post";
 
 export class SharedPostRepository {
-  async findPost(sharedPostId: string): Promise<Post | null> {
+  async findPost(sharedPostId: string): Promise<PostWithUser | null> {
     const sharedPost = await prisma.sharedPost.findFirst({
       where: {
         id: sharedPostId,
@@ -17,6 +17,7 @@ export class SharedPostRepository {
         post: {
           include: {
             tags: true,
+            createdByUser: true,
           },
         },
       },
@@ -26,7 +27,7 @@ export class SharedPostRepository {
       return null;
     }
 
-    return postSchema.parse(sharedPost.post);
+    return postWithUserSchema.parse(sharedPost.post);
   }
 
   async create(postId: string, userId: string): Promise<SharedPost> {

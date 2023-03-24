@@ -1,6 +1,6 @@
 "use client";
 import "react-quill/dist/quill.bubble.css";
-import { Post } from "@/lib/server/schemas/Post";
+import { PostWithUser } from "@/lib/server/schemas/Post";
 import { useRouter } from "next/navigation";
 import Button from "../../Button";
 import React, { useState } from "react";
@@ -9,7 +9,7 @@ import SharePostDialog from "@/components/SharePostDialog";
 import PostPreviewWithTags from "@/components/PostPreviewWithTags";
 
 export interface BasePostPageProps {
-  post: Post;
+  post: PostWithUser;
 }
 
 export default function BasePostPage({ post }: BasePostPageProps) {

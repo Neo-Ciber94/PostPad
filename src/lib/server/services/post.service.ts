@@ -2,8 +2,8 @@ import {
   GetAllPostsOptions,
   PostRepository,
 } from "../repositories/post.repository";
-import { CreatePost, Post, UpdatePost } from "../schemas/Post";
-import { getCurrentUserId } from "@/lib/server/utils/getUserIdFromSession";
+import { CreatePost, Post, PostWithUser, UpdatePost } from "../schemas/Post";
+import { getCurrentUserId } from "@/lib/server/utils/getCurrentUserId";
 
 export class PostService {
   private readonly postRepository = new PostRepository();
@@ -13,12 +13,12 @@ export class PostService {
     return this.postRepository.getAll(userId, options);
   }
 
-  async getPostById(id: string): Promise<Post | null> {
+  async getPostById(id: string): Promise<PostWithUser | null> {
     const userId = await getCurrentUserId();
     return this.postRepository.getById(userId, id);
   }
 
-  async getPostBySlug(slug: string): Promise<Post | null> {
+  async getPostBySlug(slug: string): Promise<PostWithUser | null> {
     const userId = await getCurrentUserId();
     return this.postRepository.getBySlug(userId, slug);
   }

@@ -1,4 +1,4 @@
-import { Post } from "@/lib/server/schemas/Post";
+import { PostWithUser } from "@/lib/server/schemas/Post";
 import { Tag } from "@/lib/server/schemas/Tag";
 import { TagIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
@@ -11,7 +11,7 @@ const PostPreview = dynamic(() => import("@/components/PostPreview"), {
 });
 
 export interface PostPreviewWithTagsProps {
-  post: Post;
+  post: PostWithUser;
 }
 
 export default function PostPreviewWithTags({

@@ -1,11 +1,11 @@
 import { SharedPostRepository } from "../repositories/sharedPost.repository";
-import { Post, SharedPost } from "../schemas/Post";
-import { getCurrentUserId } from "../utils/getUserIdFromSession";
+import { PostWithUser, SharedPost } from "../schemas/Post";
+import { getCurrentUserId } from "../utils/getCurrentUserId";
 
 export class SharedPostService {
   private readonly sharedPostRepository = new SharedPostRepository();
 
-  async findPost(sharedPostId: string): Promise<Post | null> {
+  async findPost(sharedPostId: string): Promise<PostWithUser | null> {
     const post = await this.sharedPostRepository.findPost(sharedPostId);
     return post;
   }

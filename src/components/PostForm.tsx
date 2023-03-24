@@ -2,7 +2,7 @@
 import {
   CreatePost,
   createPostSchema,
-  Post,
+  PostWithUser,
   UpdatePost,
   updatePostSchema,
 } from "@/lib/server/schemas/Post";
@@ -28,6 +28,8 @@ import { useAbortController } from "@/lib/client/hooks/useAbortController";
 import { useStateWithChange } from "@/lib/client/hooks/useStateWithChange";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { promptSchema } from "@/lib/server/schemas/Prompt";
+import SharePostButton from "./SharePostButton";
+import SharePostDialog from "./SharePostDialog";
 
 const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
   ssr: false,
@@ -46,7 +48,7 @@ interface UpdatePostFormProps {
   onSubmit: (post: UpdatePost) => Promise<void>;
   isSubmitting: boolean;
   error?: unknown;
-  post: Post;
+  post: PostWithUser;
   isEditing: true;
 }
 
@@ -61,6 +63,7 @@ export default function PostForm({
 }: PostFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [shareOpen, setShareOpen] = useState(false);
   const { isDarkMode } = useDarkMode();
   const [showTags, setShowTags] = useState(
     () => post && post.tags && post.tags.length > 0
@@ -171,6 +174,10 @@ export default function PostForm({
       {/* Only when creating we can generate using AI  */}
       <promptDialog.DialogComponent />
 
+      {shareOpen && post && (
+        <SharePostDialog onClose={() => setShareOpen(false)} post={post} />
+      )}
+
       <form
         className="flex w-full flex-col lg:px-[5%]"
         onSubmit={handleSubmit(async (post) => {
@@ -185,26 +192,30 @@ export default function PostForm({
         })}
       >
         <div className="mb-2 flex flex-row justify-end">
-          <div className="flex flex-row items-center gap-4">
-            {post == null && (
-              <GenerateAIPostButton
-                onClick={handleOpenPromptDialog}
-                isLoading={generatePost.isLoading}
-              />
-            )}
+          <div className="flex w-full flex-row justify-between">
+            <SharePostButton onClick={() => setShareOpen(true)} />
 
-            <div className="flex flex-row gap-2">
-              <button
-                type="button"
-                className="rounded-full bg-slate-600 p-3 shadow-lg 
+            <div className="flex flex-row items-center gap-4">
+              {post == null && (
+                <GenerateAIPostButton
+                  onClick={handleOpenPromptDialog}
+                  isLoading={generatePost.isLoading}
+                />
+              )}
+
+              <div className="flex flex-row gap-2">
+                <button
+                  type="button"
+                  className="rounded-full bg-slate-600 p-3 shadow-lg 
                           transition-colors duration-200 hover:bg-slate-900"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowTags((show) => !show);
-                }}
-              >
-                <TagIcon className="h-4 w-4 text-white" />
-              </button>
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowTags((show) => !show);
+                  }}
+                >
+                  <TagIcon className="h-4 w-4 text-white" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -303,6 +314,14 @@ export default function PostForm({
             </Button>
           </Link>
         </div>
+
+        {post != null && (
+          <div className="flex w-full flex-row justify-end px-4">
+            <span className="text-xs italic text-slate-300  opacity-70">{`Last update: ${new Date(
+              post.createdAt ?? post.updatedAt
+            ).toLocaleString()}`}</span>
+          </div>
+        )}
       </form>
     </>
   );

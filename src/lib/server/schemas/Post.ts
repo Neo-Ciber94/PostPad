@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { createTagSchema, tagSchema, updateTagSchema } from "./Tag";
+import { userSchema } from "./User";
 
 export const postRules = Object.freeze({
   POST_TITLE_MAX_LENGTH: 100,
@@ -43,6 +44,14 @@ export const postSchema = z.object({
 
   sharedPosts: z.array(sharedPostSchema).optional(),
 });
+
+export type PostWithUser = z.infer<typeof postWithUserSchema>;
+
+export const postWithUserSchema = postSchema.merge(
+  z.object({
+    createdByUser: userSchema,
+  })
+);
 
 export type CreatePost = z.infer<typeof createPostSchema>;
 

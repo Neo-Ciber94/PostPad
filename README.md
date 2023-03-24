@@ -33,7 +33,7 @@ PostPad allow you to create and share publications.
   - Español
 - [x] AI
   - Generate Post using OpenAI
-- [ ] Share
+- [x] Share
   - Allow to generate an url to share a post
 - [ ] Ratelimiter
 - [ ] Logging

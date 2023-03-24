@@ -1,11 +1,11 @@
 import { useDarkMode } from "@/lib/client/contexts/DarkModeContext";
-import { Post } from "@/lib/server/schemas/Post";
+import { PostWithUser } from "@/lib/server/schemas/Post";
 import ReactQuill from "react-quill";
 import AIGeneratedTag from "./AIGeneratedTag";
 import { DarkModeToggle } from "./DarkModeToggle";
 
 export interface PostPreviewProps {
-  post: Post;
+  post: PostWithUser;
 }
 
 export default function PostPreview({ post }: PostPreviewProps) {
@@ -14,6 +14,8 @@ export default function PostPreview({ post }: PostPreviewProps) {
   return (
     <>
       <div className="mb-10">
+        {post != null && <PostCreationInfo post={post} />}
+
         <div
           className={`overflow-hidden rounded-lg py-4 transition-colors duration-500 ${
             isDarkMode ? "bg-[#0d1117] text-white" : "text-dark bg-white"
@@ -43,5 +45,21 @@ export default function PostPreview({ post }: PostPreviewProps) {
         )}
       </div>
     </>
+  );
+}
+
+interface PostCreationInfoProps {
+  post: PostWithUser;
+}
+function PostCreationInfo({ post }: PostCreationInfoProps) {
+  return (
+    <div className="mb-2 flex w-full flex-row justify-between px-2">
+      <span></span>
+      <span className="text-xs opacity-70 italic text-slate-300">{`Created by ${
+        post.createdByUser.name
+      } on: ${new Date(
+        post.createdAt ?? post.updatedAt
+      ).toLocaleString()}`}</span>
+    </div>
   );
 }
