@@ -1,7 +1,9 @@
+import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { Single_Day } from "next/font/google";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Avatar from "./Avatar";
 import { Menu, MenuItem } from "./Menu";
@@ -15,6 +17,8 @@ export interface HeaderProps {
 }
 
 export default function Header({ session }: HeaderProps) {
+  const pathname = usePathname();
+
   return (
     <header>
       <nav
@@ -25,6 +29,7 @@ export default function Header({ session }: HeaderProps) {
           <Logo />
         </Link>
 
+        {!session?.user && pathname != "/" && <LoginButton />}
         {session?.user && <UserAvatar user={session?.user} />}
       </nav>
     </header>
@@ -72,6 +77,21 @@ function UserAvatar({ user }: UserAvatarProps) {
         <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
       </Menu>
     </>
+  );
+}
+
+function LoginButton() {
+  const router = useRouter();
+  return (
+    <button
+      onClick={() => router.push("/")}
+      className="flex hover:scale-90 flex-row items-center gap-2 rounded-lg bg-base-500 p-2 text-white transition-all duration-300 hover:bg-base-400 shadow"
+    >
+      <span>
+        <ArrowRightOnRectangleIcon className="h-6 w-6" />
+      </span>
+      <span>Login</span>
+    </button>
   );
 }
 

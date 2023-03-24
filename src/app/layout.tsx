@@ -34,7 +34,7 @@ export default async function RootLayout({
         className="bg-base-500 scrollbar
             scrollbar-track-base-300/25
             scrollbar-thumb-base-700 
-            scrollbar-thumb-rounded-lg"
+            scrollbar-thumb-rounded-sm"
       >
         <DarkModeProvider prefersDarkMode={prefersDarkMode}>
           <Main session={session}>{children}</Main>
