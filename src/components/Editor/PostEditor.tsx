@@ -1,4 +1,5 @@
 import "react-quill/dist/quill.snow.css";
+import hljs from "highlight.js";
 import { useState } from "react";
 import React from "react";
 import ReactQuill from "react-quill";
@@ -31,7 +32,9 @@ Font.whitelist = [
 ReactQuill.Quill.register(Font, true);
 
 const modules = {
-  syntax: true,
+  syntax: {
+    highlight: (text: string) => hljs.highlightAuto(text).value,
+  },
   blotFormatter: {},
   toolbar: [
     [{ font: Font.whitelist }],

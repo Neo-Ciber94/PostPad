@@ -1,3 +1,4 @@
+import hljs from "highlight.js";
 import { useDarkMode } from "@/lib/client/contexts/DarkModeContext";
 import { PostWithUser } from "@/lib/server/schemas/Post";
 import ReactQuill from "react-quill";
@@ -12,6 +13,12 @@ ReactQuill.Quill.register("formats/video", CustomVideo, true);
 export interface PostPreviewProps {
   post: PostWithUser;
 }
+
+const modules = {
+  syntax: {
+    highlight: (text: string) => hljs.highlightAuto(text).value,
+  },
+};
 
 export default function PostPreview({ post }: PostPreviewProps) {
   const { isDarkMode } = useDarkMode();
@@ -37,9 +44,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
             value={post.content || ""}
             readOnly
             theme="bubble"
-            modules={{
-              syntax: true,
-            }}
+            modules={modules}
           />
         </div>
 

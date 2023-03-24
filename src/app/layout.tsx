@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-before-interactive-script-outside-document */
 import "./styles/globals.scss";
+import "highlight.js/styles/monokai.css";
 import Main from "@/components/Main";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { DarkModeProvider } from "@/lib/client/contexts/DarkModeContext";
 import { getUserPrefersDarkMode } from "@/lib/server/utils/getUserPrefersDarkMode";
-import Script from "next/script";
 
 export const metadata = {
   title: "PostPad",
@@ -31,7 +31,6 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <HightLight />
       </head>
       <body
         className="bg-base-500 scrollbar
@@ -44,23 +43,5 @@ export default async function RootLayout({
         </DarkModeProvider>
       </body>
     </html>
-  );
-}
-
-// We include highlight.js in this way for `quill.js` to use,
-// is not preferred to include it globally, but is failing to load for some routes
-
-function HightLight() {
-  return (
-    <>
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
-      />
-      <Script
-        strategy="beforeInteractive"
-        src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
-      />
-    </>
   );
 }
