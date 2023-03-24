@@ -4,8 +4,10 @@ import ReactQuill from "react-quill";
 import AIGeneratedTag from "./AIGeneratedTag";
 import { DarkModeToggle } from "./DarkModeToggle";
 import CustomImage from "./Editor/CustomImage";
+import CustomVideo from "./Editor/CustomVideo";
 
-ReactQuill.Quill.register("formats/image", CustomImage);
+ReactQuill.Quill.register("formats/image", CustomImage, true);
+ReactQuill.Quill.register("formats/video", CustomVideo, true);
 
 export interface PostPreviewProps {
   post: PostWithUser;

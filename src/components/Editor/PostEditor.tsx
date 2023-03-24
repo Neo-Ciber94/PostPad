@@ -10,9 +10,11 @@ import {
 import { DarkModeToggle } from "../DarkModeToggle";
 import BlotFormatter from "quill-blot-formatter";
 import CustomImage from "./CustomImage";
+import CustomVideo from "./CustomVideo";
 
-ReactQuill.Quill.register("modules/blotFormatter", BlotFormatter);
-ReactQuill.Quill.register("formats/image", CustomImage);
+ReactQuill.Quill.register("modules/blotFormatter", BlotFormatter, true);
+ReactQuill.Quill.register("formats/image", CustomImage, true);
+ReactQuill.Quill.register("formats/video", CustomVideo, true);
 
 const Font = ReactQuill.Quill.import("formats/font");
 
@@ -70,7 +72,6 @@ const formats = [
   "width",
   "class",
   "style",
-  "left",
 ];
 
 export interface PostEditorProps {
