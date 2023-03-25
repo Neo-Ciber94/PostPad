@@ -95,19 +95,21 @@ function PostListItem({ post, onDelete }: PostListItemProps) {
     <>
       <Link href={`/posts/${post.slug}`}>
         <div
-          className={`my-3 rounded-xl bg-base-600 px-6 py-4 
-          shadow-md shadow-black/50 ring-2 ring-base-300/40 transition duration-300
-          hover:bg-base-700 ${deletePost.isLoading ? "animate-pulse" : ""}`}
+          className={`bg-base-600 ring-base-300/40 hover:bg-base-700 my-3 rounded-xl 
+          px-6 py-4 shadow-md shadow-black/50 ring-2 transition
+          duration-300 ${deletePost.isLoading ? "animate-pulse" : ""}`}
         >
           <div className="flex flex-row items-center justify-between">
             <div className="flex w-full flex-col overflow-hidden">
               <TimeAgo date={new Date(post.updatedAt ?? post.createdAt)} />
 
-              <div className="flex max-w-full flex-row items-center gap-4 overflow-hidden text-ellipsis whitespace-nowrap">
+              <div className="flex max-w-full flex-row items-center gap-4">
                 {deletePost.isLoading && (
                   <LoadingSpinner size={20} color="rgba(255, 255, 255, 0.2)" />
                 )}
-                <span>{post.title}</span>
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                  {post.title}
+                </span>
               </div>
               {post.tags && (
                 <div className="mt-2">
@@ -174,18 +176,18 @@ function PostListButtonMenu({
 
   return (
     <Menu onClose={onClose} onClick={onOpen} open={open}>
-      <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
+      <EllipsisVerticalIcon className="hover:bg-base-400/30 h-8 w-8 p-1 text-white hover:rounded-full" />
 
       <Menu.List className="absolute z-40 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
         <Menu.Item
-          className="flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg hover:bg-base-100"
+          className="hover:bg-base-100 flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg"
           onClick={() => router.push(`/posts/edit/${post.slug}`)}
         >
           <MdEdit size={28} className="text-base-400" />
           Edit
         </Menu.Item>
         <Menu.Item
-          className="flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg hover:bg-base-100"
+          className="hover:bg-base-100 flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg"
           onClick={onDelete}
         >
           <MdDelete size={28} className="text-base-400" />
