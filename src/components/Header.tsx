@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Avatar from "./Avatar";
-import { Menu, MenuItem } from "./Menu";
+import MenuButton from "./MenuButton";
 
 const singleDay = Single_Day({
   weight: "400",
@@ -48,16 +48,13 @@ export interface UserAvatarProps {
 
 function UserAvatar({ user }: UserAvatarProps) {
   const [open, setOpen] = useState(false);
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
-  const handleOpen = (e: React.MouseEvent) => {
-    setAnchor(e.target as HTMLElement);
+  const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setAnchor(null);
   };
 
   const handleSignOut = async () => {
@@ -67,15 +64,21 @@ function UserAvatar({ user }: UserAvatarProps) {
 
   return (
     <>
-      <button onClick={handleOpen}>
+      <MenuButton onClose={handleClose} onClick={handleOpen} open={open}>
         <Avatar
           alt={user.name || user.email || "me"}
           src={user.image || "/default-user.png"}
         />
-      </button>
-      <Menu open={open} anchor={anchor} onClose={handleClose}>
-        <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
-      </Menu>
+
+        <MenuButton.List className="absolute right-0 top-10 z-40 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
+          <MenuButton.Item
+            className="hover:bg-base-100 flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </MenuButton.Item>
+        </MenuButton.List>
+      </MenuButton>
     </>
   );
 }
@@ -85,7 +88,7 @@ function LoginButton() {
   return (
     <button
       onClick={() => router.push("/")}
-      className="flex hover:scale-90 flex-row items-center gap-2 rounded-lg bg-base-500 p-2 text-white transition-all duration-300 hover:bg-base-400 shadow"
+      className="bg-base-500 hover:bg-base-400 flex flex-row items-center gap-2 rounded-lg p-2 text-white shadow transition-all duration-300 hover:scale-90"
     >
       <span>
         <ArrowRightOnRectangleIcon className="h-6 w-6" />
