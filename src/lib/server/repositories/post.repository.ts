@@ -12,14 +12,16 @@ import {
 } from "../schemas/Post";
 import { arrayPartition } from "../../utils/arrayUtils";
 import { generateSlug } from "../../utils/generateSlug";
+import { PageResult } from "@/lib/utils/types";
+
+const DEFAULT_LIMIT = 10;
 
 const getAllPostsOptionsSchema = z.object({
   search: z.string().optional(),
   tags: z.array(z.string()).optional(),
   pagination: z
     .object({
-      page: z.number().min(1).nullish(),
-      limit: z.number().min(1).max(100).nullish(),
+      cursor: z.string().nullish(),
     })
     .optional(),
 });
@@ -30,15 +32,8 @@ export class PostRepository {
   async getAll(
     userId: string,
     options: GetAllPostsOptions = {}
-  ): Promise<Post[]> {
-    const {
-      search,
-      skip,
-      take,
-      tags = [],
-    } = getQueryCriteriaFromOptions(options);
-
-    console.log({ skip, take });
+  ): Promise<PageResult<Post>> {
+    const { search, cursor, tags = [] } = getQueryCriteriaFromOptions(options);
 
     const result = await prisma.post.findMany({
       where: {
@@ -47,18 +42,31 @@ export class PostRepository {
         createdByUserId: userId,
         tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } },
       },
+      cursor: cursor == null ? undefined : { id: cursor },
+      take: DEFAULT_LIMIT + 1, // Add one item to check if there is more
+      skip: cursor == null ? 0 : 1, // Skip the cursor
       orderBy: {
         updatedAt: "desc",
       },
-      take: 100,
-      //skip,
       include: {
         tags: true,
         sharedPosts: true,
       },
     });
 
-    return result.map((x) => postSchema.parse(x));
+    let nextId: string | undefined = undefined;
+    const data = result.map((x) => postSchema.parse(x));
+    const hasNextPage = result.length > DEFAULT_LIMIT;
+
+    if (hasNextPage) {
+      const lastItem = data.pop(); // Remove extra item
+      nextId = lastItem?.id; // Start in the next item
+    }
+
+    return {
+      data,
+      nextId,
+    };
   }
 
   async getById(userId: string, id: string): Promise<PostWithUser | null> {
@@ -200,22 +208,17 @@ function trimStrings<T extends Record<string, unknown>>(obj: T): T {
 }
 
 function getQueryCriteriaFromOptions(options: GetAllPostsOptions) {
-  const DEFAULT_LIMIT = 100;
-
   // On invalid parse we just ignore the result
   const optionsResult = getAllPostsOptionsSchema.safeParse(options);
   const { pagination, search, tags } = optionsResult.success
     ? options
     : ({} as GetAllPostsOptions);
 
-  let take = DEFAULT_LIMIT;
-  let skip: number | undefined;
+  let cursor: string | undefined;
 
   if (pagination) {
-    const page = pagination.page ?? 1;
-    take = pagination.limit ?? DEFAULT_LIMIT;
-    skip = (page - 1) * (pagination.limit || DEFAULT_LIMIT);
+    cursor = pagination.cursor ?? undefined;
   }
 
-  return { search, take, skip, tags };
+  return { search, cursor, tags };
 }

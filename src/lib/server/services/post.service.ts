@@ -4,11 +4,14 @@ import {
 } from "../repositories/post.repository";
 import { CreatePost, Post, PostWithUser, UpdatePost } from "../schemas/Post";
 import { getCurrentUserId } from "@/lib/server/utils/getCurrentUserId";
+import { PageResult } from "@/lib/utils/types";
 
 export class PostService {
   private readonly postRepository = new PostRepository();
 
-  async getAllPosts(options: GetAllPostsOptions = {}): Promise<Post[]> {
+  async getAllPosts(
+    options: GetAllPostsOptions = {}
+  ): Promise<PageResult<Post>> {
     const userId = await getCurrentUserId();
 
     if (userId == null) {

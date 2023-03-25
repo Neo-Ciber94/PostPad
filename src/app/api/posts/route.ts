@@ -77,8 +77,7 @@ export async function PUT(request: Request) {
 function getGetAllPostsOptionsFromRequest(request: Request) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") ?? undefined;
-  const page = searchParams.get("page") ?? undefined;
-  const limit = searchParams.get("limit") ?? undefined;
+  const cursor = searchParams.get("cursor") ?? undefined;
   const tags = searchParams.getAll("tags");
   const options: GetAllPostsOptions = { tags };
 
@@ -86,12 +85,8 @@ function getGetAllPostsOptionsFromRequest(request: Request) {
     options.search = search;
   }
 
-  if (page && !Number.isNaN(page)) {
-    options.pagination = { ...options.pagination, page: Number(page) };
-  }
-
-  if (limit && !Number.isNaN(page)) {
-    options.pagination = { ...options.pagination, limit: Number(limit) };
+  if (cursor) {
+    options.pagination = { cursor };
   }
 
   return options;
