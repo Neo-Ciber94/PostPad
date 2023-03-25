@@ -17,16 +17,8 @@ export interface PostListProps {
   posts: Post[];
 }
 
-export default function PostList({ posts: initialPosts }: PostListProps) {
-  // TODO: When deleting a post we can clear this list,
-  // so we can reflect the changes on the client immediately
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [posts, setPosts] = useState(initialPosts);
-
-  const handleDelete = (postId: string) => {
-    const newPosts = posts.filter((post) => post.id !== postId);
-    setPosts(newPosts);
-  };
+export default function PostList({ posts }: PostListProps) {
+  const queryClient = useQueryClient();
 
   return (
     <>
@@ -44,7 +36,7 @@ export default function PostList({ posts: initialPosts }: PostListProps) {
               <PostListItem
                 post={post}
                 key={post.id}
-                onDelete={() => handleDelete(post.id)}
+                onDelete={() => queryClient.invalidateQueries(["posts"])}
               />
             );
           })}

@@ -38,12 +38,13 @@ export class PostRepository {
       tags = [],
     } = getQueryCriteriaFromOptions(options);
 
+    console.log({ options, tags });
     const result = await prisma.post.findMany({
       where: {
         content: { search },
         title: { search },
         createdByUserId: userId,
-        tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } },
+        tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } }
       },
       orderBy: {
         updatedAt: "desc",

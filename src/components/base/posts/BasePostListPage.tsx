@@ -41,6 +41,7 @@ export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
   });
 
   useEffect(() => {
+    console.log({ search, searchTags });
     if (search.trim().length > 0 || searchTags.length > 0) {
       refetch().catch(console.error);
     }
@@ -90,6 +91,7 @@ function NewPostButton() {
 async function fetchPosts(searchString: string, tags: SelectedTag[]) {
   const searchParams = new URLSearchParams();
 
+  console.log("fetch");
   if (searchString.trim().length > 0) {
     searchParams.set("search", searchString);
   }
@@ -101,11 +103,7 @@ async function fetchPosts(searchString: string, tags: SelectedTag[]) {
   const queryString = searchParams.toString();
   const q = queryString.length > 0 ? `?${queryString}` : "";
 
-  const res = await fetch(`/api/posts${q}`, {
-    next: {
-      revalidate: 10,
-    },
-  });
+  const res = await fetch(`/api/posts${q}`);
   const json = await res.json();
   return json as Post[];
 }

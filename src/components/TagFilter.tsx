@@ -112,7 +112,7 @@ function TagSelectorDialog(props: TagSelectorDialog) {
 
   return (
     <Dialog
-      className="bg-base-500 min-h-[250px] w-4/5"
+      className="min-h-[250px] w-4/5 bg-base-500"
       BackdropProps={{
         onClick: onClose,
       }}
@@ -174,7 +174,7 @@ function TagSelectorDialog(props: TagSelectorDialog) {
             </>
           )}
 
-          {tags.length === 0 && (
+          {!isLoading && tags.length === 0 && (
             <div className="my-4 flex flex-col items-center justify-center gap-2 p-4 opacity-30">
               <InboxIcon className="h-12 w-12" />
               <span className="text-2xl">No tags were found</span>
@@ -219,7 +219,7 @@ function TagToggle({ tag, selected, onClick }: TagToggleProps) {
         duration-200
         ${
           selected
-            ? "bg-accent-500 text-black ring-2 ring-black/50"
+            ? "bg-accent-500 text-black"
             : "bg-black  text-white"
         }`}
     >
