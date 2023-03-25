@@ -14,6 +14,11 @@
   }
 }
 
+.animate-fade-in {
+  animation: 1s forwards fade-in;
+  animation-timing-function: ease-in;
+}
+
 @keyframes fade-in {
   0% {
     opacity: 0;

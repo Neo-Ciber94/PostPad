@@ -1,5 +1,6 @@
 "use client";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 import SearchInput from "@/components/SearchInput";
 import TagFilter, { SelectedTag } from "@/components/TagFilter";
 import { useDebounce } from "@/lib/client/hooks/useDebounce";
@@ -95,47 +96,53 @@ export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
   }, [data]);
 
   return (
-    <div className="p-2 text-white">
-      <div className="py-2 px-10 md:px-[10%] lg:px-[25%]">
-        <NewPostButton />
+    <>
+      <div className="fixed bottom-10 right-10 z-30">
+        <ScrollToTopButton />
       </div>
 
-      <div className="px-2 md:px-[10%] lg:px-[20%]">
-        <hr className="my-8 bg-gray-400 opacity-10" />
-        <div className="mt-4 mb-8 flex flex-col gap-2">
-          <TagFilter
-            onChange={handleChangeTagFilter}
-            selectedTags={searchTags}
-          />
-          <SearchInput value={searchString} onInput={handleSearchChange} />
+      <div className="p-2 text-white">
+        <div className="py-2 px-10 md:px-[10%] lg:px-[25%]">
+          <NewPostButton />
         </div>
-        {isLoading ? (
-          <div className="my-20">
-            <LoadingSpinner
-              size={60}
-              width={5}
-              color="rgba(255, 255, 255, 0.2)"
+
+        <div className="px-2 md:px-[10%] lg:px-[20%]">
+          <hr className="my-8 bg-gray-400 opacity-10" />
+          <div className="mt-4 mb-8 flex flex-col gap-2">
+            <TagFilter
+              onChange={handleChangeTagFilter}
+              selectedTags={searchTags}
             />
+            <SearchInput value={searchString} onInput={handleSearchChange} />
           </div>
-        ) : (
-          <>
-            <PostList posts={posts} />
+          {isLoading ? (
+            <div className="my-20">
+              <LoadingSpinner
+                size={60}
+                width={5}
+                color="rgba(255, 255, 255, 0.2)"
+              />
+            </div>
+          ) : (
+            <>
+              <PostList posts={posts} />
 
-            {isFetchingNextPage && (
-              <div className="flex w-full flex-row justify-center">
-                <LoadingSpinner />
-              </div>
-            )}
+              {isFetchingNextPage && (
+                <div className="flex w-full flex-row justify-center">
+                  <LoadingSpinner />
+                </div>
+              )}
 
-            {hasNextPage && (
-              <span ref={ref} className="invisible">
-                marker
-              </span>
-            )}
-          </>
-        )}
+              {hasNextPage && (
+                <span ref={ref} className="invisible">
+                  marker
+                </span>
+              )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
