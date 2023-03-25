@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import SignIn from "./SignIn";
 import { useSelectedLayoutSegments } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const MainContent: React.FC<PropsWithChildren<{ session: Session | null }>> = ({
   return (
     <QueryClientProvider client={queryClient}>
       <Header session={session} />
+      <Toaster />
       {children}
     </QueryClientProvider>
   );

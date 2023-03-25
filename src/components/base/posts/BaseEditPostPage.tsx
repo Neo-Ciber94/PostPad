@@ -1,8 +1,9 @@
 "use client";
 import PostForm from "@/components/PostForm";
 import { PostWithUser, UpdatePost } from "@/lib/server/schemas/Post";
+import { deferredPromise } from "@/lib/utils/promises/deferred";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
-import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 import { useMutation } from "react-query";
 
 interface BaseEditPostPage {
@@ -10,25 +11,40 @@ interface BaseEditPostPage {
 }
 
 export default function BaseEditPostPage({ post }: BaseEditPostPage) {
-  const router = useRouter();
   const mutation = useMutation(async (post: UpdatePost) => {
-    const json = JSON.stringify(post);
-    const result = await fetch("/api/posts", {
-      body: json,
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-    });
+    const [deferred, promise] = deferredPromise<void>();
 
-    await throwOnResponseError(result);
+    void toast.promise(
+      promise,
+      {
+        loading: "Saving...",
+        success: "Post was updated",
+        error: "Failed to update post",
+      },
+      {}
+    );
 
-    // Redirect
-    router.push("/posts");
+    try {
+      const json = JSON.stringify(post);
+      const result = await fetch("/api/posts", {
+        body: json,
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      await throwOnResponseError(result);
+      deferred.resolve();
+    } catch (err) {
+      deferred.reject(err);
+      throw err;
+    }
   });
 
   return (
     <div className="p-4">
       <PostForm
         onSubmit={(post) => mutation.mutateAsync(post)}
+        cancelButtonText="Back"
         isSubmitting={mutation.isLoading}
         error={mutation.error}
         post={post}

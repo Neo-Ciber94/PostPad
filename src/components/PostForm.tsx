@@ -36,18 +36,21 @@ const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
   loading: () => <EditorLoading />,
 });
 
-interface CreatePostFormProps {
-  onSubmit: (post: CreatePost) => Promise<void>;
+type BaseProps = {
   isSubmitting: boolean;
   error?: unknown;
+  submitButtonText?: string;
+  cancelButtonText?: string;
+};
+
+interface CreatePostFormProps extends BaseProps {
+  onSubmit: (post: CreatePost) => Promise<void>;
   post?: undefined;
   isEditing?: false;
 }
 
-interface UpdatePostFormProps {
+interface UpdatePostFormProps extends BaseProps {
   onSubmit: (post: UpdatePost) => Promise<void>;
-  isSubmitting: boolean;
-  error?: unknown;
   post: PostWithUser;
   isEditing: true;
 }
@@ -60,6 +63,8 @@ export default function PostForm({
   onSubmit,
   isSubmitting,
   isEditing,
+  submitButtonText,
+  cancelButtonText,
 }: PostFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -318,7 +323,13 @@ export default function PostForm({
             disabled={isSubmitting}
           >
             {isSubmitting && <LoadingSpinner size={20} />}
-            <span>{isEditing === true ? "Update" : "Create"}</span>
+            <span>
+              {submitButtonText
+                ? submitButtonText
+                : isEditing === true
+                ? "Update"
+                : "Create"}
+            </span>
           </Button>
           <Link
             href="/"
@@ -330,7 +341,7 @@ export default function PostForm({
             }}
           >
             <Button type="button" variant="error" disabled={isSubmitting}>
-              Cancel
+              {cancelButtonText ?? "Cancel"}
             </Button>
           </Link>
         </div>
