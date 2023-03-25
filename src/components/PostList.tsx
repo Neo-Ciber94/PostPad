@@ -12,6 +12,7 @@ import LoadingSpinner from "./loading/LoadingSpinner";
 import MenuButton from "./MenuButton";
 import TimeAgo from "./TimeAgo";
 import { MdEdit, MdDelete } from "react-icons/md";
+import { toast } from "react-hot-toast";
 
 export interface PostListProps {
   posts: Post[];
@@ -19,6 +20,12 @@ export interface PostListProps {
 
 export default function PostList({ posts }: PostListProps) {
   const queryClient = useQueryClient();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDeletePost = async (post: Post) => {
+    void toast.success(`Post was deleted`);
+    void queryClient.invalidateQueries(["posts"]);
+  };
 
   return (
     <>
@@ -36,7 +43,7 @@ export default function PostList({ posts }: PostListProps) {
               <PostListItem
                 post={post}
                 key={post.id}
-                onDelete={() => queryClient.invalidateQueries(["posts"])}
+                onDelete={() => handleDeletePost(post)}
               />
             );
           })}
