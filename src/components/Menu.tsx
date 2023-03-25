@@ -1,38 +1,27 @@
 import { useOuterClick } from "@/lib/client/hooks/useOuterClick";
 import { createContext, PropsWithChildren, useContext, useRef } from "react";
 
-export interface MenuButtonProps {
+export interface MenuProps {
   open: boolean;
   onClick: () => void;
   onClose: () => void;
 }
 
-type MenuButtonContextProps = { open: boolean };
-const MenuButtonContext = createContext<MenuButtonContextProps>(
-  {} as MenuButtonContextProps
+type MenuContextProps = { open: boolean };
+const MenuButtonContext = createContext<MenuContextProps>(
+  {} as MenuContextProps
 );
 
-export type MenuButtonListComponent = React.FC<
-  PropsWithChildren<MenuButtonListProps>
->;
+export type MenuListComponent = React.FC<PropsWithChildren<MenuListProps>>;
 
-export type MenuButtonItemComponent = React.FC<
-  PropsWithChildren<MenuButtonItemProps>
->;
+export type MenuItemComponent = React.FC<PropsWithChildren<MenuItemProps>>;
 
-export type MenuButtonComponent = React.FC<
-  PropsWithChildren<MenuButtonProps>
-> & {
-  List: MenuButtonListComponent;
-  Item: MenuButtonItemComponent;
+export type MenuComponent = React.FC<PropsWithChildren<MenuProps>> & {
+  List: MenuListComponent;
+  Item: MenuItemComponent;
 };
 
-const MenuButton: MenuButtonComponent = ({
-  children,
-  open,
-  onClose,
-  onClick,
-}) => {
+const Menu: MenuComponent = ({ children, open, onClose, onClick }) => {
   const curRef = useRef<HTMLButtonElement | null>(null);
 
   useOuterClick({
@@ -61,12 +50,12 @@ const MenuButton: MenuButtonComponent = ({
   );
 };
 
-export type MenuButtonListProps = React.DetailedHTMLProps<
+export type MenuListProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLUListElement>,
   HTMLUListElement
 >;
 
-const List: React.FC<PropsWithChildren<MenuButtonListProps>> = ({
+const List: React.FC<PropsWithChildren<MenuListProps>> = ({
   children,
   ...props
 }) => {
@@ -79,17 +68,17 @@ const List: React.FC<PropsWithChildren<MenuButtonListProps>> = ({
   return <ul {...props}>{children}</ul>;
 };
 
-export type MenuButtonItemProps = React.DetailedHTMLProps<
+export type MenuItemProps = React.DetailedHTMLProps<
   React.LiHTMLAttributes<HTMLLIElement>,
   HTMLLIElement
 >;
 
-const Item: React.FC<PropsWithChildren<MenuButtonItemProps>> = ({
+const Item: React.FC<PropsWithChildren<MenuItemProps>> = ({
   children,
   ...props
 }) => <li {...props}>{children}</li>;
 
-MenuButton.List = List;
-MenuButton.Item = Item;
+Menu.List = List;
+Menu.Item = Item;
 
-export default MenuButton;
+export default Menu;

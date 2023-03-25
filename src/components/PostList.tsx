@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import Chip, { ChipProps } from "./Chip";
 import LoadingSpinner from "./loading/LoadingSpinner";
-import MenuButton from "./MenuButton";
+import Menu from "./Menu";
 import TimeAgo from "./TimeAgo";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { toast } from "react-hot-toast";
@@ -173,25 +173,25 @@ function PostListButtonMenu({
   const router = useRouter();
 
   return (
-    <MenuButton onClose={onClose} onClick={onOpen} open={open}>
+    <Menu onClose={onClose} onClick={onOpen} open={open}>
       <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
 
-      <MenuButton.List className="absolute z-40 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
-        <MenuButton.Item
+      <Menu.List className="absolute z-40 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
+        <Menu.Item
           className="flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg hover:bg-base-100"
           onClick={() => router.push(`/posts/edit/${post.slug}`)}
         >
           <MdEdit size={28} className="text-base-400" />
           Edit
-        </MenuButton.Item>
-        <MenuButton.Item
+        </Menu.Item>
+        <Menu.Item
           className="flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg hover:bg-base-100"
           onClick={onDelete}
         >
           <MdDelete size={28} className="text-base-400" />
           Delete
-        </MenuButton.Item>
-      </MenuButton.List>
-    </MenuButton>
+        </Menu.Item>
+      </Menu.List>
+    </Menu>
   );
 }

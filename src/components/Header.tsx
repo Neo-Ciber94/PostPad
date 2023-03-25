@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Avatar from "./Avatar";
-import MenuButton from "./MenuButton";
+import Menu from "./Menu";
 
 const singleDay = Single_Day({
   weight: "400",
@@ -64,21 +64,21 @@ function UserAvatar({ user }: UserAvatarProps) {
 
   return (
     <>
-      <MenuButton onClose={handleClose} onClick={handleOpen} open={open}>
+      <Menu onClose={handleClose} onClick={handleOpen} open={open}>
         <Avatar
           alt={user.name || user.email || "me"}
           src={user.image || "/default-user.png"}
         />
 
-        <MenuButton.List className="absolute right-0 top-10 z-40 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
-          <MenuButton.Item
+        <Menu.List className="absolute right-0 top-10 z-40 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
+          <Menu.Item
             className="hover:bg-base-100 flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg"
             onClick={handleSignOut}
           >
             Sign Out
-          </MenuButton.Item>
-        </MenuButton.List>
-      </MenuButton>
+          </Menu.Item>
+        </Menu.List>
+      </Menu>
     </>
   );
 }
