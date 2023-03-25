@@ -35,10 +35,17 @@ export class PostRepository {
   ): Promise<PageResult<Post>> {
     const { search, cursor, tags = [] } = getQueryCriteriaFromOptions(options);
 
+    let searchTerm = escapeFullTextSearchString(search);
+
+    if (search) {
+      // We search the words that starts with the search term
+      searchTerm = `${searchTerm}*`;
+    }
+
     const result = await prisma.post.findMany({
       where: {
-        content: { search },
-        title: { search },
+        content: { search: searchTerm },
+        title: { search: searchTerm },
         createdByUserId: userId,
         tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } },
       },
@@ -221,4 +228,14 @@ function getQueryCriteriaFromOptions(options: GetAllPostsOptions) {
   }
 
   return { search, cursor, tags };
+}
+
+function escapeFullTextSearchString(
+  term: string | undefined | null
+): string | undefined {
+  if (term == null) {
+    return undefined;
+  }
+
+  return term;
 }
