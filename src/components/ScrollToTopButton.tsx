@@ -7,7 +7,7 @@ interface ScrollToTopButtonProps {
 }
 
 export default function ScrollToTopButton(props: ScrollToTopButtonProps) {
-  const { threshold = 100 } = props;
+  const { threshold = 200 } = props;
   const [isShowing, setIsShowing] = useState(false);
 
   const scrollToTop = () => {
