@@ -1,0 +1,49 @@
+@for $idx from 0 through 10 {
+  .animate-post-item-left-#{$idx * 100} {
+    --slide-left-start: 40px;
+    animation: 600ms forwards slide-left;
+    animation-delay: #{$idx * 100}ms;
+    animation-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  }
+
+  .animate-post-item-right-#{$idx * 100} {
+    --slide-right-start: 40px;
+    animation: 600ms forwards slide-right;
+    animation-delay: #{$idx * 100}ms;
+    animation-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-left {
+  0% {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--slide-left-start)));
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(var(--slide-right-start));
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}

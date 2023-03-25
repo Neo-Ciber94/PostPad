@@ -38,11 +38,12 @@ export default function PostList({ posts }: PostListProps) {
 
       {
         <>
-          {posts.map((post) => {
+          {posts.map((post, idx) => {
             return (
               <PostListItem
                 post={post}
                 key={post.id}
+                index={idx}
                 onDelete={() => handleDeletePost(post)}
               />
             );
@@ -57,10 +58,11 @@ export default function PostList({ posts }: PostListProps) {
 
 interface PostListItemProps {
   post: Post;
+  index: number;
   onDelete: () => void;
 }
 
-function PostListItem({ post, onDelete }: PostListItemProps) {
+function PostListItem({ index, post, onDelete }: PostListItemProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -91,12 +93,18 @@ function PostListItem({ post, onDelete }: PostListItemProps) {
     setOpen(true);
   };
 
+  const d = index % 10;
+  const animation =
+    d % 2 === 0
+      ? `animate-post-item-left-${d * 100}`
+      : `animate-post-item-right-${d * 100}`;
+
   return (
     <>
       <Link href={`/posts/${post.slug}`}>
         <div
-          className={`bg-base-600 ring-base-300/40 hover:bg-base-700 my-3 rounded-xl 
-          px-6 py-4 shadow-md shadow-black/50 ring-2 transition
+          className={`bg-base-600 ring-base-300/40 hover:bg-base-700 my-3 rounded-xl  
+          px-6 py-4 opacity-0 shadow-md shadow-black/50 ring-2 transition ${animation}
           duration-300 ${deletePost.isLoading ? "animate-pulse" : ""}`}
         >
           <div className="flex flex-row items-center justify-between">
