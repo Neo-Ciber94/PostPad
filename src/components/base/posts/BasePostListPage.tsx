@@ -41,7 +41,6 @@ export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
   });
 
   useEffect(() => {
-    console.log({ search, searchTags });
     if (search.trim().length > 0 || searchTags.length > 0) {
       refetch().catch(console.error);
     }

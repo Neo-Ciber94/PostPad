@@ -18,8 +18,8 @@ const getAllPostsOptionsSchema = z.object({
   tags: z.array(z.string()).optional(),
   pagination: z
     .object({
-      page: z.number().min(1).optional(),
-      limit: z.number().min(1).optional(),
+      page: z.number().min(1).nullish(),
+      limit: z.number().min(1).max(100).nullish(),
     })
     .optional(),
 });
@@ -38,19 +38,20 @@ export class PostRepository {
       tags = [],
     } = getQueryCriteriaFromOptions(options);
 
-    console.log({ options, tags });
+    console.log({ skip, take });
+
     const result = await prisma.post.findMany({
       where: {
         content: { search },
         title: { search },
         createdByUserId: userId,
-        tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } }
+        tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } },
       },
       orderBy: {
         updatedAt: "desc",
       },
-      take,
-      skip,
+      take: 100,
+      //skip,
       include: {
         tags: true,
         sharedPosts: true,
@@ -207,12 +208,12 @@ function getQueryCriteriaFromOptions(options: GetAllPostsOptions) {
     ? options
     : ({} as GetAllPostsOptions);
 
+  let take = DEFAULT_LIMIT;
   let skip: number | undefined;
-  let take: number | undefined;
 
   if (pagination) {
-    const page = pagination.page || 1;
-    take = pagination.limit;
+    const page = pagination.page ?? 1;
+    take = pagination.limit ?? DEFAULT_LIMIT;
     skip = (page - 1) * (pagination.limit || DEFAULT_LIMIT);
   }
 
