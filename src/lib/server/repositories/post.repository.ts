@@ -34,26 +34,48 @@ export class PostRepository {
     options: GetAllPostsOptions = {}
   ): Promise<PageResult<Post>> {
     const { search, cursor, tags = [] } = getQueryCriteriaFromOptions(options);
-
-    let searchTerm = escapeFullTextSearchString(search);
-
-    if (search) {
-      // We search the words that starts with the search term
-      searchTerm = `${searchTerm}*`;
-    }
+    const searchString = escapeFullTextSearchString(search);
 
     const result = await prisma.post.findMany({
       where: {
-        content: { search: searchTerm },
-        title: { search: searchTerm },
         createdByUserId: userId,
         tags: tags.length === 0 ? undefined : { some: { name: { in: tags } } },
+        OR:
+          search == null
+            ? undefined
+            : [
+                {
+                  content: {
+                    search:
+                      searchString == null ? undefined : `${searchString}*`,
+                  },
+                },
+                {
+                  title: {
+                    search:
+                      searchString == null ? undefined : `${searchString}*`,
+                  },
+                },
+
+                // FIXME: Not sure if this defeats the purpose of the full text search,
+                // but for works containing the boolean mode operators we need to use contains
+                {
+                  content: {
+                    contains: search == null ? undefined : `${search}`,
+                  },
+                },
+                {
+                  title: { contains: search == null ? undefined : `${search}` },
+                },
+              ],
       },
       cursor: cursor == null ? undefined : { id: cursor },
       take: DEFAULT_LIMIT + 1, // Add one item to check if there is more
-      skip: cursor == null ? 0 : 1, // Skip the cursor
       orderBy: {
-        updatedAt: "desc",
+        updatedAt: {
+          sort: 'desc',
+          nulls: 'first'
+        },
       },
       include: {
         tags: true,
@@ -230,12 +252,12 @@ function getQueryCriteriaFromOptions(options: GetAllPostsOptions) {
   return { search, cursor, tags };
 }
 
-function escapeFullTextSearchString(
-  term: string | undefined | null
-): string | undefined {
-  if (term == null) {
+function escapeFullTextSearchString(s: string | undefined): string | undefined {
+  if (s == null) {
     return undefined;
   }
 
-  return term;
+  // We escape the full text search operators
+  // https://dev.mysql.com/doc/refman/8.0/en/fulltext-boolean.html
+  return s.replaceAll(/[-+><()~*"]/g, "");
 }

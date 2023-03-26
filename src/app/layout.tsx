@@ -32,12 +32,7 @@ export default async function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body
-        className="bg-base-500 scrollbar
-            scrollbar-track-base-300/25
-            scrollbar-thumb-base-700 
-            scrollbar-thumb-rounded-sm"
-      >
+      <body className="bg-base-500">
         <DarkModeProvider prefersDarkMode={prefersDarkMode}>
           <Main session={session}>{children}</Main>
         </DarkModeProvider>

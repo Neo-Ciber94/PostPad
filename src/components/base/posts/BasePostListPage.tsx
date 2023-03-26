@@ -44,8 +44,9 @@ export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
     isFetchingNextPage,
     isLoading,
   } = useInfiniteQuery(["posts", search, searchTags], {
+    getNextPageParam: (lastPage) => lastPage.nextId,
     initialData: {
-      pageParams: [initialPosts.nextId],
+      pageParams: [undefined],
       pages: [initialPosts],
     },
     queryFn({ pageParam = "" }) {
@@ -55,7 +56,6 @@ export default function BasePostsListPage({ initialPosts }: BasePostListPage) {
         cursor: pageParam,
       });
     },
-    getNextPageParam: (lastPage) => lastPage.nextId,
   });
 
   useEffect(() => {

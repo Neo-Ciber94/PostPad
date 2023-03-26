@@ -4,8 +4,8 @@ import { PostWithUser } from "@/lib/server/schemas/Post";
 import ReactQuill from "react-quill";
 import AIGeneratedTag from "./AIGeneratedTag";
 import { DarkModeToggle } from "./DarkModeToggle";
-import CustomImage from "./Editor/CustomImage";
-import CustomVideo from "./Editor/CustomVideo";
+import CustomImage from "./editor/CustomImage";
+import CustomVideo from "./editor/CustomVideo";
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 

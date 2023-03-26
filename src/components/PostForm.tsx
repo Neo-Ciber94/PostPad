@@ -31,7 +31,7 @@ import { promptSchema } from "@/lib/server/schemas/Prompt";
 import SharePostButton from "./SharePostButton";
 import SharePostDialog from "./SharePostDialog";
 
-const PostEditor = dynamic(() => import("./Editor/PostEditor"), {
+const PostEditor = dynamic(() => import("./editor/PostEditor"), {
   ssr: false,
   loading: () => <EditorLoading />,
 });

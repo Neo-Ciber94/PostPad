@@ -14,3 +14,15 @@
 
 @import "./quill.scss";
 @import "./animations.scss";
+
+body::-webkit-scrollbar {
+  width: 1em;
+}
+
+body::-webkit-scrollbar-track {
+  @apply bg-base-300/25;
+}
+
+body::-webkit-scrollbar-thumb {
+  @apply bg-base-700;
+}
