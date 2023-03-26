@@ -27,6 +27,9 @@ jobs:
     
     # Run tests
     - run: yarn test
+
+    # Run Typecheck
+    - run: yarn typecheck
     
     # Run linter
     - run: yarn lint

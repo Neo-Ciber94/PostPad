@@ -76,9 +76,9 @@ function SocialLoginButtons() {
         <FaGithub size={25} /> <span>Log in with Github</span>
       </SocialIcon>
 
-      {/* <SocialIcon onClick={handleAzureB2DSignIn}>
+      <SocialIcon onClick={handleAzureB2DSignIn}>
         <SiMicrosoft size={25} /> <span>Log in with Microsoft</span>
-      </SocialIcon> */}
+      </SocialIcon>
     </div>
   );
 }
