@@ -13,6 +13,7 @@ import Menu from "./Menu";
 import TimeAgo from "./TimeAgo";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { toast } from "react-hot-toast";
+import { Relative } from "./Relative";
 
 export interface PostListProps {
   posts: Post[];
@@ -64,6 +65,7 @@ interface PostListItemProps {
 
 function PostListItem({ index, post, onDelete }: PostListItemProps) {
   const router = useRouter();
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const deletePost = useMutation(async () => {
@@ -87,10 +89,15 @@ function PostListItem({ index, post, onDelete }: PostListItemProps) {
 
   const handleClose = () => {
     setOpen(false);
+    setAnchor(null);
   };
 
-  const handleOpen = () => {
+  const handleOpen = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     setOpen(true);
+    setAnchor(e.target as HTMLElement);
   };
 
   const d = index % 10;
@@ -104,7 +111,7 @@ function PostListItem({ index, post, onDelete }: PostListItemProps) {
       <Link href={`/posts/${post.slug}`}>
         <div
           className={`my-3 rounded-xl bg-base-600 px-6 py-4 opacity-0 shadow-md 
-          shadow-black/50 ring-2 ring-base-300/40 transition hover:relative hover:z-50 hover:bg-base-700 ${animation}
+          shadow-black/50 ring-2 ring-base-300/40 transition hover:bg-base-700 ${animation}
           duration-300 ${deletePost.isLoading ? "animate-pulse" : ""}`}
         >
           <div className="flex flex-row items-center justify-between">
@@ -126,16 +133,28 @@ function PostListItem({ index, post, onDelete }: PostListItemProps) {
               )}
             </div>
 
-            <PostListButtonMenu
-              open={open}
-              post={post}
-              onOpen={handleOpen}
-              onClose={handleClose}
-              onDelete={() => deletePost.mutate()}
-            />
+            <button onClick={handleOpen}>
+              <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
+            </button>
           </div>
         </div>
       </Link>
+
+      <Relative
+        anchor={anchor}
+        visible={open}
+        className="z-50"
+        offsetY={32}
+        offsetX={16}
+      >
+        <MenuItems
+          open={open}
+          post={post}
+          onOpen={handleOpen}
+          onClose={handleClose}
+          onDelete={() => deletePost.mutate()}
+        />
+      </Relative>
     </>
   );
 }
@@ -169,11 +188,11 @@ interface PostListButtonMenuProps {
   post: Post;
   open: boolean;
   onDelete: () => void;
-  onOpen: () => void;
+  onOpen: (event: React.MouseEvent) => void;
   onClose: () => void;
 }
 
-function PostListButtonMenu({
+function MenuItems({
   open,
   onOpen,
   onClose,
@@ -184,9 +203,7 @@ function PostListButtonMenu({
 
   return (
     <Menu onClose={onClose} onClick={onOpen} open={open}>
-      <EllipsisVerticalIcon className="h-8 w-8 p-1 text-white hover:rounded-full hover:bg-base-400/30" />
-
-      <Menu.List className="absolute z-50 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
+      <Menu.List className="z-50 min-w-[150px] rounded-md bg-white p-1 shadow-lg">
         <Menu.Item
           className="flex cursor-pointer flex-row items-center gap-2 px-4 py-2 text-black hover:rounded-lg hover:bg-base-100"
           onClick={() => router.push(`/posts/edit/${post.slug}`)}

@@ -3,7 +3,7 @@ import { createContext, PropsWithChildren, useContext, useRef } from "react";
 
 export interface MenuProps {
   open: boolean;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent) => void;
   onClose: () => void;
 }
 
@@ -41,7 +41,7 @@ const Menu: MenuComponent = ({ children, open, onClose, onClick }) => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          onClick();
+          onClick(e);
         }}
       >
         {children}
