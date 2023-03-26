@@ -4,7 +4,7 @@ A sample application using the new experimental app directory.
 
 ## What is PostPad?
 
-PostPad allow you to create and share publications.
+PostPad allow you to create and share posts.
 
 > **Website**: <https://postpad.vercel.app/>
 
@@ -37,4 +37,4 @@ PostPad allow you to create and share publications.
   - Allow to generate an url to share a post
 - [ ] Ratelimiter
 - [ ] Logging
-- [ ] Scroll pagination
+- [x] Scroll pagination
