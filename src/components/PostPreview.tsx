@@ -8,6 +8,7 @@ import CustomImage from "./editor/CustomImage";
 import CustomVideo from "./editor/CustomVideo";
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
+import { getPostDate } from "@/lib/utils/getPostDate";
 
 ReactQuill.Quill.register("formats/image", CustomImage, true);
 ReactQuill.Quill.register("formats/video", CustomVideo, true);
@@ -42,12 +43,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
             <hr className="border-neutral-400 opacity-30" />
           </div>
 
-          <ReactQuill
-            value={post.content || ""}
-            readOnly
-            theme="bubble"
-            modules={modules}
-          />
+          <ReactQuill value={post.content || ""} readOnly theme="bubble" modules={modules} />
         </div>
 
         {post.isAIGenerated && (
@@ -69,7 +65,7 @@ function PostCreationInfo({ post }: PostCreationInfoProps) {
 
   const label = useMemo(() => {
     const user = session?.user;
-    const date = new Date(post.createdAt ?? post.updatedAt).toLocaleString();
+    const date = getPostDate(post);
 
     if (user && user.id === post.createdByUser.id) {
       return `Last updated: ${date}`;

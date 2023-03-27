@@ -31,6 +31,7 @@ import { promptSchema } from "@/lib/server/schemas/Prompt";
 import SharePostButton from "./SharePostButton";
 import SharePostDialog from "./SharePostDialog";
 import { toast } from "react-hot-toast";
+import { getPostDate } from "@/lib/utils/getPostDate";
 
 const PostEditor = dynamic(() => import("./editor/PostEditor"), {
   ssr: false,
@@ -71,9 +72,7 @@ export default function PostForm({
   const queryClient = useQueryClient();
   const [shareOpen, setShareOpen] = useState(false);
   const { isDarkMode } = useDarkMode();
-  const [showTags, setShowTags] = useState(
-    () => post && post.tags && post.tags.length > 0
-  );
+  const [showTags, setShowTags] = useState(() => post && post.tags && post.tags.length > 0);
 
   const schema = useMemo(
     () => (isEditing === true ? updatePostSchema : createPostSchema),
@@ -104,12 +103,9 @@ export default function PostForm({
     },
   });
 
-  const editorContent = useStateWithChange(
-    editorController.field.value || "",
-    (content) => {
-      editorController.field.onChange(content);
-    }
-  );
+  const editorContent = useStateWithChange(editorController.field.value || "", (content) => {
+    editorController.field.onChange(content);
+  });
 
   const [isGenerating, setIsGenerating] = useState(false);
   const promptDialog = usePromptDialog();
@@ -126,10 +122,7 @@ export default function PostForm({
       setIsGenerating(true);
 
       try {
-        const completionStream = fetchPostCompletionStream(
-          prompt,
-          abortController.signal
-        );
+        const completionStream = fetchPostCompletionStream(prompt, abortController.signal);
 
         let generated = "";
 
@@ -207,14 +200,8 @@ export default function PostForm({
         })}
       >
         <div className="mb-2 flex flex-row justify-end">
-          <div
-            className={`flex w-full flex-row ${
-              post ? "justify-between" : "justify-end"
-            }`}
-          >
-            {post != null && (
-              <SharePostButton onClick={() => setShareOpen(true)} />
-            )}
+          <div className={`flex w-full flex-row ${post ? "justify-between" : "justify-end"}`}>
+            {post != null && <SharePostButton onClick={() => setShareOpen(true)} />}
 
             <div className="flex flex-row items-center gap-4">
               {post == null && (
@@ -294,9 +281,7 @@ export default function PostForm({
               editorContent.set(value);
             }}
           />
-          <p className="text-xs italic text-red-500">
-            {errors.content?.message}
-          </p>
+          <p className="text-xs italic text-red-500">{errors.content?.message}</p>
         </div>
 
         <Controller
@@ -318,9 +303,7 @@ export default function PostForm({
         <>
           {error && (
             <div className="py-4 text-red-500">
-              <Alert color="#e00">
-                {getErrorMessage(error) || "Something went wrong"}
-              </Alert>
+              <Alert color="#e00">{getErrorMessage(error) || "Something went wrong"}</Alert>
             </div>
           )}
         </>
@@ -334,11 +317,7 @@ export default function PostForm({
           >
             {isSubmitting && <LoadingSpinner size={20} />}
             <span>
-              {submitButtonText
-                ? submitButtonText
-                : isEditing === true
-                ? "Update"
-                : "Create"}
+              {submitButtonText ? submitButtonText : isEditing === true ? "Update" : "Create"}
             </span>
           </Button>
           <Link
@@ -358,9 +337,9 @@ export default function PostForm({
 
         {post != null && (
           <div className="flex w-full flex-row justify-end px-4">
-            <span className="text-xs italic text-slate-300 opacity-70">{`Last update: ${new Date(
-              post.createdAt ?? post.updatedAt
-            ).toLocaleString()}`}</span>
+            <span className="text-xs italic text-slate-300 opacity-70">{`Last update: ${getPostDate(
+              post
+            )}`}</span>
           </div>
         )}
       </form>
