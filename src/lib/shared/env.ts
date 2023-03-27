@@ -45,3 +45,11 @@ export const environment: Environment = envSchema.parse({
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   OPENAI_ORGANIZATION_ID: process.env.OPENAI_ORGANIZATION_ID,
 } satisfies Partial<Environment>);
+
+
+/**
+ * Returns `true` if the application is running on development mode.
+ */
+export function isDevelopment() {
+  return process.env.NODE_ENV === "development";
+}

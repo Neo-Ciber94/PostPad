@@ -1,4 +1,4 @@
-import { environment } from "@/lib/shared/env";
+import { environment, isDevelopment } from "@/lib/shared/env";
 import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
@@ -7,7 +7,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/server/database/prisma";
 
 export const authOptions: AuthOptions = {
-  debug: true,
+  debug: isDevelopment(),
   adapter: PrismaAdapter(prisma),
   pages: { signIn: "/" },
   providers: [
