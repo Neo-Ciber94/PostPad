@@ -131,7 +131,7 @@ export default function TagsListInput(props: TagsListInputProps) {
         onBlur={handleAddTag}
         placeholder={tags.length > 0 ? undefined : "Add Tag..."}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === "Enter" || e.key === "Accept") {
             e.preventDefault();
             handleAddTag();
           }
