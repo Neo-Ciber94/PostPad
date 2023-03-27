@@ -1,5 +1,6 @@
 import { PostService } from "@/lib/server/services/post.service";
 import { RequestContext } from "@/lib/server/types/RequestContext";
+import { createResponseFromError } from "@/lib/server/utils/createResponseFromError";
 import { json } from "@/lib/utils/responseUtils";
 
 export async function DELETE(_: Request, ctx: RequestContext<{ id: string }>) {
@@ -17,15 +18,9 @@ export async function DELETE(_: Request, ctx: RequestContext<{ id: string }>) {
       );
     }
 
-    console.log({ deleted: result });
     return json(result);
   } catch (error) {
     console.error({ error });
-    return json(
-      { message: "Something went wrong" },
-      {
-        status: 500,
-      }
-    );
+    return createResponseFromError(error);
   }
 }

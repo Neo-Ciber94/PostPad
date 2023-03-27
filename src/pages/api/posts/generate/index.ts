@@ -3,6 +3,8 @@ import { ChatCompletionRequestMessage } from "openai/dist/api";
 import { json } from "@/lib/utils/responseUtils";
 import { contentModeration } from "@/lib/utils/ai/contentModeration";
 import { promptSchema } from "@/lib/server/schemas/Prompt";
+import { limitUserRequest } from "@/lib/server/utils/rateLimiter";
+import { NextRequest } from "next/server";
 
 // TODO: When edge api handlers in app directory are stable move this to there
 
@@ -13,7 +15,7 @@ export const config = {
   runtime: "edge",
 };
 
-export default async function POST(request: Request) {
+export default async function POST(request: NextRequest) {
   try {
     const input = await request.json();
     const result = promptSchema.safeParse(input);
@@ -21,6 +23,8 @@ export default async function POST(request: Request) {
     if (result.success === false) {
       return json({ message: result.error }, { status: 400 });
     }
+
+    await limitUserRequest(request.cookies);
 
     const { prompt } = result.data;
     const moderationResult = await contentModeration(prompt, request.signal);

@@ -3,6 +3,7 @@ export const enum ErrorCode {
   BAD_REQUEST = "BAD_REQUEST",
   UNAUTHORIZED = "UNAUTHORIZED",
   FORBIDDEN = "FORBIDDEN",
+  TOO_MANY_REQUESTS = "TOO_MANY_REQUESTS",
   INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR",
 }
 
@@ -32,6 +33,8 @@ function codeToStatusCode(code: ErrorCode): number {
       return 403;
     case ErrorCode.NOT_FOUND:
       return 404;
+    case ErrorCode.TOO_MANY_REQUESTS:
+      return 429;
     case ErrorCode.INTERNAL_SERVER_ERROR:
       return 500;
     default:

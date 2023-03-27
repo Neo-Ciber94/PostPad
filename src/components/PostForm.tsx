@@ -8,7 +8,7 @@ import {
 } from "@/lib/server/schemas/Post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Controller, useController, useForm } from "react-hook-form";
 import Button from "./Button";
 import LoadingSpinner from "./loading/LoadingSpinner";
@@ -30,6 +30,7 @@ import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { promptSchema } from "@/lib/server/schemas/Prompt";
 import SharePostButton from "./SharePostButton";
 import SharePostDialog from "./SharePostDialog";
+import { toast } from "react-hot-toast";
 
 const PostEditor = dynamic(() => import("./editor/PostEditor"), {
   ssr: false,
@@ -113,51 +114,60 @@ export default function PostForm({
   const [isGenerating, setIsGenerating] = useState(false);
   const promptDialog = usePromptDialog();
 
-  const generatePost = useMutation(async (prompt: string) => {
-    console.log({ prompt });
-    editorContent.set("");
+  const generatePost = useCallback(
+    async (prompt: string) => {
+      console.log({ prompt });
+      editorContent.set("");
 
-    if (isGenerating && !abortController.isAborted) {
-      abortController.abort();
-    }
-
-    setIsGenerating(true);
-
-    try {
-      const completionStream = fetchPostCompletionStream(
-        prompt,
-        abortController.signal
-      );
-
-      let generated = "";
-
-      for await (const chunk of completionStream) {
-        const nextChunk = generated + chunk;
-        generated = nextChunk;
-        editorContent.set(generated);
+      if (isGenerating && !abortController.isAborted) {
+        abortController.abort();
       }
 
-      // Update the is AI generated flag
-      setValue("isAIGenerated", true);
+      setIsGenerating(true);
 
-      // If had a title, continue, otherwise set the generated title
-      const currentTitle = getValues("title");
-      if (currentTitle != null && currentTitle.trim().length > 0) {
-        return;
-      }
+      try {
+        const completionStream = fetchPostCompletionStream(
+          prompt,
+          abortController.signal
+        );
 
-      // The generated title will be within a <h1> tag
-      const titleMatches = /^<h1>(.+)<\/h1>/g.exec(generated);
+        let generated = "";
 
-      if (titleMatches) {
-        const generatedTitle = titleMatches[1];
-        if (generatedTitle) {
-          setValue("title", generatedTitle);
+        for await (const chunk of completionStream) {
+          const nextChunk = generated + chunk;
+          generated = nextChunk;
+          editorContent.set(generated);
         }
+
+        // Update the is AI generated flag
+        setValue("isAIGenerated", true);
+
+        // If had a title, continue, otherwise set the generated title
+        const currentTitle = getValues("title");
+        if (currentTitle != null && currentTitle.trim().length > 0) {
+          return;
+        }
+
+        // The generated title will be within a <h1> tag
+        const titleMatches = /^<h1>(.+)<\/h1>/g.exec(generated);
+
+        if (titleMatches) {
+          const generatedTitle = titleMatches[1];
+          if (generatedTitle) {
+            setValue("title", generatedTitle);
+          }
+        }
+      } finally {
+        setIsGenerating(false);
       }
-    } finally {
-      setIsGenerating(false);
-    }
+    },
+    [abortController, editorContent, getValues, isGenerating, setValue]
+  );
+
+  const generatePostMutation = useMutation(generatePost, {
+    onError(error) {
+      void toast.error(getErrorMessage(error) ?? "Something went wrong");
+    },
   });
 
   const handleOpenPromptDialog = () => {
@@ -169,7 +179,7 @@ export default function PostForm({
     promptDialog.open({
       title: "Generate AI Post",
       placeholder: "What would you like your post to be about?",
-      onConfirm: (prompt) => generatePost.mutate(prompt),
+      onConfirm: (prompt) => generatePostMutation.mutate(prompt),
       schema: promptSchema,
     });
   };
@@ -210,7 +220,7 @@ export default function PostForm({
               {post == null && (
                 <GenerateAIPostButton
                   onClick={handleOpenPromptDialog}
-                  isLoading={generatePost.isLoading}
+                  isLoading={generatePostMutation.isLoading}
                 />
               )}
 

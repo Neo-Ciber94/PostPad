@@ -1,5 +1,5 @@
 import { SharedPostService } from "@/lib/server/services/sharedPost.service";
-import { createJsonResponseFromError } from "@/lib/server/utils/createJsonResponseFromError";
+import { createResponseFromError } from "@/lib/server/utils/createResponseFromError";
 import { getSharedPostUrl } from "@/lib/utils/getSharedPostUrl";
 import { z } from "zod";
 
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error(err);
-    return createJsonResponseFromError(err);
+    return createResponseFromError(err);
   }
 }
 
@@ -38,6 +38,6 @@ export async function DELETE(req: Request) {
     return new Response();
   } catch (err) {
     console.error(err);
-    return createJsonResponseFromError(err);
+    return createResponseFromError(err);
   }
 }

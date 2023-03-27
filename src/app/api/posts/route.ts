@@ -1,7 +1,10 @@
 import { GetAllPostsOptions } from "@/lib/server/repositories/post.repository";
 import { PostService } from "@/lib/server/services/post.service";
+import { createResponseFromError } from "@/lib/server/utils/createResponseFromError";
+import { limitUserRequest } from "@/lib/server/utils/rateLimiter";
 import { json } from "@/lib/utils/responseUtils";
-import { ZodError } from "zod";
+import { cookies as getCookies } from "next/headers";
+import { NextRequest } from "next/server";
 
 export async function GET(request: Request) {
   const postService = new PostService();
@@ -13,36 +16,26 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const postService = new PostService();
 
+  const cookies = getCookies();
+
   try {
     const input = await request.json();
     const result = await postService.createPost(input);
-    console.log({ created: input });
+    await limitUserRequest(cookies);
     return json(result);
   } catch (error) {
     console.error({ error });
-
-    if (error instanceof ZodError) {
-      const zodError = error as ZodError;
-      return json(zodError.message, {
-        status: 400,
-      });
-    }
-
-    return json(
-      { message: "Something went wrong" },
-      {
-        status: 500,
-      }
-    );
+    return createResponseFromError(error);
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   const postService = new PostService();
 
   try {
     const input = await request.json();
     const result = await postService.updatePost(input);
+    const cookies = getCookies();
 
     if (result == null) {
       return json(
@@ -53,24 +46,11 @@ export async function PUT(request: Request) {
       );
     }
 
-    console.log({ updated: input });
+    await limitUserRequest(cookies);
     return json(result);
   } catch (error) {
     console.error({ error });
-
-    if (error instanceof ZodError) {
-      const zodError = error as ZodError;
-      return json(zodError.message, {
-        status: 400,
-      });
-    }
-
-    return json(
-      { message: "Something went wrong" },
-      {
-        status: 500,
-      }
-    );
+    return createResponseFromError(error);
   }
 }
 

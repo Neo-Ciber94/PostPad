@@ -35,6 +35,6 @@ PostPad allow you to create and share posts.
   - Generate Post using OpenAI
 - [x] Share
   - Allow to generate an url to share a post
-- [ ] Ratelimiter
+- [x] Ratelimiter
 - [ ] Logging
 - [x] Scroll pagination
