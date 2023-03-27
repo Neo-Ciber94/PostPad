@@ -12,10 +12,22 @@
   transition-duration: var(--editor-transition-duration);
 }
 
+.ql-formats {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  margin-top: 2px;
+  margin-bottom: 1px;
+  margin-right: 10px !important;
+}
+
 .text-editor.dark {
   background-color: #0d1117;
   color: white;
   transition-duration: var(--editor-transition-duration);
+
+  .ql-formats {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
 
   .ql-picker-options {
     color: gray !important;
@@ -109,14 +121,6 @@ button.ql-header.ql-active {
   color: #3891d0;
 }
 
-.ql-formats {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  margin-top: 2px;
-  margin-bottom: 1px;
-  margin-right: 10px !important;
-}
-
 // Text sizes
 .ql-editor {
   p,
@@ -201,8 +205,8 @@ button.ql-header.ql-active {
 // Lucida
 
 .ql-font-lucida {
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva,
+    Verdana, sans-serif;
 }
 
 .ql-picker.ql-font .ql-picker-label[data-value="lucida"]::before,
