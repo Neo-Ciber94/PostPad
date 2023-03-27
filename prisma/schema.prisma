@@ -33,7 +33,7 @@ model Post {
 
 model Tag {
   id     String @id @unique @default(uuid())
-  name   String @db.TinyText
+  name   String @db.VarChar(36)
   postId String
   note   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
@@ -41,6 +41,7 @@ model Tag {
   createdByUserId String
   createdByUser   User   @relation(fields: [createdByUserId], references: [id])
 
+  @@index([name])
   @@index([postId])
   @@index([createdByUserId])
 }
