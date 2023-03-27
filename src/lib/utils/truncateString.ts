@@ -1,11 +1,13 @@
-export function truncateString(
-  str: string,
-  maxLength: number,
-  placeholder = "..."
-): string {
+export function truncateString(str: string, maxLength: number, placeholder = "..."): string {
   if (str.length < maxLength) {
     return str;
   }
 
-  return str.substring(0, maxLength - placeholder.length) + placeholder;
+  const length = Math.min(str.length, maxLength - placeholder.length);
+
+  if (length === str.length) {
+    return str;
+  }
+
+  return str.slice(0, length) + placeholder;
 }

@@ -2,20 +2,13 @@
 import BaseSharedPostPage from "@/components/base/p/BaseSharePostPage";
 import postsLoader from "@/lib/server/loaders/postsLoader";
 import { RequestContext } from "@/lib/server/types/RequestContext";
-import { truncateString } from "@/lib/utils/truncateString";
+import { getPostMetadataDescription } from "@/lib/server/utils/getPostMetadataDescription";
 import { Metadata } from "next";
 
-export async function generateMetadata(
-  ctx: RequestContext<Params>
-): Promise<Metadata> {
+export async function generateMetadata(ctx: RequestContext<Params>): Promise<Metadata> {
   const sharedPostId = ctx.params.sharedPostId;
   const post = await postsLoader.getSharedPost(sharedPostId);
-
-  let description = post.content;
-
-  if (description) {
-    description = truncateString(description, 50);
-  }
+  const description = getPostMetadataDescription(post);
 
   return {
     title: `PostPad | ${post.title}`,
