@@ -10,9 +10,9 @@ PostPad allow you to create and share posts.
 
 ## Screenshots
 
-![login](./static/login.jpg)
+![login](./assets/login.jpg)
 
-![posts](./static/posts.jpg)
+![posts](./assets/posts.jpg)
 
 ## Stack
 

@@ -32,6 +32,7 @@ import SharePostButton from "./SharePostButton";
 import SharePostDialog from "./SharePostDialog";
 import { toast } from "react-hot-toast";
 import { getPostDate } from "@/lib/utils/getPostDate";
+import ImageInputDialog from "./ImageInputDialog";
 
 const PostEditor = dynamic(() => import("./editor/PostEditor"), {
   ssr: false,
@@ -181,6 +182,8 @@ export default function PostForm({
     <>
       {/* Only when creating we can generate using AI  */}
       <promptDialog.DialogComponent />
+
+      {/* <ImageInputDialog /> */}
 
       {shareOpen && post != null && (
         <SharePostDialog onClose={() => setShareOpen(false)} post={post} />

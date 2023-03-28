@@ -11,6 +11,8 @@ import CustomImage from "./CustomImage";
 import CustomVideo from "./CustomVideo";
 import QuillImageDropAndPaste from "quill-image-drop-and-paste";
 
+// Custom image input: https://github.com/quilljs/quill/issues/2044#issuecomment-1387091319
+
 Quill.register("modules/blotFormatter", BlotFormatter, true);
 Quill.register("formats/image", CustomImage, true);
 Quill.register("formats/video", CustomVideo, true);
