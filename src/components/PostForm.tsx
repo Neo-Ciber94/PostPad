@@ -183,7 +183,7 @@ export default function PostForm({
       {/* Only when creating we can generate using AI  */}
       <promptDialog.DialogComponent />
 
-      <ImageInputDialog />
+      <ImageInputDialog onChange={e => console.log(e)}/>
 
       {shareOpen && post != null && (
         <SharePostDialog onClose={() => setShareOpen(false)} post={post} />
