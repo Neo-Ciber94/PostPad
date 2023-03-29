@@ -172,7 +172,7 @@ function URLInputArea() {
       return;
     }
 
-    const checkClickboard = async () => {
+    const checkClipboard = async () => {
       if (url.trim().length > 0) {
         return;
       }
@@ -182,9 +182,9 @@ function URLInputArea() {
       setUrl(text.trim());
     };
 
-    window.addEventListener("focus", checkClickboard);
+    window.addEventListener("focus", checkClipboard);
     return () => {
-      window.removeEventListener("focus", checkClickboard);
+      window.removeEventListener("focus", checkClipboard);
     };
   }, [url]);
 
