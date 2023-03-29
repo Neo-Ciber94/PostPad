@@ -62,4 +62,4 @@ const colors = {
   },
 };
 
-module.exports = colors;
+export default colors;
