@@ -20,15 +20,15 @@ export default function ImageInputDialog() {
   ];
 
   return (
-    <Dialog className="fixed top-10 flex h-[90%] w-[90%] flex-col overflow-hidden bg-base-500 md:w-[90%]">
+    <Dialog className="bg-base-500 fixed top-10 flex h-[90%] w-[90%] flex-col overflow-hidden p-[13px] md:w-[90%]">
       <Tab.Group>
         <Tab.List className="flex flex-row pt-10">
           {tabs.map((tab) => (
             <Tab
               className={({ selected }) =>
-                `flex min-w-[150px] flex-row items-center justify-center gap-2 rounded-t-lg border-x border-t
-                border-base-300/20 px-8 pb-2 pt-4 font-mono text-lg shadow-2xl outline-none transition duration-300 ${
-                  selected ? "bg-base-300 " : "text-white hover:bg-base-600"
+                `border-base-300/20 flex min-w-[150px] flex-row items-center justify-center gap-2 rounded-t-lg px-8 pb-5 pt-4 
+                font-mono text-lg shadow-2xl outline-none transition duration-300 ${
+                  selected ? "bg-base-300" : "hover:bg-base-600 text-white"
                 }`
               }
               key={tab.name}
@@ -37,7 +37,13 @@ export default function ImageInputDialog() {
             </Tab>
           ))}
         </Tab.List>
-        <Tab.Panels className="h-full w-full bg-base-300">
+        <Tab.Panels
+          className={({ selectedIndex }) =>
+            `bg-base-300 before:bg-base-300 relative h-full w-full before:absolute before:top-[-5px] before:h-5 before:w-full before:rounded-t-lg ${
+              selectedIndex !== 0 ? "" : ""
+            }`
+          }
+        >
           <Tab.Panel className="h-full w-full">
             <DragAndDropArea />
           </Tab.Panel>
@@ -50,11 +56,11 @@ export default function ImageInputDialog() {
         </Tab.Panels>
       </Tab.Group>
 
-      <div className="flex flex-row justify-end gap-2 bg-base-300 px-8 pb-4 pt-2">
+      <div className="bg-base-300 flex flex-row justify-end gap-2 rounded-b-lg px-8 pb-4 pt-2">
         <Button variant="primary" className="border border-violet-300/50">
           Confirm
         </Button>
-        <Button variant="error" className="border border-error-600/50">
+        <Button variant="error" className="border-error-600/50 border">
           Cancel
         </Button>
       </div>
@@ -86,19 +92,30 @@ function DragAndDropArea() {
   const acceptedFile = useMemo(() => acceptedFiles[0], [acceptedFiles]);
 
   return (
-    <div className="h-full w-full px-8 pb-4 pt-8">
+    <div
+      className={`inline-block h-full w-full transition  duration-200 ease-in ${
+        isDragAccept ? "px-10 pb-6 pt-10" : "px-8 pb-4 pt-8"
+      }`}
+    >
       <div
         {...getRootProps()}
-        className={`h-full w-full border-spacing-3 cursor-pointer rounded-xl border-4 border-dashed p-4
+        className={`h-full w-full cursor-pointer overflow-hidden rounded-xl border-2
+        border-dashed p-4
         transition duration-200 ${acceptedFile ? "" : "hover:bg-base-400/40"} ${
           isDragReject ? "bg-red-500/60" : ""
         } ${isDragAccept ? "bg-green-500/60" : ""}`}
       >
         <input {...getInputProps()} />
         {acceptedFile && previewUrl ? (
-          <div className="flex flex-col items-center justify-center text-white">
-            <img className="w-max-[400px] w-[50%] h-auto" src={previewUrl} alt={acceptedFile.name} />
-            {acceptedFile.name}
+          <div className="relative flex h-full w-full flex-col items-center justify-center overflow-auto text-white">
+            <picture className="absolute mx-auto flex h-full w-full items-center justify-center pb-10">
+              <img
+                className="h-full w-auto object-contain"
+                src={previewUrl}
+                alt={acceptedFile.name}
+              />
+            </picture>
+            <span className="absolute bottom-2 text-center">{acceptedFile.name}</span>
           </div>
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2">
