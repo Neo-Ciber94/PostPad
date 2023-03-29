@@ -234,10 +234,13 @@ function ImagePreview(props: ImagePreviewProps) {
   const [show, setShow] = useState(false);
   const [hasError, setHasError] = useState(false);
 
+  // We check the url is valid and not relative
+  const isURLValid = useMemo(() => checkIsValidURL(url), [url]);
+
+  // We reset the state on url change
   useEffect(() => {
-    const canShow = url.trim().length > 0 && isValidUrl(url);
     setHasError(false);
-    setShow(canShow);
+    setShow(false);
   }, [url]);
 
   const handleRemove = (e: React.MouseEvent) => {
@@ -260,7 +263,7 @@ function ImagePreview(props: ImagePreviewProps) {
           <FaTrashAlt className="text-4xl " />
         </button>
       </div>
-      {!hasError && (
+      {!hasError && isURLValid && (
         <picture
           className={`absolute mx-auto flex h-full w-full items-center justify-center shadow-lg shadow-black/50
       ${showName ? "pb-10" : ""}`}
@@ -275,12 +278,13 @@ function ImagePreview(props: ImagePreviewProps) {
         </picture>
       )}
 
-      {hasError && (
-        <div className="flex flex-row items-center justify-center gap-1 px-4 text-red-300">
-          <MdBrokenImage className="text-4xl" />
-          <span className="my-3 text-2xl">Not image found</span>
-        </div>
-      )}
+      {hasError ||
+        (!isURLValid && (
+          <div className="flex flex-row items-center justify-center gap-1 px-4 text-red-300">
+            <MdBrokenImage className="text-4xl" />
+            <span className="my-3 text-2xl">Not image found</span>
+          </div>
+        ))}
 
       {showName && (
         <span
@@ -295,7 +299,7 @@ function ImagePreview(props: ImagePreviewProps) {
 }
 
 // TODO: Use regex, we only require an URL that is not relative
-function isValidUrl(url: string): boolean {
+function checkIsValidURL(url: string): boolean {
   try {
     // This throw if is invalid or relative
     void new URL(url);
