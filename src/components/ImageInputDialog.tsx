@@ -1,5 +1,5 @@
 import Dialog from "@/components/Dialog";
-import { PropsWithChildren, useCallback, useMemo, useState } from "react";
+import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from "react";
 import Button from "./Button";
 import { Tab } from "@headlessui/react";
 import { GoCloudUpload } from "react-icons/go";
@@ -7,7 +7,7 @@ import { AiOutlineLink } from "react-icons/ai";
 import { BsRobot } from "react-icons/bs";
 import { FaImages, FaTrashAlt } from "react-icons/fa";
 import { useDropzone } from "react-dropzone";
-import { MdHideImage } from "react-icons/md";
+import { MdHideImage, MdBrokenImage, MdWarning } from "react-icons/md";
 
 const TABS = [
   { name: "From File", Icon: <GoCloudUpload /> },
@@ -66,13 +66,15 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
             }`
           }
         >
-          <Tab.Panel className="h-full w-full">
+          <Tab.Panel className="h-full w-full" unmount={false}>
             <DragAndDropArea />
           </Tab.Panel>
-          <Tab.Panel>
-            <Content>Content 2</Content>
+          <Tab.Panel className="h-full w-full" unmount={false}>
+            <Content>
+              <URLInputArea />
+            </Content>
           </Tab.Panel>
-          <Tab.Panel>
+          <Tab.Panel unmount={false}>
             <Content>Content 3</Content>
           </Tab.Panel>
         </Tab.Panels>
@@ -114,9 +116,7 @@ function DragAndDropArea() {
     },
   });
 
-  const handleRemoveImage = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleRemoveImage = () => {
     setFile(null);
   };
 
@@ -136,20 +136,7 @@ function DragAndDropArea() {
       >
         <input {...getInputProps()} />
         {file && previewUrl ? (
-          <div className="relative flex h-full w-full flex-col items-center justify-center overflow-auto text-white">
-            <div className="flex-end flex flex-row">
-              <button
-                onClick={handleRemoveImage}
-                className="absolute top-0 right-0 z-20 text-red-500 hover:text-red-600"
-              >
-                <FaTrashAlt className="text-4xl " />
-              </button>
-            </div>
-            <picture className="absolute mx-auto flex h-full w-full items-center justify-center pb-10">
-              <img className="h-full w-auto object-contain" src={previewUrl} alt={file.name} />
-            </picture>
-            <span className="absolute bottom-2 text-center">{file.name}</span>
-          </div>
+          <ImagePreview onRemove={handleRemoveImage} name={file.name} url={previewUrl} showName />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2">
             <FaImages className="text-8xl text-white" />
@@ -165,10 +152,155 @@ function DragAndDropArea() {
   );
 }
 
+export interface URLInputAreaProps {
+  onChange?: (imageUrl: string) => void;
+}
+
 function URLInputArea() {
-  return <></>;
+  const [url, setUrl] = useState<string>("");
+
+  const handleRemoveUrl = () => {
+    setUrl("");
+  };
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUrl(e.target.value.trim());
+  };
+
+  useEffect(() => {
+    if (!navigator.clipboard) {
+      return;
+    }
+
+    const checkClickboard = async () => {
+      if (url.trim().length > 0) {
+        return;
+      }
+
+      const text = await navigator.clipboard.readText();
+      console.log({ text });
+      setUrl(text.trim());
+    };
+
+    window.addEventListener("focus", checkClickboard);
+    return () => {
+      window.removeEventListener("focus", checkClickboard);
+    };
+  }, [url]);
+
+  return (
+    <div className="flex h-full w-full flex-col justify-center">
+      <div className="relative w-full">
+        <input
+          type="url"
+          placeholder="Image URL..."
+          value={url}
+          onChange={handleUrlChange}
+          className="h-10 w-full rounded-full py-2 pl-14 pr-5 shadow-md outline-none"
+        />
+
+        <span>
+          <AiOutlineLink className="absolute top-2 left-4 text-2xl opacity-40" />
+        </span>
+      </div>
+
+      <div className="m-4 h-full w-full rounded-lg border-2 border-dashed border-white p-2">
+        {url && <ImagePreview url={url} name={url} onRemove={handleRemoveUrl} />}
+
+        {!url && (
+          <div className="flex h-full w-full cursor-pointer flex-row items-center justify-center gap-1 px-4 text-white">
+            <MdHideImage className="text-4xl" />
+            <span className="my-3 text-2xl">No image URL</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function GenerateImageInputArea() {
   return <></>;
+}
+
+interface ImagePreviewProps {
+  url: string;
+  name: string;
+  onRemove: (e: React.MouseEvent) => void;
+  showName?: boolean;
+}
+
+function ImagePreview(props: ImagePreviewProps) {
+  const { url, onRemove, name, showName } = props;
+  const [show, setShow] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    const canShow = url.trim().length > 0 && isValidUrl(url);
+    setHasError(false);
+    setShow(canShow);
+  }, [url]);
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onRemove(e);
+  };
+
+  const handleError = () => {
+    setHasError(true);
+  };
+
+  return (
+    <div className="relative flex h-full w-full flex-col items-center justify-center overflow-auto text-white">
+      <div className="flex-end flex flex-row">
+        <button
+          onClick={handleRemove}
+          className="text-base-600 absolute top-0 right-0 z-20 hover:text-red-300"
+        >
+          <FaTrashAlt className="text-4xl " />
+        </button>
+      </div>
+      {!hasError && (
+        <picture
+          className={`absolute mx-auto flex h-full w-full items-center justify-center shadow-lg shadow-black/50
+      ${showName ? "pb-10" : ""}`}
+        >
+          <img
+            className={`h-full w-auto object-contain ${show ? "" : "hidden"}`}
+            src={url}
+            alt={name}
+            onLoad={() => setShow(true)}
+            onError={handleError}
+          />
+        </picture>
+      )}
+
+      {hasError && (
+        <div className="flex flex-row items-center justify-center gap-1 px-4 text-red-300">
+          <MdBrokenImage className="text-4xl" />
+          <span className="my-3 text-2xl">Not image found</span>
+        </div>
+      )}
+
+      {showName && (
+        <span
+          className="absolute bottom-2 max-w-[80%] overflow-hidden text-ellipsis whitespace-nowrap text-center"
+          title={name}
+        >
+          {name}
+        </span>
+      )}
+    </div>
+  );
+}
+
+// TODO: Use regex, we only require an URL that is not relative
+function isValidUrl(url: string): boolean {
+  try {
+    // This throw if is invalid or relative
+    void new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
 }
