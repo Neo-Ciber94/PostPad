@@ -23,7 +23,9 @@ export async function rateLimitOrThrow(
 }
 
 export async function limitUserRequest(cookies: RequestCookies | ReadonlyRequestCookies) {
-  const cookieName = "next-auth.session-token";
+  // Logic from: https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/jwt.ts
+  const isSecureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VERCEL;
+  const cookieName = isSecureCookie ? "__Secure-next-auth.session-token" : "next-auth.session-token";
   const requestIdentifier = cookies.get(cookieName)?.value;
 
   if (requestIdentifier == null) {

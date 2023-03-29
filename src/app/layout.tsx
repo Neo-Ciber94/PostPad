@@ -8,37 +8,34 @@ import { getUserPrefersDarkMode } from "@/lib/server/utils/getUserPrefersDarkMod
 import type { Metadata } from "next";
 import { headers as getHeaders } from "next/headers";
 
-export function generateMetadata(): Metadata {
-  const title = "PostPad";
-  const description =
-    "An AI powered application that allow users to create and share personal blog posts";
+const defaultMetadata = {
+  title: "PostPad",
+  description: "An AI powered application that allow users to create and share personal blog posts",
+};
 
-  const images = getMetadataImages();
+export function generateMetadata(): Metadata {
+  const title = defaultMetadata.title;
+  const description = defaultMetadata.description;
 
   return {
     title,
     description,
     icons: {
-      icon: "/favicon.ico",
+      icon: "/favicons/favicon.ico",
     },
 
-    // This is not working
-    viewport: {
-      width: "device-width",
-      initialScale: 1.0,
-    },
+    // This is not working in root
+    // openGraph: {
+    //   title,
+    //   description,
+    //   images,
+    // },
 
-    openGraph: {
-      title,
-      description,
-      images,
-    },
-
-    twitter: {
-      title,
-      description,
-      images,
-    },
+    // twitter: {
+    //   title,
+    //   description,
+    //   images,
+    // },
   };
 }
 
@@ -50,6 +47,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <DefaultMetadata />
       </head>
       <body className="bg-base-500">
         <DarkModeProvider prefersDarkMode={prefersDarkMode}>
@@ -70,7 +68,7 @@ function getMetadataImages() {
   const host = headers.get("host");
 
   if (!host) {
-    throw new Error("host not required");
+    throw new Error("host is required");
   }
 
   const schema = process.env.VERCEL === "1" ? "https" : "http";
@@ -89,4 +87,39 @@ function getMetadataImages() {
   }));
 
   return result;
+}
+
+// FIXME: This is a workaround the metadata not showing in the /
+// but because I can't figure out the current directory, this will be shown in all routes.
+function DefaultMetadata() {
+  const images = getMetadataImages();
+
+  // FIXME: Read from environment variable
+  const url = process.env.VERCEL === "1" ? "https://postpad.vercel.app" : "";
+
+  return (
+    <>
+      <title>{defaultMetadata.title}</title>
+      <meta name="title" content={defaultMetadata.title} />
+      <meta name="description" content={defaultMetadata.description} />
+      <meta name="icon" content="/favicons/favicon.ico" />
+
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={url} />
+      <meta property="og:title" content={defaultMetadata.title} />
+      <meta property="og:description" content={defaultMetadata.description} />
+
+      {images.map((img, idx) => (
+        <meta key={idx} property="og:image" content={img.url} />
+      ))}
+
+      <meta property="twitter:url" content={url} />
+      <meta property="twitter:title" content={defaultMetadata.title} />
+      <meta property="twitter:description" content={defaultMetadata.description} />
+
+      {images.map((img, idx) => (
+        <meta key={idx} property="twitter:image" content={img.url} />
+      ))}
+    </>
+  );
 }
