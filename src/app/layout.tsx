@@ -11,7 +11,6 @@ import { headers as getHeaders } from "next/headers";
 const defaultMetadata = {
   title: "PostPad",
   description: "An AI powered application that allow users to create and share personal blog posts",
-  images: getMetadataImages(),
 };
 
 export function generateMetadata(): Metadata {
@@ -22,26 +21,21 @@ export function generateMetadata(): Metadata {
     title,
     description,
     icons: {
-      icon: "/favicon.ico",
+      icon: "/favicons/favicon.ico",
     },
 
-    // This is not working
-    viewport: {
-      width: "device-width",
-      initialScale: 1.0,
-    },
+    // This is not working in root
+    // openGraph: {
+    //   title,
+    //   description,
+    //   images,
+    // },
 
-    openGraph: {
-      title,
-      description,
-      images: defaultMetadata.images,
-    },
-
-    twitter: {
-      title,
-      description,
-      images: defaultMetadata.images,
-    },
+    // twitter: {
+    //   title,
+    //   description,
+    //   images,
+    // },
   };
 }
 
@@ -74,7 +68,7 @@ function getMetadataImages() {
   const host = headers.get("host");
 
   if (!host) {
-    throw new Error("host not required");
+    throw new Error("host is required");
   }
 
   const schema = process.env.VERCEL === "1" ? "https" : "http";
@@ -96,8 +90,9 @@ function getMetadataImages() {
 }
 
 // FIXME: This is a workaround the metadata not showing in the /
+// but because I can't figure out the current directory, this will be shown in all routes.
 function DefaultMetadata() {
-  const images = defaultMetadata.images;
+  const images = getMetadataImages();
 
   // FIXME: Read from environment variable
   const url = process.env.VERCEL === "1" ? "https://postpad.vercel.app" : "";
@@ -107,7 +102,7 @@ function DefaultMetadata() {
       <title>{defaultMetadata.title}</title>
       <meta name="title" content={defaultMetadata.title} />
       <meta name="description" content={defaultMetadata.description} />
-      <meta name="icon" content="/favicon.ico" />
+      <meta name="icon" content="/favicons/favicon.ico" />
 
       <meta property="og:type" content="website" />
       <meta property="og:url" content={url} />

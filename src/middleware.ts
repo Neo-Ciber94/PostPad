@@ -42,6 +42,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * - api/og (image generation)
      */
-    "/((?!_next/static|_next/image|favicon.ico|api/og).*)"
+    "/((?!_next/static|_next/image|favicons/|api/og).*)"
   ],
 };
+
