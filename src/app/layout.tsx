@@ -8,12 +8,15 @@ import { getUserPrefersDarkMode } from "@/lib/server/utils/getUserPrefersDarkMod
 import type { Metadata } from "next";
 import { headers as getHeaders } from "next/headers";
 
-export function generateMetadata(): Metadata {
-  const title = "PostPad";
-  const description =
-    "An AI powered application that allow users to create and share personal blog posts";
+const defaultMetadata = {
+  title: "PostPad",
+  description: "An AI powered application that allow users to create and share personal blog posts",
+  images: getMetadataImages(),
+};
 
-  const images = getMetadataImages();
+export function generateMetadata(): Metadata {
+  const title = defaultMetadata.title;
+  const description = defaultMetadata.description;
 
   return {
     title,
@@ -31,13 +34,13 @@ export function generateMetadata(): Metadata {
     openGraph: {
       title,
       description,
-      images,
+      images: defaultMetadata.images,
     },
 
     twitter: {
       title,
       description,
-      images,
+      images: defaultMetadata.images,
     },
   };
 }
@@ -50,6 +53,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <DefaultMetadata />
       </head>
       <body className="bg-base-500">
         <DarkModeProvider prefersDarkMode={prefersDarkMode}>
@@ -78,8 +82,8 @@ function getMetadataImages() {
 
   const imageSizes: Size[] = [
     { width: 1200, height: 630 },
-    // { width: 800, height: 418 },
-    // { width: 400, height: 209 },
+    { width: 800, height: 418 },
+    { width: 400, height: 209 },
   ];
 
   const result = imageSizes.map(({ width, height }) => ({
@@ -89,4 +93,38 @@ function getMetadataImages() {
   }));
 
   return result;
+}
+
+// FIXME: This is a workaround the metadata not showing in the /
+function DefaultMetadata() {
+  const images = defaultMetadata.images;
+
+  // FIXME: Read from environment variable
+  const url = process.env.VERCEL === "1" ? "https://postpad.vercel.app" : "";
+
+  return (
+    <>
+      <title>{defaultMetadata.title}</title>
+      <meta name="title" content={defaultMetadata.title} />
+      <meta name="description" content={defaultMetadata.description} />
+      <meta name="icon" content="/favicon.ico" />
+
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={url} />
+      <meta property="og:title" content={defaultMetadata.title} />
+      <meta property="og:description" content={defaultMetadata.description} />
+
+      {images.map((img, idx) => (
+        <meta key={idx} property="og:image" content={img.url} />
+      ))}
+
+      <meta property="twitter:url" content={url} />
+      <meta property="twitter:title" content={defaultMetadata.title} />
+      <meta property="twitter:description" content={defaultMetadata.description} />
+
+      {images.map((img, idx) => (
+        <meta key={idx} property="twitter:image" content={img.url} />
+      ))}
+    </>
+  );
 }
