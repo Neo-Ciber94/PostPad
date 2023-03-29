@@ -172,8 +172,10 @@ function URLInputArea() {
       }
 
       const text = await navigator.clipboard.readText();
-      console.log({ text });
-      setUrl(text.trim());
+      if (checkIsValidURL(text)) {
+        console.log({ text });
+        setUrl(text.trim());
+      }
     };
 
     window.addEventListener("focus", checkClipboard);
@@ -183,20 +185,26 @@ function URLInputArea() {
   }, [url]);
 
   return (
-    <div className="p-4 h-full w-full">
+    <div className="h-full w-full p-4">
       <div className="flex h-full w-full flex-col justify-center">
         <div className="relative w-full">
-          <input
-            type="url"
-            placeholder="Image URL..."
-            value={url}
-            onChange={handleUrlChange}
-            className="h-10 w-full rounded-lg py-2 pl-14 pr-5 shadow-md outline-none"
-          />
+          <label htmlFor="url-input" className="text-sm text-white">
+            Write a description of the image to generate
+          </label>
+          <div className="relative mt-1">
+            <input
+              id="url-input"
+              type="url"
+              placeholder="Image URL..."
+              value={url}
+              onChange={handleUrlChange}
+              className="h-10 w-full rounded-lg py-2 pl-14 pr-5 shadow-md outline-none"
+            />
 
-          <span>
-            <AiOutlineLink className="absolute top-2 left-4 text-2xl opacity-40" />
-          </span>
+            <span>
+              <AiOutlineLink className="absolute left-4 top-2 text-2xl opacity-40" />
+            </span>
+          </div>
         </div>
 
         <div className="my-4 h-full w-full rounded-lg border-2 border-dashed border-white p-2">
@@ -216,12 +224,12 @@ function URLInputArea() {
 
 function GenerateImageInputArea() {
   return (
-    <div className="mt-5 flex h-full w-full flex-col p-4">
+    <div className="flex h-full w-full flex-col p-4">
       <div className="w-full">
         <label htmlFor="generate-input" className="text-sm text-white">
           Write a description of the image to generate
         </label>
-        <div className="relative overflow-hidden mt-1">
+        <div className="relative mt-1">
           <input
             id="generate-input"
             type="url"
@@ -230,7 +238,7 @@ function GenerateImageInputArea() {
           />
 
           <button
-            className={`bg-base-500 hover:bg-base-700 absolute top-0 right-0 h-full rounded-r-lg px-6 font-semibold text-white shadow-md transition duration-200`}
+            className={`bg-base-500 hover:bg-base-700 absolute right-0 top-0 h-full rounded-r-lg px-6 font-semibold text-white shadow-md transition duration-200`}
           >
             Generate
           </button>
@@ -276,7 +284,7 @@ function ImagePreview(props: ImagePreviewProps) {
       <div className="flex-end flex flex-row">
         <button
           onClick={handleRemove}
-          className="text-base-600 absolute top-0 right-0 z-20 hover:text-red-300"
+          className="text-base-600 absolute right-0 top-0 z-20 hover:text-red-300"
         >
           <FaTrashAlt className="text-4xl " />
         </button>
