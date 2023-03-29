@@ -70,12 +70,10 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
             <DragAndDropArea />
           </Tab.Panel>
           <Tab.Panel className="h-full w-full" unmount={false}>
-            <Content>
-              <URLInputArea />
-            </Content>
+            <URLInputArea />
           </Tab.Panel>
-          <Tab.Panel unmount={false}>
-            <Content>Content 3</Content>
+          <Tab.Panel className="h-full w-full" unmount={false}>
+            <GenerateImageInputArea />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
@@ -90,10 +88,6 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
       </div>
     </Dialog>
   );
-}
-
-function Content({ children }: PropsWithChildren) {
-  return <div className="h-full w-full p-8">{children}</div>;
 }
 
 function DragAndDropArea() {
@@ -189,37 +183,61 @@ function URLInputArea() {
   }, [url]);
 
   return (
-    <div className="flex h-full w-full flex-col justify-center">
-      <div className="relative w-full">
-        <input
-          type="url"
-          placeholder="Image URL..."
-          value={url}
-          onChange={handleUrlChange}
-          className="h-10 w-full rounded-full py-2 pl-14 pr-5 shadow-md outline-none"
-        />
+    <div className="p-4 h-full w-full">
+      <div className="flex h-full w-full flex-col justify-center">
+        <div className="relative w-full">
+          <input
+            type="url"
+            placeholder="Image URL..."
+            value={url}
+            onChange={handleUrlChange}
+            className="h-10 w-full rounded-lg py-2 pl-14 pr-5 shadow-md outline-none"
+          />
 
-        <span>
-          <AiOutlineLink className="absolute top-2 left-4 text-2xl opacity-40" />
-        </span>
-      </div>
+          <span>
+            <AiOutlineLink className="absolute top-2 left-4 text-2xl opacity-40" />
+          </span>
+        </div>
 
-      <div className="m-4 h-full w-full rounded-lg border-2 border-dashed border-white p-2">
-        {url && <ImagePreview url={url} name={url} onRemove={handleRemoveUrl} />}
+        <div className="my-4 h-full w-full rounded-lg border-2 border-dashed border-white p-2">
+          {url && <ImagePreview url={url} name={url} onRemove={handleRemoveUrl} />}
 
-        {!url && (
-          <div className="flex h-full w-full cursor-pointer flex-row items-center justify-center gap-1 px-4 text-white">
-            <MdHideImage className="text-4xl" />
-            <span className="my-3 text-2xl">No image URL</span>
-          </div>
-        )}
+          {!url && (
+            <div className="flex h-full w-full cursor-pointer flex-row items-center justify-center gap-1 px-4 text-white">
+              <MdHideImage className="text-4xl" />
+              <span className="my-3 text-2xl">No image URL</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
 function GenerateImageInputArea() {
-  return <></>;
+  return (
+    <div className="mt-5 flex h-full w-full flex-col p-4">
+      <div className="w-full">
+        <label htmlFor="generate-input" className="text-sm text-white">
+          Write a description of the image to generate
+        </label>
+        <div className="relative overflow-hidden mt-1">
+          <input
+            id="generate-input"
+            type="url"
+            placeholder="A white cat, anime style"
+            className="h-10 w-full rounded-lg py-2 pl-4 pr-[130px] shadow-md outline-none"
+          />
+
+          <button
+            className={`bg-base-500 hover:bg-base-700 absolute top-0 right-0 h-full rounded-r-lg px-6 font-semibold text-white shadow-md transition duration-200`}
+          >
+            Generate
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 interface ImagePreviewProps {
