@@ -78,8 +78,8 @@ function getMetadataImages() {
 
   const imageSizes: Size[] = [
     { width: 1200, height: 630 },
-    { width: 800, height: 418 },
-    { width: 400, height: 209 },
+    // { width: 800, height: 418 },
+    // { width: 400, height: 209 },
   ];
 
   const result = imageSizes.map(({ width, height }) => ({
