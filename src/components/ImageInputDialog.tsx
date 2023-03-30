@@ -14,6 +14,9 @@ import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { checkIsValidURL } from "@/lib/utils/checkIsValidURL";
 import { toast } from "react-hot-toast";
 import { getErrorMessage } from "@/lib/utils/getErrorMessage";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 
 const TABS = [
   { name: "From File", Icon: <GoCloudUpload /> },
@@ -264,6 +267,13 @@ const PLACEHOLDER_PROMPTS = [
 interface GenerateImageInputAreaProps {
   onChange: (image: ImageSource) => void;
 }
+
+const imagePromptSchema = z.object({
+  prompt: z.string().trim().min(1, { message: "prompt cannot be empty" }),
+});
+
+type ImagePrompt = z.infer<typeof imagePromptSchema>;
+
 function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
   const { onChange } = props;
   const placeholderPrompt = useMemo(
@@ -271,9 +281,24 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
     []
   );
 
+  const { register, handleSubmit } = useForm<ImagePrompt>({});
+
   const generateImageMutation = useMutation(
-    async () => {
+    async (prompt: string) => {
+      console.log(prompt);
       await delay(3000);
+      const res = await fetch("/api/generate/image", {
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      await throwOnResponseError(res);
+      const json = await res.json();
+      console.log(json);
+      const { url } = json;
+      onChange({ type: "url", url });
     },
     {
       onError(error) {
@@ -281,6 +306,12 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
       },
     }
   );
+
+  const onGenerateClick = async () => {
+    handleSubmit(async ({ prompt }) => {
+      await generateImageMutation.mutateAsync(prompt);
+    });
+  };
 
   return (
     <div className="mr-1 flex h-full w-full flex-col p-4">
@@ -295,11 +326,12 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
             placeholder={placeholderPrompt}
             className="h-10 w-full rounded-lg py-2 pl-4 pr-[135px] shadow-md outline-none"
             suppressHydrationWarning
+            {...register("prompt")}
           />
 
           <button
             disabled={generateImageMutation.isLoading}
-            onClick={() => generateImageMutation.mutate()}
+            onClick={onGenerateClick}
             className={`bg-base-500  absolute right-0 top-0 h-full min-w-[130px] rounded-r-lg
             px-6 font-semibold text-white shadow-md transition duration-200 ${
               generateImageMutation.isLoading ? "" : "hover:bg-base-700"
