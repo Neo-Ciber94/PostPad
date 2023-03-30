@@ -15,7 +15,7 @@ export const config = {
   runtime: "edge",
 };
 
-export default async function POST(request: NextRequest) {
+export default async function handler(request: NextRequest) {
   try {
     const input = await request.json();
     const result = promptSchema.safeParse(input);
