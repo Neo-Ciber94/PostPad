@@ -1,5 +1,5 @@
 import Dialog from "@/components/Dialog";
-import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "./Button";
 import { Tab } from "@headlessui/react";
 import { GoCloudUpload } from "react-icons/go";
@@ -7,7 +7,13 @@ import { AiOutlineLink } from "react-icons/ai";
 import { BsRobot } from "react-icons/bs";
 import { FaImages, FaTrashAlt } from "react-icons/fa";
 import { useDropzone } from "react-dropzone";
-import { MdHideImage, MdBrokenImage, MdWarning } from "react-icons/md";
+import { MdHideImage, MdBrokenImage } from "react-icons/md";
+import { useMutation } from "react-query";
+import { delay } from "@/lib/utils/delay";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import { checkIsValidURL } from "@/lib/utils/checkIsValidURL";
+import { toast } from "react-hot-toast";
+import { getErrorMessage } from "@/lib/utils/getErrorMessage";
 
 const TABS = [
   { name: "From File", Icon: <GoCloudUpload /> },
@@ -15,25 +21,41 @@ const TABS = [
   { name: "Generate", Icon: <BsRobot /> },
 ];
 
+export type ImageFromFile = {
+  type: "file";
+  file: File;
+};
+
+export type ImageFromURL = {
+  type: "url";
+  url: string;
+};
+
+export type ImageSource = ImageFromFile | ImageFromURL;
+
 interface ImageInputDialogProps {
-  onChange: (file: File) => void;
+  onChange: (image: ImageSource) => void;
   onClose?: () => void;
 }
 
 export default function ImageInputDialog(props: ImageInputDialogProps) {
   const { onChange, onClose } = props;
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedImage, setSelectedImage] = useState<ImageSource | null>(null);
 
   const handleClose = () => {
     onClose?.();
   };
 
+  const handleChange = (image: ImageSource) => {
+    setSelectedImage(image);
+  };
+
   const handleConfirm = () => {
-    if (selectedFile == null) {
+    if (selectedImage == null) {
       return;
     }
 
-    onChange?.(selectedFile);
+    onChange?.(selectedImage);
   };
 
   return (
@@ -48,8 +70,8 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
           {TABS.map((tab) => (
             <Tab
               className={({ selected }) =>
-                `border-base-300/20 flex min-w-[150px] flex-row items-center justify-center gap-2 rounded-b-lg rounded-t-lg px-8 pb-2 
-                pt-2 font-mono text-lg outline-none transition duration-300 sm:pb-5 sm:pt-4 ${
+                `border-base-300/20 flex min-w-[150px] flex-row items-center justify-center gap-2 rounded-b-lg rounded-t-lg px-8 pb-2 pt-2 
+                font-mono text-lg outline-none transition duration-300 sm:rounded-b-none sm:pb-5 sm:pt-4 ${
                   selected ? "bg-base-300" : "hover:bg-base-600 text-white"
                 }`
               }
@@ -68,13 +90,13 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
           }
         >
           <Tab.Panel className="h-full w-full" unmount={false}>
-            <DragAndDropArea />
+            <DragAndDropArea onChange={handleChange} />
           </Tab.Panel>
           <Tab.Panel className="h-full w-full" unmount={false}>
-            <URLInputArea />
+            <URLInputArea onChange={handleChange} />
           </Tab.Panel>
           <Tab.Panel className="h-full w-full" unmount={false}>
-            <GenerateImageInputArea />
+            <GenerateImageInputArea onChange={handleChange} />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
@@ -91,7 +113,12 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
   );
 }
 
-function DragAndDropArea() {
+interface DragAndDropAreaProps {
+  onChange: (image: ImageSource) => void;
+}
+
+function DragAndDropArea(props: DragAndDropAreaProps) {
+  const { onChange } = props;
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const { getRootProps, getInputProps, isDragReject, isDragAccept } = useDropzone({
@@ -104,10 +131,11 @@ function DragAndDropArea() {
         URL.revokeObjectURL(previewUrl);
       }
 
-      const url = URL.createObjectURL(files[0]);
+      const selectedFile = files[0];
+      const url = URL.createObjectURL(selectedFile);
       setPreviewUrl(url);
-      setFile(files[0]);
-      console.log(files);
+      setFile(selectedFile);
+      onChange({ type: "file", file: selectedFile });
     },
   });
 
@@ -148,10 +176,11 @@ function DragAndDropArea() {
 }
 
 export interface URLInputAreaProps {
-  onChange?: (imageUrl: string) => void;
+  onChange: (image: ImageSource) => void;
 }
 
-function URLInputArea() {
+function URLInputArea(props: URLInputAreaProps) {
+  const { onChange } = props;
   const [url, setUrl] = useState<string>("");
 
   const handleRemoveUrl = () => {
@@ -159,7 +188,9 @@ function URLInputArea() {
   };
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value.trim());
+    const newUrl = e.target.value.trim();
+    setUrl(newUrl);
+    onChange({ type: "url", url: newUrl });
   };
 
   useEffect(() => {
@@ -196,7 +227,7 @@ function URLInputArea() {
             <input
               id="url-input"
               type="url"
-              placeholder="Image URL..."
+              placeholder="Image URL"
               value={url}
               onChange={handleUrlChange}
               className="h-10 w-full rounded-lg py-2 pl-14 pr-5 shadow-md outline-none"
@@ -230,14 +261,29 @@ const PLACEHOLDER_PROMPTS = [
   "A white cat, anime style",
 ];
 
-function GenerateImageInputArea() {
+interface GenerateImageInputAreaProps {
+  onChange: (image: ImageSource) => void;
+}
+function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
+  const { onChange } = props;
   const placeholderPrompt = useMemo(
     () => PLACEHOLDER_PROMPTS[Math.floor(Math.random() * PLACEHOLDER_PROMPTS.length)],
     []
   );
 
+  const generateImageMutation = useMutation(
+    async () => {
+      await delay(3000);
+    },
+    {
+      onError(error) {
+        toast.error(getErrorMessage(error) ?? "Something went wrong");
+      },
+    }
+  );
+
   return (
-    <div className="flex h-full w-full flex-col p-4">
+    <div className="mr-1 flex h-full w-full flex-col p-4">
       <div className="w-full">
         <label htmlFor="generate-input" className="text-sm text-white">
           Write a description of the image to generate
@@ -247,18 +293,48 @@ function GenerateImageInputArea() {
             id="generate-input"
             type="url"
             placeholder={placeholderPrompt}
-            className="h-10 w-full rounded-lg py-2 pl-4 pr-[130px] shadow-md outline-none"
+            className="h-10 w-full rounded-lg py-2 pl-4 pr-[135px] shadow-md outline-none"
+            suppressHydrationWarning
           />
 
           <button
-            className={`bg-base-500 hover:bg-base-700 absolute right-0 top-0 h-full rounded-r-lg px-6 font-semibold text-white shadow-md transition duration-200`}
+            disabled={generateImageMutation.isLoading}
+            onClick={() => generateImageMutation.mutate()}
+            className={`bg-base-500  absolute right-0 top-0 h-full min-w-[130px] rounded-r-lg
+            px-6 font-semibold text-white shadow-md transition duration-200 ${
+              generateImageMutation.isLoading ? "" : "hover:bg-base-700"
+            }`}
           >
-            Generate
+            {generateImageMutation.isLoading ? (
+              <LoadingSpinner width={2} size={25} />
+            ) : (
+              <span>Generate</span>
+            )}
           </button>
+        </div>
+      </div>
+
+      <div className="relative h-full">
+        <div
+          className="scrollbar-thin scrollbar-track-base-300/25 scrollbar-thumb-base-900 absolute 
+        mt-2 grid h-full w-full grid-cols-1 gap-4 overflow-auto p-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {range(10).map((idx) => (
+            <picture key={idx}>
+              <img
+                alt={String(idx)}
+                src={`https://via.placeholder.com/512x512/EEEEEE?text=${idx + 1}`}
+              />
+            </picture>
+          ))}
         </div>
       </div>
     </div>
   );
+}
+
+function range(max: number): number[] {
+  return [...Array(max).keys()];
 }
 
 interface ImagePreviewProps {
@@ -335,15 +411,4 @@ function ImagePreview(props: ImagePreviewProps) {
       )}
     </div>
   );
-}
-
-// TODO: Use regex, we only require an URL that is not relative
-function checkIsValidURL(url: string): boolean {
-  try {
-    // This throw if is invalid or relative
-    void new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
 }
