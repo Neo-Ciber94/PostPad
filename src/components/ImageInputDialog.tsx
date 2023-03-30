@@ -43,13 +43,13 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
           &times;
         </button>
       </div>
-      <Tab.Group>
-        <Tab.List className="flex flex-row">
+      <Tab.Group vertical>
+        <Tab.List className="flex flex-col sm:flex-row">
           {TABS.map((tab) => (
             <Tab
               className={({ selected }) =>
-                `border-base-300/20 flex min-w-[150px] flex-row items-center justify-center gap-2 rounded-t-lg px-8 pb-5 pt-4 
-                font-mono text-lg shadow-2xl outline-none transition duration-300 ${
+                `border-base-300/20 flex min-w-[150px] flex-row items-center justify-center gap-2 rounded-b-lg rounded-t-lg px-8 pb-2 
+                pt-2 font-mono text-lg outline-none transition duration-300 sm:pb-5 sm:pt-4 ${
                   selected ? "bg-base-300" : "hover:bg-base-600 text-white"
                 }`
               }
@@ -61,7 +61,8 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
         </Tab.List>
         <Tab.Panels
           className={({ selectedIndex }) =>
-            `bg-base-300 before:bg-base-300 relative h-full w-full before:absolute before:top-[-5px] before:h-5 before:w-full before:rounded-t-lg ${
+            `bg-base-300 before:bg-base-300 relative h-full w-full rounded-t-lg before:absolute 
+            before:top-[-5px] before:hidden before:h-5 before:w-full before:rounded-t-lg sm:rounded-t-none sm:before:block ${
               selectedIndex !== 0 ? "" : ""
             }`
           }
@@ -79,7 +80,7 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
       </Tab.Group>
 
       <div className="bg-base-300 flex flex-row justify-end gap-2 rounded-b-lg px-8 pb-4 pt-2">
-        <Button variant="primary" className="border border-violet-300/50">
+        <Button variant="primary" className="border border-violet-300/50" onClick={handleConfirm}>
           Confirm
         </Button>
         <Button variant="error" className="border-error-600/50 border" onClick={handleClose}>
@@ -189,7 +190,7 @@ function URLInputArea() {
       <div className="flex h-full w-full flex-col justify-center">
         <div className="relative w-full">
           <label htmlFor="url-input" className="text-sm text-white">
-            Write a description of the image to generate
+            Enter the URL of the image
           </label>
           <div className="relative mt-1">
             <input
@@ -222,7 +223,19 @@ function URLInputArea() {
   );
 }
 
+const PLACEHOLDER_PROMPTS = [
+  "A dragon made of flowers, in a fantasy watercolor style",
+  "A spooky haunted house",
+  "A beautiful japanese garden, watercolor style",
+  "A white cat, anime style",
+];
+
 function GenerateImageInputArea() {
+  const placeholderPrompt = useMemo(
+    () => PLACEHOLDER_PROMPTS[Math.floor(Math.random() * PLACEHOLDER_PROMPTS.length)],
+    []
+  );
+
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="w-full">
@@ -233,7 +246,7 @@ function GenerateImageInputArea() {
           <input
             id="generate-input"
             type="url"
-            placeholder="A white cat, anime style"
+            placeholder={placeholderPrompt}
             className="h-10 w-full rounded-lg py-2 pl-4 pr-[130px] shadow-md outline-none"
           />
 
