@@ -1,9 +1,12 @@
 import { createResponseFromError } from "@/lib/server/utils/createResponseFromError";
 import { delay } from "@/lib/utils/delay";
 import { json } from "@/lib/utils/responseUtils";
-import { NextRequest } from "next/server";
 
-export default async function handler(req: NextRequest) {
+export const config = {
+  runtime: "edge",
+};
+
+export default async function handler(req: Request) {
   await delay(3000);
 
   try {
@@ -11,7 +14,7 @@ export default async function handler(req: NextRequest) {
 
     return json({
       prompt,
-      url: "shorturl.at/afpCM",
+      url: "https://i.imgur.com/VeJ3BNH.png",
     });
   } catch (err) {
     console.error(err);

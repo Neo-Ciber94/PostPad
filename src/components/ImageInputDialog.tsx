@@ -1,5 +1,5 @@
 import Dialog from "@/components/Dialog";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "./Button";
 import { Tab } from "@headlessui/react";
 import { GoCloudUpload } from "react-icons/go";
@@ -9,7 +9,6 @@ import { FaImages, FaTrashAlt } from "react-icons/fa";
 import { useDropzone } from "react-dropzone";
 import { MdHideImage, MdBrokenImage } from "react-icons/md";
 import { useMutation } from "react-query";
-import { delay } from "@/lib/utils/delay";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { checkIsValidURL } from "@/lib/utils/checkIsValidURL";
 import { toast } from "react-hot-toast";
@@ -17,6 +16,7 @@ import { getErrorMessage } from "@/lib/utils/getErrorMessage";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
+import { useAbortController } from "@/lib/client/hooks/useAbortController";
 
 const TABS = [
   { name: "From File", Icon: <GoCloudUpload /> },
@@ -44,12 +44,17 @@ interface ImageInputDialogProps {
 export default function ImageInputDialog(props: ImageInputDialogProps) {
   const { onChange, onClose } = props;
   const [selectedImage, setSelectedImage] = useState<ImageSource | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleClose = () => {
     onClose?.();
   };
 
-  const handleChange = (image: ImageSource) => {
+  const handleChange = (index: number, image: ImageSource) => {
+    if (selectedIndex != index) {
+      return;
+    }
+
     setSelectedImage(image);
   };
 
@@ -68,7 +73,7 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
           &times;
         </button>
       </div>
-      <Tab.Group vertical>
+      <Tab.Group vertical onChange={setSelectedIndex}>
         <Tab.List className="flex flex-col sm:flex-row">
           {TABS.map((tab) => (
             <Tab
@@ -93,22 +98,32 @@ export default function ImageInputDialog(props: ImageInputDialogProps) {
           }
         >
           <Tab.Panel className="h-full w-full" unmount={false}>
-            <DragAndDropArea onChange={handleChange} />
+            <DragAndDropArea onChange={(img) => handleChange(0, img)} />
           </Tab.Panel>
           <Tab.Panel className="h-full w-full" unmount={false}>
-            <URLInputArea onChange={handleChange} />
+            <URLInputArea onChange={(img) => handleChange(1, img)} />
           </Tab.Panel>
           <Tab.Panel className="h-full w-full" unmount={false}>
-            <GenerateImageInputArea onChange={handleChange} />
+            <GenerateImageInputArea onChange={(img) => handleChange(2, img)} />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
 
       <div className="bg-base-300 flex flex-row justify-end gap-2 rounded-b-lg px-8 pb-4 pt-2">
-        <Button variant="primary" className="border border-violet-300/50" onClick={handleConfirm}>
+        <Button
+          type="button"
+          variant="primary"
+          className="border border-violet-300/50"
+          onClick={handleConfirm}
+        >
           Confirm
         </Button>
-        <Button variant="error" className="border-error-600/50 border" onClick={handleClose}>
+        <Button
+          type="button"
+          variant="error"
+          className="border-error-600/50 border"
+          onClick={handleClose}
+        >
           Cancel
         </Button>
       </div>
@@ -190,10 +205,17 @@ function URLInputArea(props: URLInputAreaProps) {
     setUrl("");
   };
 
+  const handleSetImageUrl = useCallback(
+    (url: string) => {
+      setUrl(url);
+      onChange({ type: "url", url });
+    },
+    [onChange]
+  );
+
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newUrl = e.target.value.trim();
-    setUrl(newUrl);
-    onChange({ type: "url", url: newUrl });
+    handleSetImageUrl(newUrl);
   };
 
   useEffect(() => {
@@ -206,10 +228,10 @@ function URLInputArea(props: URLInputAreaProps) {
         return;
       }
 
-      const text = await navigator.clipboard.readText();
-      if (checkIsValidURL(text)) {
-        console.log({ text });
-        setUrl(text.trim());
+      const clipboardURL = await navigator.clipboard.readText().then((s) => s.trim());
+      if (checkIsValidURL(clipboardURL)) {
+        console.log({ clipboardURL });
+        handleSetImageUrl(clipboardURL);
       }
     };
 
@@ -217,7 +239,7 @@ function URLInputArea(props: URLInputAreaProps) {
     return () => {
       window.removeEventListener("focus", checkClipboard);
     };
-  }, [url]);
+  }, [handleSetImageUrl, url]);
 
   return (
     <div className="h-full w-full p-4">
@@ -281,22 +303,23 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
     []
   );
 
+  const abortController = useAbortController();
   const { register, handleSubmit } = useForm<ImagePrompt>({});
 
   const generateImageMutation = useMutation(
     async (prompt: string) => {
       console.log(prompt);
-      await delay(3000);
       const res = await fetch("/api/generate/image", {
+        method: "POST",
         headers: {
           "content-type": "application/json",
         },
+        signal: abortController.signal,
         body: JSON.stringify({ prompt }),
       });
 
       await throwOnResponseError(res);
       const json = await res.json();
-      console.log(json);
       const { url } = json;
       onChange({ type: "url", url });
     },
@@ -307,10 +330,15 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
     }
   );
 
-  const onGenerateClick = async () => {
-    handleSubmit(async ({ prompt }) => {
-      await generateImageMutation.mutateAsync(prompt);
-    });
+  const onGenerateClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (generateImageMutation.isLoading) {
+      abortController.abort();
+      generateImageMutation.reset();
+      return;
+    }
+
+    const submit = handleSubmit(({ prompt }) => generateImageMutation.mutateAsync(prompt));
+    await submit(e);
   };
 
   return (
@@ -330,11 +358,12 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
           />
 
           <button
+            type="button"
             disabled={generateImageMutation.isLoading}
             onClick={onGenerateClick}
-            className={`bg-base-500  absolute right-0 top-0 h-full min-w-[130px] rounded-r-lg
+            className={`bg-base-500  absolute right-0 top-0 h-full min-w-[130px] cursor-pointer rounded-r-lg
             px-6 font-semibold text-white shadow-md transition duration-200 ${
-              generateImageMutation.isLoading ? "" : "hover:bg-base-700"
+              generateImageMutation.isLoading ? "hover:bg-red-600" : "hover:bg-base-700"
             }`}
           >
             {generateImageMutation.isLoading ? (
@@ -404,6 +433,7 @@ function ImagePreview(props: ImagePreviewProps) {
     <div className="relative flex h-full w-full flex-col items-center justify-center overflow-auto text-white">
       <div className="flex-end flex flex-row">
         <button
+          type="button"
           onClick={handleRemove}
           className="text-base-600 absolute right-0 top-0 z-20 hover:text-red-300"
         >

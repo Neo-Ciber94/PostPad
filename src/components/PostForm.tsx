@@ -32,7 +32,6 @@ import SharePostButton from "./SharePostButton";
 import SharePostDialog from "./SharePostDialog";
 import { toast } from "react-hot-toast";
 import { getPostDate } from "@/lib/utils/getPostDate";
-import ImageInputDialog from "./ImageInputDialog";
 
 const PostEditor = dynamic(() => import("./editor/PostEditor"), {
   ssr: false,
@@ -183,8 +182,6 @@ export default function PostForm({
       {/* Only when creating we can generate using AI  */}
       <promptDialog.DialogComponent />
 
-      <ImageInputDialog onChange={e => console.log(e)}/>
-
       {shareOpen && post != null && (
         <SharePostDialog onClose={() => setShareOpen(false)} post={post} />
       )}
@@ -264,7 +261,7 @@ export default function PostForm({
             disabled={isGenerating}
             placeholder="Title"
             className={`focus:shadow-outline w-full appearance-none rounded border border-gray-600
-                 py-2 px-3 leading-tight shadow transition-colors duration-500 focus:outline-none ${
+                 px-3 py-2 leading-tight shadow transition-colors duration-500 focus:outline-none ${
                    isDarkMode ? "bg-[#0D1117] text-white" : "bg-white"
                  } ${errors.title?.message ? "border-red-500" : ""}`}
           />
@@ -351,7 +348,7 @@ export default function PostForm({
 }
 
 async function* fetchPostCompletionStream(prompt: string, signal: AbortSignal) {
-  const res = await fetch("/api/posts/generate", {
+  const res = await fetch("/api/generate/post", {
     headers: { "content-type": "application/json" },
     method: "POST",
     body: JSON.stringify({ prompt }),
