@@ -14,6 +14,7 @@ import ImageInputDialog, { ImageSource } from "../ImageInputDialog";
 import { fileToBase64Url } from "@/lib/client/utils/fileToBase64Url";
 import { getErrorMessage } from "@/lib/utils/getErrorMessage";
 import toast from "react-hot-toast";
+import { Transition } from "@headlessui/react";
 
 // Custom image input: https://github.com/quilljs/quill/issues/2044#issuecomment-1387091319
 
@@ -135,7 +136,8 @@ export default function PostEditor({ value, onChange, readOnly }: PostEditorProp
     }
 
     console.log({ range, imageUrl });
-    const index = range?.index ?? editor.getContents().length();
+    // TODO: Check if this range do not overwrite existing content
+    const index = range?.index ?? editor.getContents().length() + 1;
     editor.insertEmbed(index, "image", imageUrl, "user");
     setOpen(false);
   };

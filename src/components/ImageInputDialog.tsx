@@ -1,5 +1,5 @@
 import Dialog from "@/components/Dialog";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "./Button";
 import { Tab } from "@headlessui/react";
 import { GoCloudUpload } from "react-icons/go";
