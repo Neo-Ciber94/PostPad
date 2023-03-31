@@ -5,6 +5,7 @@ import {
 } from "eventsource-parser";
 import { CreateChatCompletionRequest } from "openai";
 import { environment } from "../../shared/env";
+import { getErrorFromResponse } from "../getErrorFromResponse";
 
 export interface ChatCompletionPayload extends CreateChatCompletionRequest {
   signal: AbortSignal;
@@ -94,25 +95,4 @@ export async function createChatCompletion(
   return stream;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getErrorFromResponse(
-  response: Response
-): Promise<unknown | null> {
-  if (response.headers.get("Content-Type") === "application/json") {
-    const json = await response.json();
 
-    if (json == null) {
-      return null;
-    }
-
-    try {
-      return JSON.stringify(json);
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  }
-
-  const text = await response.text();
-  return text;
-}

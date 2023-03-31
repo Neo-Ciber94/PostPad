@@ -27,7 +27,7 @@ import { usePromptDialog } from "@/lib/client/hooks/usePromptDialog";
 import { useAbortController } from "@/lib/client/hooks/useAbortController";
 import { useStateWithChange } from "@/lib/client/hooks/useStateWithChange";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
-import { promptSchema } from "@/lib/server/schemas/Prompt";
+import { chatCompletionPromptSchema } from "@/lib/server/schemas/Prompt";
 import SharePostButton from "./SharePostButton";
 import SharePostDialog from "./SharePostDialog";
 import { toast } from "react-hot-toast";
@@ -173,7 +173,7 @@ export default function PostForm({
       title: "Generate AI Post",
       placeholder: "What would you like your post to be about?",
       onConfirm: (prompt) => generatePostMutation.mutate(prompt),
-      schema: promptSchema,
+      schema: chatCompletionPromptSchema,
     });
   };
 

@@ -1,16 +1,35 @@
+import { imageGenerationPromptSchema } from "@/lib/server/schemas/Prompt";
 import { createResponseFromError } from "@/lib/server/utils/createResponseFromError";
-import { delay } from "@/lib/utils/delay";
+import { limitUserRequest } from "@/lib/server/utils/rateLimiter";
+import { contentModeration } from "@/lib/utils/ai/contentModeration";
+import { ImageRequest } from "@/lib/utils/ai/generateImage";
 import { json } from "@/lib/utils/responseUtils";
+import { NextRequest } from "next/server";
 
 export const config = {
   runtime: "edge",
 };
 
-export default async function handler(req: Request) {
-  await delay(3000);
-
+export default async function handler(request: NextRequest) {
   try {
-    const { prompt } = await req.json();
+    await limitUserRequest(request.cookies);
+
+    const input = await request.json();
+    const { prompt } = imageGenerationPromptSchema.parse(input);
+    const moderationResult = await contentModeration(prompt, request.signal);
+    const anyFlagged = moderationResult.results.some((x) => x.flagged === true);
+
+    if (anyFlagged) {
+      return json(
+        {
+          message:
+            "We're unable to process your prompt at this time, as it has been flagged for moderation",
+        },
+        { status: 400 }
+      );
+    }
+
+
 
     return json({
       prompt,

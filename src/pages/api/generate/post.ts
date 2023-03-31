@@ -2,7 +2,7 @@ import { createChatCompletion } from "@/lib/utils/ai/createChatCompletion";
 import { ChatCompletionRequestMessage } from "openai/dist/api";
 import { json } from "@/lib/utils/responseUtils";
 import { contentModeration } from "@/lib/utils/ai/contentModeration";
-import { promptSchema } from "@/lib/server/schemas/Prompt";
+import { chatCompletionPromptSchema } from "@/lib/server/schemas/Prompt";
 import { limitUserRequest } from "@/lib/server/utils/rateLimiter";
 import { NextRequest } from "next/server";
 
@@ -17,14 +17,14 @@ export const config = {
 
 export default async function handler(request: NextRequest) {
   try {
+    await limitUserRequest(request.cookies);
+
     const input = await request.json();
-    const result = promptSchema.safeParse(input);
+    const result = chatCompletionPromptSchema.safeParse(input);
 
     if (result.success === false) {
       return json({ message: result.error }, { status: 400 });
     }
-
-    await limitUserRequest(request.cookies);
 
     const { prompt } = result.data;
     const moderationResult = await contentModeration(prompt, request.signal);

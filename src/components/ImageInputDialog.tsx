@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { useAbortController } from "@/lib/client/hooks/useAbortController";
+import { imageGenerationPromptSchema } from "@/lib/server/schemas/Prompt";
 
 const TABS = [
   { name: "From File", Icon: <GoCloudUpload /> },
@@ -290,11 +291,7 @@ interface GenerateImageInputAreaProps {
   onChange: (image: ImageSource) => void;
 }
 
-const imagePromptSchema = z.object({
-  prompt: z.string().trim().min(1, { message: "prompt cannot be empty" }),
-});
-
-type ImagePrompt = z.infer<typeof imagePromptSchema>;
+type ImagePrompt = z.infer<typeof imageGenerationPromptSchema>;
 
 function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
   const { onChange } = props;
