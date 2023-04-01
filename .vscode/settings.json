@@ -18,5 +18,5 @@
     "\\w+ClassName='([^`]*)'",
     "\\w+ClassName={`([^`]*`}"
   ],
-  "dotenv.enableAutocloaking": true,
+  "dotenv.enableAutocloaking": false,
 }

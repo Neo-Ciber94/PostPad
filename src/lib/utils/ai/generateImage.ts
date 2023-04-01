@@ -3,15 +3,17 @@ import type { CreateImageRequest } from "openai";
 import { getErrorFromResponse } from "../getErrorFromResponse";
 
 export type ImageRequest = CreateImageRequest & {
-  signal: AbortSignal;
+  signal?: AbortSignal;
 };
+
+export type CreateImageResponseData = { url: string };
 
 export type CreateImageResponse = {
   created: number;
-  url: string[];
+  data: CreateImageResponseData[];
 };
 
-export async function generateImage(payload: ImageRequest) {
+export async function generateImage({ signal, ...payload }: ImageRequest) {
   const res = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
     headers: {
@@ -19,7 +21,7 @@ export async function generateImage(payload: ImageRequest) {
       Authorization: `Bearer ${environment.OPENAI_API_KEY}`,
       "OpenAI-Organization": environment.OPENAI_ORGANIZATION_ID,
     },
-    signal: payload.signal,
+    signal,
     body: JSON.stringify(payload),
   });
 
@@ -30,5 +32,6 @@ export async function generateImage(payload: ImageRequest) {
   }
 
   const json: CreateImageResponse = await res.json();
+  console.log({ generateImageResponse: json });
   return json;
 }

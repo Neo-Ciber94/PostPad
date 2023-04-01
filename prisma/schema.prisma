@@ -55,6 +55,18 @@ model SharedPost {
   @@index([postId])
 }
 
+model GeneratedImage {
+  id              String   @id @unique @default(cuid())
+  url             String   @db.MediumText
+  createdByPrompt String   @db.TinyText
+  createdAt       DateTime @default(now())
+  createdByUserId String
+  createdByUser   User     @relation(fields: [createdByUserId], references: [id])
+
+  @@index([createdByUserId])
+  @@fulltext([createdByPrompt])
+}
+
 model Account {
   id                       String  @id @default(cuid())
   userId                   String
@@ -89,15 +101,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Post          Post[]
-  Tag           Tag[]
+  id             String           @id @default(cuid())
+  name           String?
+  email          String?          @unique
+  emailVerified  DateTime?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  Post           Post[]
+  Tag            Tag[]
+  GeneratedImage GeneratedImage[]
 }
 
 model VerificationToken {

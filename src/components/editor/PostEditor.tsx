@@ -134,7 +134,6 @@ export default function PostEditor({ value, onChange, readOnly }: PostEditorProp
         throw new Error("Invalid image type");
     }
 
-    console.log({ range, imageUrl });
     // TODO: Check if this range do not overwrite existing content
     const index = range?.index ?? editor.getContents().length() + 1;
     editor.insertEmbed(index, "image", imageUrl, "user");

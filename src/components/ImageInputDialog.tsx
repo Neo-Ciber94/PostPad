@@ -7,8 +7,13 @@ import { AiOutlineLink } from "react-icons/ai";
 import { BsRobot } from "react-icons/bs";
 import { FaImages, FaTrashAlt } from "react-icons/fa";
 import { useDropzone } from "react-dropzone";
-import { MdHideImage, MdBrokenImage } from "react-icons/md";
-import { useMutation } from "react-query";
+import {
+  MdHideImage,
+  MdBrokenImage,
+  MdOutlineErrorOutline,
+  MdOutlineImageNotSupported,
+} from "react-icons/md";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { checkIsValidURL } from "@/lib/utils/checkIsValidURL";
 import { toast } from "react-hot-toast";
@@ -18,6 +23,8 @@ import { z } from "zod";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
 import { useAbortController } from "@/lib/client/hooks/useAbortController";
 import { imageGenerationPromptSchema } from "@/lib/server/schemas/Prompt";
+import { useDebounce } from "@/lib/client/hooks/useDebounce";
+import { GeneratedImage } from "@/lib/server/schemas/GeneratedImage";
 
 const TABS = [
   { name: "From File", Icon: <GoCloudUpload /> },
@@ -295,6 +302,7 @@ type ImagePrompt = z.infer<typeof imageGenerationPromptSchema>;
 
 function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
   const { onChange } = props;
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
   const placeholderPrompt = useMemo(
     () => PLACEHOLDER_PROMPTS[Math.floor(Math.random() * PLACEHOLDER_PROMPTS.length)],
     []
@@ -302,10 +310,35 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
 
   const abortController = useAbortController();
   const { register, handleSubmit } = useForm<ImagePrompt>({});
+  const [searchString, setSearchString] = useState("");
+  const search = useDebounce(searchString, 500);
+
+  const queryClient = useQueryClient();
+  const {
+    data = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryFn: () => fetchAllImages(search),
+    queryKey: ["images", search],
+    onError(err) {
+      const msg = getErrorMessage(err);
+      toast.error(msg ?? "Failed to get images");
+    },
+  });
+
+  const handleSelectImage = (url: string) => {
+    if (selectedImageUrl == url) {
+      setSelectedImageUrl(null);
+    } else {
+      setSelectedImageUrl(url);
+      onChange({ type: "url", url });
+    }
+  };
 
   const generateImageMutation = useMutation(
     async (prompt: string) => {
-      console.log(prompt);
       const res = await fetch("/api/generate/image", {
         method: "POST",
         headers: {
@@ -316,21 +349,32 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
       });
 
       await throwOnResponseError(res);
+
       const json = await res.json();
       const { url } = json;
       onChange({ type: "url", url });
+      setSelectedImageUrl(url);
     },
     {
+      async onSuccess() {
+        await queryClient.invalidateQueries(["images"], {
+          refetchActive: true,
+        });
+      },
       onError(error) {
         toast.error(getErrorMessage(error) ?? "Something went wrong");
       },
     }
   );
 
+  const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+    setSearchString(text);
+  };
+
   const onGenerateClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (generateImageMutation.isLoading) {
       abortController.abort();
-      generateImageMutation.reset();
       return;
     }
 
@@ -350,8 +394,11 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
             type="url"
             placeholder={placeholderPrompt}
             className="h-10 w-full rounded-lg py-2 pl-4 pr-[135px] shadow-md outline-none"
+            value={searchString}
             suppressHydrationWarning
-            {...register("prompt")}
+            {...register("prompt", {
+              onChange: handleChangeSearch,
+            })}
           />
 
           <button
@@ -375,24 +422,45 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
       <div className="relative h-full">
         <div
           className="scrollbar-thin scrollbar-track-base-300/25 scrollbar-thumb-base-900 absolute 
-        mt-2 grid h-full w-full grid-cols-1 gap-4 overflow-auto p-4 sm:grid-cols-2 lg:grid-cols-3"
+        mt-2 grid h-full w-full grid-cols-1 gap-4 overflow-auto p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
-          {range(10).map((idx) => (
-            <picture key={idx}>
+          {data.map(({ id, url }) => (
+            <picture key={id}>
               <img
-                alt={String(idx)}
-                src={`https://via.placeholder.com/512x512/EEEEEE?text=${idx + 1}`}
+                alt={url}
+                src={url}
+                onClick={() => handleSelectImage(url)}
+                className={`cursor-pointer rounded-md shadow-md transition-all hover:shadow-lg hover:shadow-indigo-500/50
+                  ${selectedImageUrl == url ? "scale-95 ring-8 ring-amber-400" : ""} `}
               />
             </picture>
           ))}
         </div>
+
+        <div className="flex h-full w-full flex-row items-center justify-center p-4">
+          {!isLoading && !isError && data.length === 0 && (
+            <div className="my-4 flex flex-col items-center justify-center gap-2 p-4 opacity-70">
+              <MdOutlineImageNotSupported className="h-12 w-12 text-white" />
+              <span className="text-2xl text-white">No images generated yet</span>
+            </div>
+          )}
+
+          {isLoading && (
+            <div className="flex flex-row items-center justify-center p-4">
+              <LoadingSpinner size={64} />
+            </div>
+          )}
+
+          {isError && (
+            <div className="flex flex-row items-center justify-center gap-2 p-4 text-white">
+              <MdOutlineErrorOutline className="h-12 w-12 text-white" />
+              <span className="text-2xl">{getErrorMessage(error) ?? "Something went wrong"}</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
-}
-
-function range(max: number): number[] {
-  return [...Array(max).keys()];
 }
 
 interface ImagePreviewProps {
@@ -470,4 +538,21 @@ function ImagePreview(props: ImagePreviewProps) {
       )}
     </div>
   );
+}
+
+async function fetchAllImages(searchString: string | null) {
+  let query = "";
+
+  if (searchString && searchString.trim().length > 0) {
+    query = `?search=${searchString}`;
+  }
+
+  const res = await fetch(`/api/generate/image${query}`, {
+    method: "GET",
+  });
+
+  await throwOnResponseError(res);
+
+  const json = await res.json();
+  return json as GeneratedImage[];
 }
