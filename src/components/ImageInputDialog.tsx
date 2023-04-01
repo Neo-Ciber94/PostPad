@@ -25,6 +25,7 @@ import { useAbortController } from "@/lib/client/hooks/useAbortController";
 import { imageGenerationPromptSchema } from "@/lib/server/schemas/Prompt";
 import { useDebounce } from "@/lib/client/hooks/useDebounce";
 import { GeneratedImage } from "@/lib/server/schemas/GeneratedImage";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const TABS = [
   { name: "From File", Icon: <GoCloudUpload /> },
@@ -308,8 +309,14 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
     []
   );
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ImagePrompt>({
+    resolver: zodResolver(imageGenerationPromptSchema),
+  });
   const abortController = useAbortController();
-  const { register, handleSubmit } = useForm<ImagePrompt>({});
   const [searchString, setSearchString] = useState("");
   const search = useDebounce(searchString, 500);
 
@@ -388,12 +395,16 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
         <label htmlFor="generate-input" className="text-sm text-white">
           Write a description of the image to generate
         </label>
-        <div className="relative mt-1">
+        <div
+          className={`relative mt-1 overflow-hidden rounded-lg ${
+            errors.prompt == null ? "" : "border-2 border-red-500"
+          }`}
+        >
           <input
             id="generate-input"
             type="url"
             placeholder={placeholderPrompt}
-            className="h-10 w-full rounded-lg py-2 pl-4 pr-[135px] shadow-md outline-none"
+            className={`h-10 w-full rounded-lg py-2 pl-4 pr-[135px] shadow-md outline-none`}
             value={searchString}
             suppressHydrationWarning
             {...register("prompt", {
@@ -417,6 +428,12 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
             )}
           </button>
         </div>
+
+        {errors.prompt && (
+          <span className={`text-sm font-semibold italic text-red-200`}>
+            {errors.prompt.message}
+          </span>
+        )}
       </div>
 
       <div className="relative h-full">

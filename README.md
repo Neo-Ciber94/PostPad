@@ -38,4 +38,4 @@ PostPad allow you to create and share posts.
 - [x] Ratelimiter
 - [ ] Logging
 - [x] Scroll pagination
-- [ ] AI image generation for posts
+- [x] AI image generation for posts

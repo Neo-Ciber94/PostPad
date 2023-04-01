@@ -9,6 +9,10 @@ import { json } from "@/lib/utils/responseUtils";
 import { NextRequest } from "next/server";
 import { cookies as getCookies } from "next/headers";
 
+// FIXME: This may timeout the serverless function:
+// move to edge?
+// https://vercel.com/docs/concepts/limits/overview#general-limits
+
 export async function POST(request: NextRequest) {
   try {
     const cookies = getCookies();
