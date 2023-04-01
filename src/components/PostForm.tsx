@@ -27,7 +27,7 @@ import { usePromptDialog } from "@/lib/client/hooks/usePromptDialog";
 import { useAbortController } from "@/lib/client/hooks/useAbortController";
 import { useStateWithChange } from "@/lib/client/hooks/useStateWithChange";
 import { throwOnResponseError } from "@/lib/utils/throwOnResponseError";
-import { promptSchema } from "@/lib/server/schemas/Prompt";
+import { chatCompletionPromptSchema } from "@/lib/server/schemas/Prompt";
 import SharePostButton from "./SharePostButton";
 import SharePostDialog from "./SharePostDialog";
 import { toast } from "react-hot-toast";
@@ -173,7 +173,7 @@ export default function PostForm({
       title: "Generate AI Post",
       placeholder: "What would you like your post to be about?",
       onConfirm: (prompt) => generatePostMutation.mutate(prompt),
-      schema: promptSchema,
+      schema: chatCompletionPromptSchema,
     });
   };
 
@@ -261,7 +261,7 @@ export default function PostForm({
             disabled={isGenerating}
             placeholder="Title"
             className={`focus:shadow-outline w-full appearance-none rounded border border-gray-600
-                 py-2 px-3 leading-tight shadow transition-colors duration-500 focus:outline-none ${
+                 px-3 py-2 leading-tight shadow transition-colors duration-500 focus:outline-none ${
                    isDarkMode ? "bg-[#0D1117] text-white" : "bg-white"
                  } ${errors.title?.message ? "border-red-500" : ""}`}
           />
@@ -348,7 +348,7 @@ export default function PostForm({
 }
 
 async function* fetchPostCompletionStream(prompt: string, signal: AbortSignal) {
-  const res = await fetch("/api/posts/generate", {
+  const res = await fetch("/api/generate/post", {
     headers: { "content-type": "application/json" },
     method: "POST",
     body: JSON.stringify({ prompt }),

@@ -15,7 +15,7 @@ export default function Dialog({
   const { BackdropProps, className, style } = props;
 
   // @tw
-  const dialogBaseClassName = `absolute bg-white inset-x-0 z-40 mx-auto flex rounded-xl shadow-lg shadow-black/25 md:w-1/2`;
+  const dialogBaseClassName = `fixed bg-white inset-x-0 z-40 mx-auto flex rounded-xl shadow-lg shadow-black/25 md:w-1/2`;
 
   return (
     <>

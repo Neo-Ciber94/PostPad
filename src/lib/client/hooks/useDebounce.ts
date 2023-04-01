@@ -15,7 +15,7 @@ export function useDebounce<T>(valueOrFactory: ValueOrFactory<T>, ms: number) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [value, ms, valueOrFactory]);
+  }, [ms, valueOrFactory]);
 
   return value;
 }

@@ -10,9 +10,9 @@ PostPad allow you to create and share posts.
 
 ## Screenshots
 
-![login](./static/login.jpg)
+![login](./assets/login.jpg)
 
-![posts](./static/posts.jpg)
+![posts](./assets/posts.jpg)
 
 ## Stack
 
@@ -38,4 +38,4 @@ PostPad allow you to create and share posts.
 - [x] Ratelimiter
 - [ ] Logging
 - [x] Scroll pagination
-- [ ] AI image generation for posts
+- [x] AI image generation for posts
