@@ -3,6 +3,7 @@ import { z } from "zod";
 export const generatedImageSchema = z.object({
   id: z.string(),
   url: z.string(),
+  createdByPrompt: z.string(),
   createdAt: z
     .string()
     .or(z.date())

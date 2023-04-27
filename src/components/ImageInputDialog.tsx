@@ -441,11 +441,11 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
           className="scrollbar-thin scrollbar-track-base-300/25 scrollbar-thumb-base-900 absolute 
         mt-2 grid h-full w-full grid-cols-1 gap-4 overflow-auto p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
-          {data.map(({ id, url }) => (
+          {data.map(({ id, url, createdByPrompt }) => (
             <picture key={id}>
               <img
-                alt={url}
-                src={url}
+                alt={createdByPrompt}
+                src={`/api/proxy?type=image&url=${encodeURIComponent(url)}`}
                 onClick={() => handleSelectImage(url)}
                 className={`cursor-pointer rounded-md shadow-md transition-all hover:shadow-lg hover:shadow-indigo-500/50
                   ${selectedImageUrl == url ? "scale-95 ring-8 ring-amber-400" : ""} `}
