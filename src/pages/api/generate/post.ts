@@ -56,7 +56,7 @@ export default async function handler(request: NextRequest) {
       model: "gpt-3.5-turbo",
       messages,
       max_tokens: 1024,
-      temperature: 2,
+      temperature: 1,
       top_p: 1,
       n: 1,
       stream: true,

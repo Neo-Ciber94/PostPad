@@ -22,6 +22,13 @@ const envSchema = z.object({
   // openAI
   OPENAI_API_KEY: z.string(),
   OPENAI_ORGANIZATION_ID: z.string(),
+
+  // cloudflare r2
+  R2_ACCESS_KEY: z.string(),
+  R2_SECRET_KEY: z.string(),
+  R2_BUCKET_ENDPOINT: z.string(),
+  R2_PUBLIC_URL: z.string(),
+  R2_BUCKET_NAME: z.string(),
 });
 
 export const environment: Environment = envSchema.parse({
@@ -44,8 +51,14 @@ export const environment: Environment = envSchema.parse({
   // openAI
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   OPENAI_ORGANIZATION_ID: process.env.OPENAI_ORGANIZATION_ID,
-} satisfies Partial<Environment>);
 
+  // cloudflare r2
+  R2_ACCESS_KEY: process.env.R2_ACCESS_KEY,
+  R2_SECRET_KEY: process.env.R2_SECRET_KEY,
+  R2_BUCKET_ENDPOINT: process.env.R2_BUCKET_ENDPOINT,
+  R2_PUBLIC_URL: process.env.R2_PUBLIC_URL,
+  R2_BUCKET_NAME: process.env.R2_BUCKET_NAME,
+} satisfies Partial<Environment>);
 
 /**
  * Returns `true` if the application is running on development mode.

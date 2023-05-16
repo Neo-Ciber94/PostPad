@@ -32,7 +32,6 @@ const imageSchema = z.object({
 
 export default async function handler(req: Request) {
   const fontData = await font;
-
   const searchParams = createObjectFromSearchParams(new URL(req.url).searchParams);
   const { width, height } = imageSchema.parse(searchParams);
 

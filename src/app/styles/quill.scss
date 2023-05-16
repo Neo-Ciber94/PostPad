@@ -236,3 +236,39 @@ button.ql-header.ql-active {
   font-family: "Quicksand";
   content: "Quicksand" !important;
 }
+
+/* Define the rainbow animation */
+
+@keyframes rainbow {
+  0% {
+    stroke: #ea0000;
+  }
+  14% {
+    stroke: #ff8c00;
+  }
+  28% {
+    stroke: #ffff00;
+  }
+  42% {
+    stroke: #008000;
+  }
+  57% {
+    stroke: #0077ff;
+  }
+  71% {
+    stroke: #a71fd4;
+  }
+  85% {
+    stroke: #8a2be2;
+  }
+  100% {
+    stroke: #ea0000;
+  }
+}
+
+/* Apply the animation to the SVG element */
+.ql-image svg .ql-stroke {
+  fill: none;
+  transform-origin: center;
+  animation: rainbow 5s linear infinite;
+}

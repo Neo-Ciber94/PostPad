@@ -445,7 +445,11 @@ function GenerateImageInputArea(props: GenerateImageInputAreaProps) {
             <picture key={id}>
               <img
                 alt={createdByPrompt}
-                src={`/api/proxy?type=image&url=${encodeURIComponent(url)}`}
+                src={url}
+                onError={(event) => {
+                  const self = event.currentTarget;
+                  self.src = "/api/image/404";
+                }}
                 onClick={() => handleSelectImage(url)}
                 className={`cursor-pointer rounded-md shadow-md transition-all hover:shadow-lg hover:shadow-indigo-500/50
                   ${selectedImageUrl == url ? "scale-95 ring-8 ring-amber-400" : ""} `}
